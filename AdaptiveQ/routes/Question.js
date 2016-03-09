@@ -3,6 +3,9 @@ var express = require('express');
 var router = express.Router();
 var qn = {"question" : "1. The word which means house is", "option1": "A","option2": "B","option3": "C","option4": "D","answer":"A"}
 router.get('/', function(req, res){
+	//to understand what question with what id, example if http://localhost:3000/Question/?id=5
+	console.log(req.query); //will output id : 5
+
 	
   res.render('question', {Question : qn});
   });
