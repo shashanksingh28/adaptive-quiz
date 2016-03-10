@@ -1,0 +1,17 @@
+<html>
+<head>
+<title>Question</title>
+<body>
+ <form method="post" action="/Question">
+<p><%=Question.question%><br>
+<input type="radio" name="option" value =<%=Question.option1%>><%=Question.option1%><BR>
+<input type="radio" name="option" value =<%=Question.option2%>><%=Question.option2%><BR>
+<input type="radio" name="option" value =<%=Question.option3%>><%=Question.option3%><BR>
+<input type="radio" name="option" value =<%=Question.option4%>><%=Question.option4%><BR>
+</p>
+<br>
+<input type="submit" value="Send Form">
+<input type="reset" value="Clear Form">
+</form>
+</body>
+</html>
