@@ -12,7 +12,10 @@
     "express": "~4.13.1",
     "ejs": "^2.4.1",
     "morgan": "~1.6.1",
-    "jade": "~1.9.2",
-    "serve-favicon": "~2.3.0"
+    "serve-favicon": "~2.3.0",
+    "mongodb": "~2.0.33",
+    "mongoose": "*",
+    "nodemon" : "*",
+     "nodemailer": "*"
   }
 }
