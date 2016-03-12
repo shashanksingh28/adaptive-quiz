@@ -1,18 +1,31 @@
 var express = require('express');
+var app = express();
+var mongo = require('mongoose');
+mongo.connect("52.37.232.47/adaptq_dev");
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+
+// For session management
 var cookieParser = require('cookie-parser');
+var session = require('express-session');
+var mongoStore = require('connect-mongo')(session);
+app.use(cookieParser());
+var secret = 'shhh';
+app.use(session({
+  resave: true,
+  saveUninitialized: true,
+  secret: secret,
+  store: new mongoStore({
+    mongooseConnection: mongo.connection,
+    collection: 'sessions' // default
+  })
+}))
+
+
 var bodyParser = require('body-parser');
-var mongoose = require('mongoose');
 var nodemailer = require("nodemailer");
-var routes = require('./routes/index');
-var users = require('./routes/users');
-var Question = require('./routes/Question');
-var app = express();
-mongoose.connect("52.37.232.47/adaptq_dev");
-port = 3000;
-console.log('Server has started! At http://localhost:' + port);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -26,9 +39,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+
+var routes = require('./routes/index');
+var users = require('./routes/users');
+var Question = require('./routes/Question');
 app.use('/', routes);
 app.use('/users', users);
-app.use('/Question', Question);
+app.use('/question', Question);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
