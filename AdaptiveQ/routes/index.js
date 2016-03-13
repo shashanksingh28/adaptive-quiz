@@ -15,7 +15,7 @@ router.post('/', function(req, res){
     //res.render('Question',{name: user});
     console.log(req.session);
     req.session.user = user;
-    res.redirect('/question');
+    res.redirect('/question?id=1');
   });
 
 module.exports = router;

@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var mongo = require('mongoose');
+
 mongo.connect("52.37.232.47/adaptq_dev");
 
 var path = require('path');
@@ -12,7 +13,7 @@ var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
 app.use(cookieParser());
-var secret = 'shhh';
+var secret = 'PgkXR<;u&G7VUL>r';
 app.use(session({
   resave: true,
   saveUninitialized: true,
@@ -21,7 +22,9 @@ app.use(session({
     mongooseConnection: mongo.connection,
     collection: 'sessions' // default
   })
-}))
+}));
+
+//console.log(mongo.connection);
 
 
 var bodyParser = require('body-parser');
@@ -42,10 +45,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var Question = require('./routes/Question');
+var question = require('./routes/question');
 app.use('/', routes);
 app.use('/users', users);
-app.use('/question', Question);
+app.use('/question', question);
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
