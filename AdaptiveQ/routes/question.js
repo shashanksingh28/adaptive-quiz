@@ -1,5 +1,5 @@
-
 var express = require('express');
+var nodemailer = require("nodemailer");
 var router = express.Router();
 // mongoose data models
 var Question = require('../models/questionModel');
@@ -8,6 +8,14 @@ function getQuestion(id){
 	var promise = Question.findById(id).exec();
 	return promise;
 }
+//setup smtp for mailing
+var smtpTransport = nodemailer.createTransport("SMTP",{
+    service: "Gmail",
+    auth: {
+        user: "",
+        pass: ""
+    }
+});
 
 function createQuestion(question){
 	var promise = question.save();
@@ -50,16 +58,36 @@ router.post('/ask', function(req, res){
 		conceptId: 0,
 		difficulty: 0
 	});
+
+		
 	createQuestion(newQuestion)
 	.then(function (err){
 		if(err)	{
 			// TODO: error page
 		}
-		console.log("Saved : "+newQuestion);
-		res.redirect('/question/ask');
-	})
+		console.log("Saved : "+newQuestion);		
+		var mailOptions={
+			from : "dhiraj92@gmail.com",
+		   	to : "dhiraj92@gmail.com",
+		   	subject : "Question of the day",
+		  	text : newQuestion.text + " your question"
+		}
+		console.log(mailOptions);
+		smtpTransport.sendMail(mailOptions, function(error, response){
+		if(error){
+		console.log(error);
+		res.end("error");
+		}else{
+		console.log("Message sent: " + response.message);
+		}
+		});
 
+		res.redirect('/question/ask');
+	
+		});
 });
+
+
 
 // Use below to populate sample questions
 /*
