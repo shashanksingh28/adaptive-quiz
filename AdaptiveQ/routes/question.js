@@ -12,8 +12,8 @@ function getQuestion(id){
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
     auth: {
-        user: "",
-        pass: ""
+        user: "adapt.q",
+        pass: "quizoftheday"
     }
 });
 
@@ -67,7 +67,7 @@ router.post('/ask', function(req, res){
 		}
 		console.log("Saved : "+newQuestion);		
 		var mailOptions={
-			from : "dhiraj92@gmail.com",
+			from : "adapt.q@gmail.com",
 		   	to : "dhiraj92@gmail.com",
 		   	subject : "Question of the day",
 		  	text : newQuestion.text + " your question"

@@ -24,7 +24,7 @@ app.use(session({
   })
 }));
 
-//console.log(mongo.connection);
+console.log("App started at http://localhost:3000");
 
 
 var bodyParser = require('body-parser');
