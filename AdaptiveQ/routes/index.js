@@ -18,4 +18,7 @@ router.post('/', function(req, res){
     res.redirect('/question?id=1');
   });
 
+router.get('/register', function(req, res){
+    res.render('register');
+  });
 module.exports = router;
