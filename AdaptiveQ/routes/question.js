@@ -34,7 +34,7 @@ router.get('/ask', function(req, res){
 // Show a question with given id
 router.get('/', function(req, res){
 	// check authentication before showing question
-	if(!(req.session && req.session.user)){
+	if(!(req.session && req.session.email)){
 		res.redirect('/');
 	}
 
@@ -59,13 +59,13 @@ router.post('/ask', function(req, res){
 		difficulty: 0
 	});
 
-		
+
 	createQuestion(newQuestion)
 	.then(function (err){
 		if(err)	{
 			// TODO: error page
 		}
-		console.log("Saved : "+newQuestion);		
+		console.log("Saved : "+newQuestion);
 		var mailOptions={
 			from : "adapt.q@gmail.com",
 		   	to : "dhiraj92@gmail.com",
@@ -83,7 +83,7 @@ router.post('/ask', function(req, res){
 		});
 
 		res.redirect('/question/ask');
-	
+
 		});
 });
 
