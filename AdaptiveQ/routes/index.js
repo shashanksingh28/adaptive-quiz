@@ -8,15 +8,12 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res){
     //console.log(req.body);
-
     var email = req.body.email;
     var pass = req.body.password;
-
     // TODO: Insert function here for user validation
     console.log(email+" : "+pass);
     //res.render('Question',{name: user});
     req.session.email = email;
-    console.log(req.session);
     res.redirect('/question?id=1');
   });
 
