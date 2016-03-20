@@ -3,11 +3,13 @@
 <title>Question</title>
 <body>
  <form method="post" action="/Question">
+
 <p><%=Question.text%><br>
-<input type="radio" name="option" value =<%=Question.option1%>><%=Question.options[0]%><BR>
-<input type="radio" name="option" value =<%=Question.option2%>><%=Question.options[1]%><BR>
-<input type="radio" name="option" value =<%=Question.option3%>><%=Question.options[2]%><BR>
-<input type="radio" name="option" value =<%=Question.option4%>><%=Question.options[3]%><BR>
+<input type="hidden" name="id" value = <%=Question._id%> >
+<input type="radio" name="option" value = 0><%=Question.options[0]%><BR>
+<input type="radio" name="option" value = 1><%=Question.options[1]%><BR>
+<input type="radio" name="option" value = 2><%=Question.options[2]%><BR>
+<input type="radio" name="option" value = 3><%=Question.options[3]%><BR>
 </p>
 <br>
 <input type="submit" value="Send Form">

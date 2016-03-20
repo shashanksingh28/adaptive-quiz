@@ -22,14 +22,29 @@ function createQuestion(question){
 	return promise;
 }
 
-function attemptQuestion(userId,questionId){
+function attemptQuestion(questionId,givenAns,req,res){
 	// check for answer and return null
+	console.log("inside attemt question")
+	var c  = 0;
+	getQuestion(questionId).then(function (question){
+	console.log(question)
+	var correctAns = question.options[question.answer];
+	console.log(correctAns)
+	if (question.answer == givenAns )
+	{
+		console.log("sahi javab");
+		res.send("correct answer");
+	}
+	else 
+	{
+		console.log("galat javab");		
+		res.send("wrong answer");
+	}
+
+	})
 }
 
-// Give page to create question
-router.get('/ask', function(req, res){
-  	res.render('askquestion');
-  });
+
 
 // Show a question with given id
 router.get('/', function(req, res){
@@ -47,6 +62,24 @@ router.get('/', function(req, res){
 	});
 });
 
+router.post('/', function(req, res){
+	// check authentication before showing question
+	if(!(req.session && req.session.user)){
+		res.send("Session not set");
+	}
+	console.log("the id is" + req.body.id + req.originalUrl);
+	console.log(req.body.option);
+	givenAns = req.body.option;
+	attemptQuestion(req.body.id,givenAns,req,res);
+
+});
+
+
+
+// Give page to create question
+router.get('/ask', function(req, res){
+  	res.render('askquestion');
+  });
 // save new question
 router.post('/ask', function(req, res){
 	console.log(req.body);
