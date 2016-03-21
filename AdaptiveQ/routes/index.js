@@ -20,12 +20,9 @@ router.post('/', function(req, res){
 router.get('/register', function(req, res){
     res.render('register');
   });
-<<<<<<< HEAD
+  
   
 router.get('/soup', function(req, res, next) {
  res.render('soup');
 });
-=======
-
->>>>>>> origin/master
 module.exports = router;
