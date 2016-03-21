@@ -7,18 +7,25 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res){
-    var user = req.body.username;
-    var pass = req.body.passwod;
-
+    //console.log(req.body);
+    var email = req.body.email;
+    var pass = req.body.password;
     // TODO: Insert function here for user validation
-    console.log(user+" : "+pass);
+    console.log(email+" : "+pass);
     //res.render('Question',{name: user});
-    console.log(req.session);
-    req.session.user = user;
+    req.session.email = email;
     res.redirect('/question?id=1');
   });
 
 router.get('/register', function(req, res){
     res.render('register');
   });
+<<<<<<< HEAD
+  
+router.get('/soup', function(req, res, next) {
+ res.render('soup');
+});
+=======
+
+>>>>>>> origin/master
 module.exports = router;
