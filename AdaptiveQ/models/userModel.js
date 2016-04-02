@@ -13,7 +13,7 @@ var userSchema = new Schema({
   updated_at: Date
 });
 
-questionSchema.plugin(autoIncrement.plugin, 'User');
+userSchema.plugin(autoIncrement.plugin, 'User');
 
 var User = mongo.model('User', userSchema);
 

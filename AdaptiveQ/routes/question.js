@@ -35,9 +35,9 @@ function attemptQuestion(questionId,givenAns,req,res){
 		console.log("sahi javab");
 		res.send("correct answer");
 	}
-	else 
+	else
 	{
-		console.log("galat javab");		
+		console.log("galat javab");
 		res.send("wrong answer");
 	}
 
@@ -53,7 +53,7 @@ router.get('/', function(req, res){
 		res.redirect('/');
 	}
 
-	getQuestion(req.param('id'))
+	getQuestion(req.query.id)
 	.then(function (question){
 		res.render('question', {Question : question});
 	})
