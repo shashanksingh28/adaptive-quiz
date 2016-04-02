@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="en">
+
+<!--EasyTree-->
+<head>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+        <link rel="stylesheet" href="/stylesheets/easyTree.css">
+		<script src="/js/easyTree.js"></script>
+</head>
+
+<!--EasyTree-->
+<body>
+<div id="jquery-script-menu">
+</div>
+<div class="easy-tree">
+<ul>
+<li>Example 1</li>
+<li>Example 2</li>
+<li>Example 3
+<ul>
+<li>Example 1</li>
+<li>Example 2
+<ul>
+<li>Example 1</li>
+<li>Example 2</li>
+<li>Example 3</li>
+<li>Example 4</li>
+</ul>
+</li>
+<li>Example 3</li>
+<li>Example 4</li>
+</ul>
+</li>
+<li>Example 0
+<ul>
+<li>Example 1</li>
+<li>Example 2</li>
+<li>Example 3</li>
+<li>Example 4
+<ul>
+<li>Example 1</li>
+<li>Example 2</li>
+<li>Example 3</li>
+<li>Example 4</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<script>
+    (function ($) {
+        function init() {
+            $('.easy-tree').EasyTree({
+                addable: true,
+                editable: true,
+                deletable: true
+            });
+        }
+
+        window.onload = init();
+    })(jQuery)
+</script>
+</body>
+</html>

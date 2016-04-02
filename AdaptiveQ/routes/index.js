@@ -84,4 +84,9 @@ router.post('/register', function(req, res){
     res.redirect('/question?id=1');
   });
 
+
+router.get('/soup', function(req, res, next) {
+ res.render('soup');
+});
+
 module.exports = router;

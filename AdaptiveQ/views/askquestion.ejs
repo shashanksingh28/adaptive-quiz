@@ -1,43 +1,103 @@
-<html>
+<!DOCTYPE html>
+<html >
 <head>
-<title>Question</title>
+<meta charset="UTF-8">
+<title>Pure CSS Segmented Controls</title>
+<!--Common-->
+<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+<!--Segment control-->
+<link rel="stylesheet" href="/stylesheets/segment_style.css">
+
+<!--Tree structure-->
+<script src="/js/tree.jquery.js"></script>
+<link rel="stylesheet" href="/stylesheets/jqtree.css">
+<script>
+var data = [
+    {
+        label: 'node1',
+        children: [
+            { 
+            	label: 'child1',
+            	children: [
+            		{ label: 'gc1' },
+		            { label: 'gc2' }
+            	] 
+            },
+            { label: 'child2' }
+        ]
+    },
+    {
+        label: 'node2',
+        children: [
+            { label: 'child3' }
+        ]
+    }
+];
+
+$( document ).ready(function() {
+    $('#tree1').tree({
+        data: data
+    });
+    $('#tree1').bind(
+    'tree.click',
+    function(event) {
+        // The clicked node is 'event.node'
+        var node = event.node;
+        console.log(node.name);
+    }
+);
+});
+
+function addOption(){
+	var options=$(".option").length+1;
+	if(options<7){
+		var dom="<div class=\"option\"><input type=\"checkbox\"><input type=\"text\" value=\"Option "+options+"\" /></input></div>";
+		$("#options").append(dom);
+	}
+}
+
+function removeOption(){
+	var maxIndex=$(".option").length;
+	if(maxIndex>2){
+		$(".option")[maxIndex-1].remove();
+	}
+}
+</script>
+</head>
+
 <body>
- <form method="post" action="/Question/ask">
-  <p>
-    <label>Question</label>
-    <input type="text" name="question">
-  </p>
-  <p>
-    <label>Option 1:</label>
-    <input type="text" name="option1" >
-  </p>
-  <p>
-    <label>Option 2:</label>
-    <input type="text" name="option2" >
-  </p>
-  <p>
-    <label>Option 3:</label>
-    <input type="text" name="option3" >
-  </p>
-  <p>
-    <label>Option 4:</label>
-    <input type="text" name="option4" >
-  </p>
-  <p>
-    <label>Answer :</label>
-    <input type="text" name="answer" >
-  </p>
-  <p>
-    <label>Concept :</label>
-    <input type="text" name="conceptId" >
-  </p>
-  <p>
-    <label>Difficulty :</label>
-    <input type="text" name="difficulty" >
-  </p>
-<br>
+<form method="post" action="/Question/ask">
+
+<div class="question">Question</div>
+<div class="question text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?</div>
+
+<button type="button" class="glyphicon glyphicon-plus" onclick="addOption()"></button>
+<div class="options" style="display:inline-block">Options</div>
+<button type="button" class="glyphicon glyphicon-minus" onclick="removeOption()"></button>
+
+<div id="options">
+<div class="option"><input type="checkbox"><input type="text" value="Option 1" /></input></div>
+<div class="option"><input type="checkbox"><input type="text" value="Option 2" /></input></div>
+<div class="option"><input type="checkbox"><input type="text" value="Option 3" /></input></div>
+<div class="option"><input type="checkbox"><input type="text" value="Option 4" /></input></div>
+</div>
+<div class="segmented-control" style="width: 20%; color: black">
+<input type="radio" name="sc-1-1" id="sc-1-1-1" checked>
+<input type="radio" name="sc-1-1" id="sc-1-1-2">
+<input type="radio" name="sc-1-1" id="sc-1-1-3">
+
+<label for="sc-1-1-1" data-value="Easy">Easy</label>
+<label for="sc-1-1-2" data-value="Medium">Medium</label>
+<label for="sc-1-1-3" data-value="Hard">Hard</label>
+</div><br/>
+<div id="tree1"></div>
 <input type="submit" value="Send Form">
 <input type="reset" value="Clear Form">
 </form>
+
+
 </body>
 </html>
