@@ -26,14 +26,11 @@ function updateUser(user,record){
 	console.log("User is " + user)
 	var promise = Users.update({'email': user},
 		{$push:{'records':record}}).exec();
-	return promise;	
+	return promise;
 }
 
 function attemptQuestion(questionId,givenAns,req,res){
 	// check for answer and return null
-
-	console.log("inside attemt question")
-	var c  = 0;
 	getQuestion(questionId).then(function (question){
 		record = {
 			qid : questionId,
@@ -51,25 +48,25 @@ function attemptQuestion(questionId,givenAns,req,res){
 		else
 		{
 			console.log("galat javab");
-		}		
-		console.log(req.session.email,record)
-		updateUser(req.session.email,record).then(function (err){
-			if (err) {
+		}
+		console.log(req.session.email,record);
+		updateUser(req.session.email,record)
+		.then(function (updatedUser){
+			console.log("Attempt Recorded:"+updatedUser);
+			// TODO: Show user the right answer, his answer and explaination
+			res.send("Attempt Recorded!");
+		},function (err){
 				console.log("error in update");
-				// TODO: error page
-			}
-			console.log("update succesful");			
-		});	
+				//TODO: redirect to error
+		});
 
 	});
 }
 
-
-
 // Show a question with given id
 router.get('/', function(req, res){
 	// check authentication before showing question
-	if(!(req.session && req.session.email)){	
+	if(!(req.session && req.session.email)){
 		res.redirect('/');
 	}
 
@@ -85,15 +82,13 @@ router.get('/', function(req, res){
 router.post('/', function(req, res){
 	// check authentication before showing question
 	if(!(req.session && req.session.user)){
-		res.send("Session not set");
+		res.redirect('/');
 	}
 	console.log("the id is" + req.body.id + req.originalUrl);
 	console.log(req.body.option);
 	givenAns = req.body.option;
 	attemptQuestion(req.body.id,givenAns,req,res);
-
 });
-
 
 
 // Give page to create question
@@ -111,7 +106,6 @@ router.post('/ask', function(req, res){
 		conceptId: 0,
 		difficulty: 0
 	});
-
 
 	createQuestion(newQuestion)
 	.then(function (err){

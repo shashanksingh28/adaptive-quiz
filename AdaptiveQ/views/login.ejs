@@ -57,9 +57,9 @@
   </div>
   <div class="form">
     <h2>Login to your account</h2>
-    <form class="form-signin" action="/" method="post" onsubmit="return hash()">
-      <input type="email" placeholder="Username" name="email" />
-      <input type="password" placeholder="Password" id="password" name="password" />
+    <form class="form-signin" action="/users/login" method="post" onsubmit="return hash()">
+      <input type="email" placeholder="Username" name="email" required/>
+      <input type="password" placeholder="Password" id="password" name="password" required/>
       <label class="checkbox"><input type="checkbox" name="checkbox" value="value" id="rem"/>Remember Me</label>
       <br><br>
      <button>Login</button>
@@ -67,11 +67,11 @@
   </div>
   <div class="form">
     <h2>Create an account</h2>
-    <form action="/register" method="post" onsubmit="return newhash()">
+    <form action="/users/register" method="post" onsubmit="return newhash()">
       <input type="text" placeholder="Full Name" name="username"/>
-      <input type="password" placeholder="Password" name="password" id="new_password"/>
+      <input type="email" placeholder="Email Address" name="email" required/>
+      <input type="password" placeholder="Password" name="password" id="new_password" required/>
       <input type="password" placeholder="Confirm Password" id="new_password_confirm"/>
-      <input type="email" placeholder="Email Address" name="email"/>
       <input type="tel" placeholder="Phone Number" name="phone"/>
       <button>Register</button>
     </form>
