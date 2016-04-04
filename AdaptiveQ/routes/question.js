@@ -3,7 +3,7 @@ var nodemailer = require("nodemailer");
 var router = express.Router();
 // mongoose data models
 var Question = require('../models/questionModel');
-
+var Users = require('../models/userModel');
 function getQuestion(id){
 	var promise = Question.findById(id).exec();
 	return promise;
@@ -22,26 +22,46 @@ function createQuestion(question){
 	return promise;
 }
 
+function updateUser(user,record){
+	console.log("User is " + user)
+	var promise = Users.update({'email': user},
+		{$push:{'records':record}}).exec();
+	return promise;	
+}
+
 function attemptQuestion(questionId,givenAns,req,res){
 	// check for answer and return null
+
 	console.log("inside attemt question")
 	var c  = 0;
 	getQuestion(questionId).then(function (question){
-	console.log(question)
-	var correctAns = question.options[question.answer];
-	console.log(correctAns)
-	if (question.answer == givenAns )
-	{
-		console.log("sahi javab");
-		res.send("correct answer");
-	}
-	else
-	{
-		console.log("galat javab");
-		res.send("wrong answer");
-	}
+		record = {
+			qid : questionId,
+			attempt : false
+		}
+		console.log(question);
+		console.log("the question id is" + questionId);
+		var correctAns = question.options[question.answer];
+		console.log(correctAns);
+		if (question.answer == givenAns )
+		{
+			record.attempt=true
+			console.log("sahi javab");
+		}
+		else
+		{
+			console.log("galat javab");
+		}		
+		console.log(req.session.email,record)
+		updateUser(req.session.email,record).then(function (err){
+			if (err) {
+				console.log("error in update");
+				// TODO: error page
+			}
+			console.log("update succesful");			
+		});	
 
-	})
+	});
 }
 
 
@@ -49,7 +69,7 @@ function attemptQuestion(questionId,givenAns,req,res){
 // Show a question with given id
 router.get('/', function(req, res){
 	// check authentication before showing question
-	if(!(req.session && req.session.email)){
+	if(!(req.session && req.session.email)){	
 		res.redirect('/');
 	}
 
