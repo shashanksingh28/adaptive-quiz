@@ -11,7 +11,9 @@ var questionSchema = new Schema({
   conceptId: Number,
   difficulty: Number,
   created_at: Date,
-  updated_at: Date
+  updated_at: Date,
+  hint: String,
+  explainations: Array
 });
 
 questionSchema.plugin(autoIncrement.plugin, 'Question');

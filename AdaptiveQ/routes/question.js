@@ -21,7 +21,13 @@ function createQuestion(question){
 	var promise = question.save();
 	return promise;
 }
-
+function updateQuestion(explaination,qid) {
+	console.log("explaination is " + explaination);
+	console.log("question id is" + qid);
+	var promise = Question.update({'_id': qid},
+		{$push:{'explainations':explaination}}).exec();
+	return promise;
+}
 function updateUser(user,record){
 	console.log("User is " + user)
 	var promise = Users.update({'email': user},
@@ -35,6 +41,14 @@ function attemptQuestion(questionId,givenAns,req,res){
 		record = {
 			qid : questionId,
 			attempt : false
+		}
+		console.log("explaination is" + req.body.explainationGiven)
+		explaination = {
+			givenBy : 1,
+			text : req.body.explainationGiven,
+			noUpVotes: 0,
+			upVotedBy: Array
+
 		}
 		console.log(question);
 		console.log("the question id is" + questionId);
@@ -54,11 +68,20 @@ function attemptQuestion(questionId,givenAns,req,res){
 		.then(function (updatedUser){
 			console.log("Attempt Recorded:"+updatedUser);
 			// TODO: Show user the right answer, his answer and explaination
-			res.send("Attempt Recorded!");
+			//res.send("Attempt Recorded!");
 		},function (err){
 				console.log("error in update");
 				//TODO: redirect to error
 		});
+		if(record.attempt == true){
+			updateQuestion(explaination,questionId)
+			.then(function (updatedQuestion,questionId){
+				console.log("updatedQuestion succesfull"+updatedQuestion);
+				res.send("updated question")
+			},function (err){
+				console.log("error in update");
+			});
+		}
 
 	});
 }
@@ -87,6 +110,7 @@ router.post('/', function(req, res){
 	console.log("the id is" + req.body.id + req.originalUrl);
 	console.log(req.body.option);
 	givenAns = req.body.option;
+	explainationGiven = 
 	attemptQuestion(req.body.id,givenAns,req,res);
 });
 
