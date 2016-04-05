@@ -20,10 +20,12 @@ router.post('/login', function(req, res){
     getUser(email)
     .then(function (user){
       console.log(user);
+      console.log("user id is" + user._id);
       if(user.email){
         // check if password matches
         if(user.password == pass){
           req.session.email = email;
+          req.session.userId = user._id
           res.redirect('/question?id=1');
         }
         else {

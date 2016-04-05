@@ -44,7 +44,7 @@ function attemptQuestion(questionId,givenAns,req,res){
 		}
 		console.log("explaination is" + req.body.explainationGiven)
 		explaination = {
-			givenBy : 1,
+			givenBy : req.session.userId,
 			text : req.body.explainationGiven,
 			noUpVotes: 0,
 			upVotedBy: Array
