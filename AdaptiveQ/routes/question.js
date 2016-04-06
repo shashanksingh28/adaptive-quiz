@@ -47,7 +47,7 @@ function attemptQuestion(questionId,givenAns,req,res){
 			givenBy : req.session.userId,
 			text : req.body.explainationGiven,
 			noUpVotes: 0,
-			upVotedBy: Array
+			upVotedBy: []
 
 		}
 		console.log(question);
@@ -77,11 +77,22 @@ function attemptQuestion(questionId,givenAns,req,res){
 			updateQuestion(explaination,questionId)
 			.then(function (updatedQuestion,questionId){
 				console.log("updatedQuestion succesfull"+updatedQuestion);
-				res.send("updated question")
+				//res.send("updated question")
 			},function (err){
 				console.log("error in update");
 			});
 		}
+		//return res.render('explaination', {Attempt : record.attempt });
+		getQuestion(questionId)
+			.then(function (question){
+			return res.render('explaination', {Question : question, Attempt : record.attempt });
+			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":1}})
+			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":2},$inc:{"explainations.$.noUpVotes":1}})
+		})
+		.catch(function (error){
+			console("caught exception");
+			// TODO: error page
+		});
 
 	});
 }
@@ -104,14 +115,17 @@ router.get('/', function(req, res){
 
 router.post('/', function(req, res){
 	// check authentication before showing question
-	if(!(req.session && req.session.user)){
+	if(!(req.session && req.session.email)){
 		res.redirect('/');
 	}
+	
 	console.log("the id is" + req.body.id + req.originalUrl);
 	console.log(req.body.option);
 	givenAns = req.body.option;
-	explainationGiven = 
-	attemptQuestion(req.body.id,givenAns,req,res);
+	//res.render('explaination', {Attempt : "record.attempt" });
+	//explainationGiven = 
+	explainationGiven = attemptQuestion(req.body.id,givenAns,req,res);
+	
 });
 
 
