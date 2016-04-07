@@ -12,21 +12,28 @@ function createUser(user){
   return promise;
 }
 
-router.post('/login', function(req, res){
+router.post('/login', function(req, res, next){
     var email = req.body.email;
     var pass = req.body.password;
     //console.log(email);
     //console.log(pass);
     getUser(email)
     .then(function (user){
-      console.log(user);
-      console.log("user id is" + user._id);
+      //console.log("user id is" + user._id);
       if(user.email){
         // check if password matches
         if(user.password == pass){
           req.session.email = email;
-          req.session.userId = user._id
-          res.redirect('/question?id=1');
+          req.session.userId = user._id;
+          // Check if need to redirect after authentication
+          if(req.session.redirect_to != null){
+            var url = req.session.redirect_to;
+            req.session.redirect_to = null;
+            res.redirect(url);
+          }
+          else {
+            res.redirect('/');
+          }
         }
         else {
           // TODO password error

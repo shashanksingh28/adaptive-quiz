@@ -101,6 +101,7 @@ function attemptQuestion(questionId,givenAns,req,res){
 router.get('/', function(req, res){
 	// check authentication before showing question
 	if(!(req.session && req.session.email)){
+		req.session.redirect_to = '/question'+req.url;
 		res.redirect('/');
 	}
 
@@ -118,14 +119,14 @@ router.post('/', function(req, res){
 	if(!(req.session && req.session.email)){
 		res.redirect('/');
 	}
-	
+
 	console.log("the id is" + req.body.id + req.originalUrl);
 	console.log(req.body.option);
 	givenAns = req.body.option;
 	//res.render('explaination', {Attempt : "record.attempt" });
-	//explainationGiven = 
+	//explainationGiven =
 	explainationGiven = attemptQuestion(req.body.id,givenAns,req,res);
-	
+
 });
 
 
@@ -171,24 +172,5 @@ router.post('/ask', function(req, res){
 
 		});
 });
-
-
-
-// Use below to populate sample questions
-/*
-var sampleQuestion = new Question({
-	text:"What of the following is a default value of an instance variable?",
-	options: ["null", "0", "Depends on type of variable", "Not Assigned"],
-	answer: 2,
-	conceptId: 0,
-	difficulty: 0
-});
-
-sampleQuestion.save(function(err){
-	if (err) throw err;
-
-	console.log("Question Created!");
-});
-*/
 
 module.exports = router;
