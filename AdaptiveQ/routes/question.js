@@ -4,11 +4,6 @@ var router = express.Router();
 // mongoose data models
 var Question = require('../models/questionModel');
 var Users = require('../models/userModel');
-function getQuestion(id){
-	var promise = Question.findById(id).exec();
-	return promise;
-}
-//setup smtp for mailing
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
     auth: {
@@ -17,10 +12,11 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
     }
 });
 
-function createQuestion(question){
-	var promise = question.save();
-	return promise;
-}
+
+/*---------------------------------------------------------------------------
+Question Display related functions
+-----------------------------------------------------------------------------*/
+
 function updateQuestion(explaination,qid) {
 	console.log("explaination is " + explaination);
 	console.log("question id is" + qid);
@@ -35,66 +31,9 @@ function updateUser(user,record){
 	return promise;
 }
 
-function attemptQuestion(questionId,givenAns,req,res){
-	// check for answer and return null
-	getQuestion(questionId).then(function (question){
-		record = {
-			qid : questionId,
-			attempt : false
-		}
-		console.log("explaination is" + req.body.explainationGiven)
-		explaination = {
-			givenBy : req.session.userId,
-			text : req.body.explainationGiven,
-			noUpVotes: 0,
-			upVotedBy: []
-
-		}
-		console.log(question);
-		console.log("the question id is" + questionId);
-		var correctAns = question.options[question.answer];
-		console.log(correctAns);
-		if (question.answer == givenAns )
-		{
-			record.attempt=true
-			console.log("sahi javab");
-		}
-		else
-		{
-			console.log("galat javab");
-		}
-		console.log(req.session.email,record);
-		updateUser(req.session.email,record)
-		.then(function (updatedUser){
-			console.log("Attempt Recorded:"+updatedUser);
-			// TODO: Show user the right answer, his answer and explaination
-			//res.send("Attempt Recorded!");
-		},function (err){
-				console.log("error in update");
-				//TODO: redirect to error
-		});
-		if(record.attempt == true){
-			updateQuestion(explaination,questionId)
-			.then(function (updatedQuestion,questionId){
-				console.log("updatedQuestion succesfull"+updatedQuestion);
-				//res.send("updated question")
-			},function (err){
-				console.log("error in update");
-			});
-		}
-		//return res.render('explaination', {Attempt : record.attempt });
-		getQuestion(questionId)
-			.then(function (question){
-			return res.render('explaination', {Question : question, Attempt : record.attempt });
-			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":1}})
-			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":2},$inc:{"explainations.$.noUpVotes":1}})
-		})
-		.catch(function (error){
-			console("caught exception");
-			// TODO: error page
-		});
-
-	});
+function getQuestion(id){
+	var promise = Question.findById(id).exec();
+	return promise;
 }
 
 // Show a question with given id
@@ -128,7 +67,18 @@ router.post('/', function(req, res){
 	explainationGiven = attemptQuestion(req.body.id,givenAns,req,res);
 
 });
+//setup smtp for mailing
 
+
+
+/*---------------------------------------------------------------------------
+Question Asked related functions
+-----------------------------------------------------------------------------*/
+
+function createQuestion(question){
+	var promise = question.save();
+	return promise;
+}
 
 // Give page to create question
 router.get('/ask', function(req, res){
@@ -172,5 +122,65 @@ router.post('/ask', function(req, res){
 
 		});
 });
+
+
+
+
+
+/*---------------------------------------------------------------------------
+Questions Explaination related functions
+-----------------------------------------------------------------------------*/
+function updateQuestionExp(id,givenBy,uid){
+
+	console.log("User is " + id);
+	console.log("Given by " + givenBy);
+	t = id + givenBy;
+	console.log("Total" + t);
+	var promise = Question.update({'_id':id,
+		"explainations.givenBy":givenBy},
+		{$push:{"explainations.$.upVotedBy":uid},
+		$inc:{"explainations.$.noUpVotes":1}}).exec();
+
+	return promise;
+}
+
+router.get('/explain', function(req, res){
+	res.render('explaination');
+
+});
+
+
+router.post('/explain', function(req, res){
+	console.log("From ajax got this " + req.body)
+        res.send(
+            { msg: '' } 
+        );
+   
+
+});
+
+router.get('/explainlist', function(req, res) {
+    	console.log(req.query.id)
+    	getQuestion(req.query.id)
+	.then(function (question){
+		res.json(question);
+	})
+});
+
+router.post('/explainUpdate', function(req, res) {
+	console.log("From ajax got this " + req.body.Qid);
+
+	Explain = req.body;
+	console.log(Explain.givenBy);
+	console.log("User in session is " + req.session.userId);
+	updateQuestionExp(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.userId)
+		.then(function (updatedUser){
+			console.log("Explain updated");
+			  res.send({ msg: '' });
+		},function (err){
+				console.log("error in update explaination");     
+   		});
+});
+
 
 module.exports = router;
