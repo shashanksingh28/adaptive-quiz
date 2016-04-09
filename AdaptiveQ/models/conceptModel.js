@@ -9,7 +9,7 @@ var conceptsSchema = new Schema({
   children: Array
 });
 
-questionSchema.plugin(autoIncrement.plugin, 'Concept');
+conceptsSchema.plugin(autoIncrement.plugin, 'Concepts');
 
 var Concepts = mongo.model('concepts', conceptsSchema);
 
