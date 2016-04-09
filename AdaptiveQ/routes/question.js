@@ -16,6 +16,10 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
 /*---------------------------------------------------------------------------
 Question Display related functions
 -----------------------------------------------------------------------------*/
+function getUser(userId){
+	var promise = Users.findById(userId).exec();
+	return promise
+}
 
 function updateQuestion(explaination,qid) {
 	console.log("explaination is " + explaination);
@@ -36,6 +40,70 @@ function getQuestion(id){
 	return promise;
 }
 
+function attemptQuestion(questionId,givenAns,req,res){
+
+// check for answer and return null
+	getQuestion(questionId).then(function (question){
+		record = {
+			qid : questionId,
+			attempt : false
+		}
+		console.log("explaination is" + req.body.explainationGiven)
+		explaination = {
+			givenBy : req.session.userId,
+			text : req.body.explainationGiven,
+			noUpVotes: 0,
+			upVotedBy: []
+
+		}
+		console.log(question);
+		console.log("the question id is" + questionId);
+		var correctAns = question.options[question.answer];
+		console.log(correctAns);
+		if (question.answer == givenAns )
+		{
+			record.attempt=true
+			console.log("sahi javab");
+		}
+		else
+		{
+			console.log("galat javab");
+		}
+		console.log(req.session.email,record);
+		updateUser(req.session.email,record)
+		.then(function (updatedUser){
+			console.log("Attempt Recorded:"+updatedUser);
+			// TODO: Show user the right answer, his answer and explaination
+			//res.send("Attempt Recorded!");
+		},function (err){
+				console.log("error in update");
+				//TODO: redirect to error
+		});
+		if(record.attempt == true){
+			updateQuestion(explaination,questionId)
+			.then(function (updatedQuestion,questionId){
+				console.log("updatedQuestion succesfull"+updatedQuestion);
+				//res.send("updated question")
+			},function (err){
+				console.log("error in update");
+			});
+		}
+		//return res.render('explaination', {Attempt : record.attempt });
+		getQuestion(questionId)
+			.then(function (question){
+			return res.render('explaination', {Question : question, Attempt : record.attempt });
+			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":1}})
+			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":2},$inc:{"explainations.$.noUpVotes":1}})
+		})
+		.catch(function (error){
+			console("caught exception");
+			// TODO: error page
+		});
+
+	});
+}
+
+
 // Show a question with given id
 router.get('/', function(req, res){
 	// check authentication before showing question
@@ -43,14 +111,40 @@ router.get('/', function(req, res){
 		req.session.redirect_to = '/question'+req.url;
 		res.redirect('/');
 	}
+	userId = req.session.userId;
+	qid = req.query.id;
+	//Checking if user attempted the question already
+	getUser(userId).then(function (User){		
+		check = 0
+		console.log("Got user" + User );
+		records = User.records;
+		console.log(records);
+		for (var i = 0; i < records.length; i++) {
+			console.log(records[i]);
+			if( qid == records[i].qid ){
+				console.log("found qid");
+				check = 1;
+				break;
+			}
+		}
+		if(check == 0){
+			getQuestion(qid)
+			.then(function (question){
+			res.render('question', {Question : question});
+			})
+			.catch(function (error){
+			// TODO: error page
+			});
+		}
+		else{
+			//TODO: change to his anser qiven for question
+			res.redirect('/');
+		}
 
-	getQuestion(req.query.id)
-	.then(function (question){
-		res.render('question', {Question : question});
-	})
-	.catch(function (error){
-		// TODO: error page
-	});
+	},function (err){
+		console.log("error in getting user");     
+	});		
+	
 });
 
 router.post('/', function(req, res){
@@ -89,11 +183,15 @@ router.post('/ask', function(req, res){
 	console.log(req.body);
 	// TODO: add multiple options to questions
 	var newQuestion = Question({
-		text : req.body.question,
-		options : [req.body.option1, req.body.option2, req.body.option3, req.body.option4],
-		answer: 3,
-		conceptId: 0,
-		difficulty: 0
+		text: { type : String, required: true},
+		options: [],
+		answer: [],
+		conceptId: "",
+		difficulty: Number,
+		created_at: Date.now(),
+		updated_at: Date.now(),
+		hint: "",
+		explainations: []
 	});
 
 	createQuestion(newQuestion)
@@ -130,6 +228,12 @@ router.post('/ask', function(req, res){
 /*---------------------------------------------------------------------------
 Questions Explaination related functions
 -----------------------------------------------------------------------------*/
+var sortByProperty = function (property) {
+    return function (x, y) {
+        return ((x[property] === y[property]) ? 0 : ((x[property] > y[property]) ? 1 : -1));
+    };
+};
+
 function updateQuestionExp(id,givenBy,uid){
 
 	console.log("User is " + id);
@@ -149,20 +253,13 @@ router.get('/explain', function(req, res){
 
 });
 
-
-router.post('/explain', function(req, res){
-	console.log("From ajax got this " + req.body)
-        res.send(
-            { msg: '' } 
-        );
-   
-
-});
-
 router.get('/explainlist', function(req, res) {
-    	console.log(req.query.id)
+    	console.log(req.query.id);
     	getQuestion(req.query.id)
 	.then(function (question){
+		explainations = question.explainations;
+		explainations.sort(sortByProperty('noUpVotes'));
+		console.log("sorted explainations are" + explainations);
 		res.json(question);
 	})
 });
