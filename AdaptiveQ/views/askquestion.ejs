@@ -17,22 +17,22 @@
 <script>
 var data = [
     {
-        label: 'node1',
+        label: 'Classes',
         children: [
             { 
-            	label: 'child1',
+            	label: 'Objects',
             	children: [
-            		{ label: 'gc1' },
-		            { label: 'gc2' }
+            		{ label: 'Attributes' },
+		            { label: 'Methods' }
             	] 
             },
-            { label: 'child2' }
+            { label: 'Collections' }
         ]
     },
     {
-        label: 'node2',
+        label: 'Inheritance',
         children: [
-            { label: 'child3' }
+            { label: 'Abstract type' }
         ]
     }
 ];
@@ -46,7 +46,8 @@ $( document ).ready(function() {
     function(event) {
         // The clicked node is 'event.node'
         var node = event.node;
-        console.log(node.name);
+        $("#conceptId").val(node.name);
+//         console.log(node.name);
     }
 );
 });
@@ -54,7 +55,7 @@ $( document ).ready(function() {
 function addOption(){
 	var options=$(".option").length+1;
 	if(options<7){
-		var dom="<div class=\"option\"><input type=\"checkbox\"><input type=\"text\" value=\"Option "+options+"\" /></input></div>";
+		var dom="<div class=\"option\"><input type=\"checkbox\" class=\"checko\" id=\"answer"+options+"\"><input type=\"text\"   id=\"option"+options+"\" value=\"Option "+options+"\" /></input></div>";
 		$("#options").append(dom);
 	}
 }
@@ -65,37 +66,154 @@ function removeOption(){
 		$(".option")[maxIndex-1].remove();
 	}
 }
+
+function clearForm(){
+	$('#tree1').tree('selectNode',null);
+	var $tree = $('#tree1');
+	var tree = $tree.tree('getTree');
+	tree.iterate(function(node) {
+
+		if (node.hasChildren()) {
+		  $tree.tree('closeNode', node, true);
+		}
+		return true;
+	});
+	$("#askQuestion").reset();
+}
+
+function sub(){
+	if($("#question").val()==""){
+		alert("Empty question");
+		return;
+	}
+	
+	var options = $(".optiono");
+	var arrOption=[];
+	for(i=0;i<options.length;i++)
+	{
+		if(options[i].value==""){
+			alert("Empty option");
+			return;
+		}
+		arrOption.push(options[i].value)
+	}
+	$("#optionId").val(JSON.stringify(arrOption));
+	
+	var checks = $(".checko");
+	var arrCheck=[];
+	nonechecked=true;
+	for(i=0;i<checks.length;i++)
+	{
+		if(checks[i].checked){
+			arrCheck.push(i);
+			nonechecked=false;
+		}
+	}
+	if(nonechecked){
+		alert("No options are checked");
+		return;
+	}
+	$("#checkId").val(JSON.stringify(arrCheck));
+	
+	if($('#difficultyo0').is(':checked'))
+		$('#difficulty').val(0);
+	else if($('#difficultyo1').is(':checked'))
+		$('#difficulty').val(1);
+	else if($('#difficultyo2').is(':checked'))
+		$('#difficulty').val(2);
+
+	if($("#conceptId").val()==""){
+		alert("No concept is selected");
+		return;
+	}
+	//$("#askQuestion").submit();
+}
+
+function trans(){
+	arrChecks = JSON.parse($("#optionId").val());
+	for(i=0;i<arrChecks.length;i++)
+		alert(arrChecks[i])
+}
+
 </script>
 </head>
 
 <body>
-<form method="post" action="/Question/ask">
+
+  <nav class="navbar navbar-default">
+    <div class="container-fluid">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="#">AdaptQ</a>
+    </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Ask Question <span class="sr-only">(current)</span></a></li>
+        <li><a href="#">Link</a></li>
+      </ul>
+      <!--<form class="navbar-form navbar-left" role="search">
+        <div class="form-group">
+          <input type="text" class="form-control" placeholder="Search">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>-->
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="/logout">Sign Out</a></li>
+      </ul>
+    </div><!-- /.navbar-collapse -->
+  </div><!-- /.container-fluid -->
+  </nav>
+
+<form method="post" action="/Question/ask" id="askQuestion">
+
+<!-- 
+	var newQuestion = Question({
+		//text : req.body.question,
+		//options : req.body.options[]//[req.body.option1, req.body.option2, req.body.option3, req.body.option4],
+		//answers: req.body.answers[]//[1,2,3]//Array of Number
+		//conceptId: 0,
+		difficulty: 0
+	});
+ -->
 
 <div class="question">Question</div>
-<div class="question text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua?</div>
+<div class="question text"><input type="text" name="question" id="question" value="" placeholder="Enter your question"></input></div>
 
 <button type="button" class="glyphicon glyphicon-plus" onclick="addOption()"></button>
 <div class="options" style="display:inline-block">Options</div>
 <button type="button" class="glyphicon glyphicon-minus" onclick="removeOption()"></button>
 
 <div id="options">
-<div class="option"><input type="checkbox"><input type="text" value="Option 1" /></input></div>
-<div class="option"><input type="checkbox"><input type="text" value="Option 2" /></input></div>
-<div class="option"><input type="checkbox"><input type="text" value="Option 3" /></input></div>
-<div class="option"><input type="checkbox"><input type="text" value="Option 4" /></input></div>
+<div class="option"><input type="checkbox" class="checko" id="answer1"><input type="text" class="optiono" id="option1" value="Option 1" /></input></div>
+<div class="option"><input type="checkbox" class="checko" id="answer2"><input type="text" class="optiono" id="option2" value="Option 2" /></input></div>
+<div class="option"><input type="checkbox" class="checko" id="answer3"><input type="text" class="optiono" id="option3" value="Option 3" /></input></div>
+<div class="option"><input type="checkbox" class="checko" id="answer4"><input type="text" class="optiono" id="option4" value="Option 4" /></input></div>
 </div>
 <div class="segmented-control" style="width: 20%; color: black">
-<input type="radio" name="sc-1-1" id="sc-1-1-1" checked>
-<input type="radio" name="sc-1-1" id="sc-1-1-2">
-<input type="radio" name="sc-1-1" id="sc-1-1-3">
+<input type="radio" name="difficultyo" id="difficultyo0" checked>
+<input type="radio" name="difficultyo" id="difficultyo1">
+<input type="radio" name="difficultyo" id="difficultyo2">
 
-<label for="sc-1-1-1" data-value="Easy">Easy</label>
-<label for="sc-1-1-2" data-value="Medium">Medium</label>
-<label for="sc-1-1-3" data-value="Hard">Hard</label>
+<label for="difficultyo0" data-value="Easy">Easy</label>
+<label for="difficultyo1" data-value="Medium">Medium</label>
+<label for="difficultyo2" data-value="Hard">Hard</label>
 </div><br/>
 <div id="tree1"></div>
-<input type="submit" value="Send Form">
-<input type="reset" value="Clear Form">
+<input type="text" name="conceptId" id="conceptId" value="">
+<input type="text" name="options[]" id="optionId" value="">
+<input type="text" name="answers[]" id="checkId" value="">
+<input type="text" name="difficulty" id="difficulty" value="">
+<input type="button" value="Send Form" onclick="sub()">
+<input type="button" value="Transparent me" onclick="trans()">
+<input type="button" value="Clear Form" onclick="clearForm()">
 </form>
 
 

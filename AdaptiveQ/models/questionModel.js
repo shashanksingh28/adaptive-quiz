@@ -5,11 +5,11 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongo.connection);
 
 var questionSchema = new Schema({
-  text: { type : String, required: true},
-  options: Array,
-  answer: Number,
-  conceptId: Number,
-  difficulty: Number,
+  text: { type : String, required: true},//question text
+  options: Array,//list of options, array of strings
+  answer: Number,//Array of Number
+  conceptId: Number,//String
+  difficulty: Number,//Number {0,1,2}
   created_at: Date,
   updated_at: Date,
   hint: String,
