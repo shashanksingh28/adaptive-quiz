@@ -17,39 +17,52 @@
 <script>
 var data = [
     {
-        label: 'Classes',
+        title: 'Classes',
         children: [
             { 
-            	label: 'Objects',
+            	title: 'Objects',
             	children: [
-            		{ label: 'Attributes' },
-		            { label: 'Methods' }
+            		{ title: 'Attributes' },
+		            { title: 'Methods' }
             	] 
             },
-            { label: 'Collections' }
+            { title: 'Collections' }
         ]
     },
     {
-        label: 'Inheritance',
+        title: 'Inheritance',
         children: [
-            { label: 'Abstract type' }
+            { title: 'Abstract type' }
         ]
     }
 ];
 
+function tree_ajax(myUrl) {
+	var ajx;
+	ajx = new XMLHttpRequest();
+	ajx.onreadystatechange = function() {
+		if (ajx.readyState == 4 && ajx.status == 200) {
+		var data=[];
+			data.push(JSON.parse(ajx.responseText.replace("\n", "")));
+			console.log(data);
+			$('#tree1').tree({
+				data:data
+			});
+			$('#tree1').bind('tree.click',
+			function(event) {
+				// The clicked node is 'event.node'
+				var node = event.node;
+				$("#conceptId").val(node.name);
+			});
+		}
+	}
+	ajx.open("GET", myUrl, true);
+	ajx.send();
+}
+
 $( document ).ready(function() {
-    $('#tree1').tree({
-        data: data
-    });
-    $('#tree1').bind(
-    'tree.click',
-    function(event) {
-        // The clicked node is 'event.node'
-        var node = event.node;
-        $("#conceptId").val(node.name);
-//         console.log(node.name);
-    }
-);
+
+	tree_ajax("/concepts");
 });
 
 function addOption(){
@@ -69,6 +82,7 @@ function removeOption(){
 
 function clearForm(){
 	$('#tree1').tree('selectNode',null);
+	$("#conceptId").val("");
 	var $tree = $('#tree1');
 	var tree = $tree.tree('getTree');
 	tree.iterate(function(node) {

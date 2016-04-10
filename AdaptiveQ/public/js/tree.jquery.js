@@ -25,6 +25,7 @@ node_module = require('./node');
 Position = node_module.Position;
 
 $ = jQuery;
+svellangDataLabel='title';
 
 DragAndDropHandler = (function() {
   function DragAndDropHandler(tree_widget) {
@@ -1098,7 +1099,7 @@ Node = (function() {
     } else {
       for (key in o) {
         value = o[key];
-        if (key === 'label') {
+        if (key === svellangDataLabel) {
           setName(value);
         } else {
           this[key] = value;
@@ -3275,7 +3276,7 @@ JqTreeWidget = (function(superClass) {
         this.toggle(click_target.node, this.options.slide);
         e.preventDefault();
         return e.stopPropagation();
-      } else if (click_target.type === 'label') {
+      } else if (click_target.type === svellangDataLabel) {
         node = click_target.node;
         event = this._triggerEvent('tree.click', {
           node: node,
@@ -3291,7 +3292,7 @@ JqTreeWidget = (function(superClass) {
   JqTreeWidget.prototype._dblclick = function(e) {
     var click_target;
     click_target = this._getClickTarget(e.target);
-    if (click_target && click_target.type === 'label') {
+    if (click_target && click_target.type === svellangDataLabel) {
       return this._triggerEvent('tree.dblclick', {
         node: click_target.node,
         click_event: e
@@ -3317,7 +3318,7 @@ JqTreeWidget = (function(superClass) {
         node = this._getNode($el);
         if (node) {
           return {
-            type: 'label',
+            type: svellangDataLabel,
             node: node
           };
         }
