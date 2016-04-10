@@ -55,7 +55,7 @@ $( document ).ready(function() {
 function addOption(){
 	var options=$(".option").length+1;
 	if(options<7){
-		var dom="<div class=\"option\"><input type=\"checkbox\" class=\"checko\" id=\"answer"+options+"\"><input type=\"text\"   id=\"option"+options+"\" value=\"Option "+options+"\" /></input></div>";
+		var dom="<div class=\"option\"><input type=\"checkbox\" class=\"checko\" id=\"answer"+options+"\"><input type=\"text\" class=\"optiono\"  id=\"option"+options+"\" value=\"Option "+options+"\" /></input></div>";
 		$("#options").append(dom);
 	}
 }
