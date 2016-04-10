@@ -170,6 +170,7 @@ Question Asked related functions
 -----------------------------------------------------------------------------*/
 
 function createQuestion(question){
+	console.log("saving quetion in db")
 	var promise = question.save();
 	return promise;
 }
@@ -184,7 +185,7 @@ router.post('/ask', function(req, res){
 	// TODO: add multiple options to questions
 	answerss = JSON.parse(req.body.answers);
 	options = JSON.parse(req.body.options);
-	console.log(answerss);
+	console.log(req.body.conceptId);
 	var newQuestion = Question({
 		text: req.body.question,
 		options: options,
@@ -198,11 +199,8 @@ router.post('/ask', function(req, res){
 	});
 	console.log(newQuestion.answer);
 	console.log(newQuestion);
-/*	createQuestion(newQuestion)
-	.then(function (err){
-		if(err)	{
-			// TODO: error page
-		}
+	createQuestion(newQuestion)
+	.then(function (promise){	
 		console.log("Saved : "+newQuestion);
 		var mailOptions={
 			from : "adapt.q@gmail.com",
@@ -222,7 +220,9 @@ router.post('/ask', function(req, res){
 
 		res.redirect('/question/ask');
 
-		});*/
+		},function (err){
+				console.log("error in update explaination" + err);     
+   		});
 });
 
 

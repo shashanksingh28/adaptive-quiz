@@ -7,8 +7,8 @@ autoIncrement.initialize(mongo.connection);
 var questionSchema = new Schema({
   text: { type : String, required: true},//question text
   options: Array,//list of options, array of strings
-  answer: Number,//Array of Number
-  conceptId: Number,//String
+  answer: Array,//Array of Number
+  conceptId: String,//String
   difficulty: Number,//Number {0,1,2}
   created_at: Date,
   updated_at: Date,
