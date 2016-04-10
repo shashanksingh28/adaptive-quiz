@@ -180,21 +180,25 @@ router.get('/ask', function(req, res){
   });
 // save new question
 router.post('/ask', function(req, res){
-	console.log(req.body);
+	//console.log(req.body.question + req.body.options + req.body.answers);
 	// TODO: add multiple options to questions
+	answerss = JSON.parse(req.body.answers);
+	options = JSON.parse(req.body.options);
+	console.log(answerss);
 	var newQuestion = Question({
-		text: { type : String, required: true},
-		options: [],
-		answer: [],
-		conceptId: "",
-		difficulty: Number,
+		text: req.body.question,
+		options: options,
+		answer: answerss,
+		conceptId: req.body.conceptId,
+		difficulty: req.body.difficulty,
 		created_at: Date.now(),
 		updated_at: Date.now(),
 		hint: "",
 		explainations: []
 	});
-
-	createQuestion(newQuestion)
+	console.log(newQuestion.answer);
+	console.log(newQuestion);
+/*	createQuestion(newQuestion)
 	.then(function (err){
 		if(err)	{
 			// TODO: error page
@@ -218,7 +222,7 @@ router.post('/ask', function(req, res){
 
 		res.redirect('/question/ask');
 
-		});
+		});*/
 });
 
 
