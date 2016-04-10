@@ -204,7 +204,7 @@ router.post('/ask', function(req, res){
 		console.log("Saved : "+newQuestion);
 		var mailOptions={
 			from : "adapt.q@gmail.com",
-		   	to : "dhiraj92@gmail.com",
+		   	to : "adapt.q@gmail.com",
 		   	subject : "Question of the day",
 		  	text : newQuestion.text + " your question"
 		}
