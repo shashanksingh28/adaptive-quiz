@@ -8,7 +8,7 @@ package com.adaptq.creco;
  * @since 1.0
  */
 public class IndexConstants {
-	public static final String VALUE = "contents";
-	public static final String KEY = "url";
-	public static final String HEADER = "title";
+	public static final String VALUE = "conceptDesc";
+	public static final String KEY = "link";
+	public static final String HEADER = "concept";
 }

@@ -13,7 +13,7 @@ import com.adaptq.creco.model.Nugget;
 import com.google.gson.Gson;
 
 /**
- * This is the main class for using Creco. <code>Recommender</code> provides
+ * This is the main class for using Creco. <code>Creco</code> provides
  * recommendations on queries through knowledge extracted from online resources.
  * 
  * @author Ajinkya Patil
@@ -41,7 +41,7 @@ public class Creco {
 	 * @throws ParseException
 	 * @throws SolrServerException
 	 */
-	public String get(String query)
+	public String search(String query)
 			throws IOException, ParseException, SolrServerException {
 
 		if (solrClient == null) {
