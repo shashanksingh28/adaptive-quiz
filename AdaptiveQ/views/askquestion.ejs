@@ -105,7 +105,7 @@ function sub(){
 	for(i=0;i<checks.length;i++)
 	{
 		if(checks[i].checked){
-			arrCheck.push(i);
+			arrCheck.push(i.toString());
 			nonechecked=false;
 		}
 	}
@@ -116,11 +116,11 @@ function sub(){
 	$("#checkId").val(JSON.stringify(arrCheck));
 	
 	if($('#difficultyo0').is(':checked'))
-		$('#difficulty').val(0);
+		$('#difficulty').val("0");
 	else if($('#difficultyo1').is(':checked'))
-		$('#difficulty').val(1);
+		$('#difficulty').val("1");
 	else if($('#difficultyo2').is(':checked'))
-		$('#difficulty').val(2);
+		$('#difficulty').val("2");
 
 	if($("#conceptId").val()==""){
 		alert("No concept is selected");
