@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var mongo = require('mongoose');
 
-mongo.connect("52.37.232.47/adaptq_dev");
+mongo.connect("mongodb://localhost:27017/adaptq");
 
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -20,7 +20,7 @@ app.use(session({
   secret: secret,
   store: new mongoStore({
     mongooseConnection: mongo.connection,
-    collection: 'sessions' // default
+    collection: 'sessions' // defaults
   })
 }));
 
@@ -41,6 +41,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
+
 
 
 var routes = require('./routes/index');
