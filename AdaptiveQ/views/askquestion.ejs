@@ -5,11 +5,13 @@
 <title>Pure CSS Segmented Controls</title>
 <!--Common-->
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
-<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
 <!-- Layout formatting -->
 <link rel="stylesheet" href="/stylesheets/layout.css">
+<!-- Theme formatting -->
+<link rel="stylesheet" href="/stylesheets/theme.css">
 
 <!-- Our bootstrap style	http://startbootstrap.com/template-overviews/shop-item/ -->
 <!-- 
@@ -24,27 +26,27 @@
 <script src="/js/tree.jquery.js"></script>
 <link rel="stylesheet" href="/stylesheets/jqtree.css">
 <script>
-var data = [
-    {
-        title: 'Classes',
-        children: [
-            { 
-            	title: 'Objects',
-            	children: [
-            		{ title: 'Attributes' },
-		            { title: 'Methods' }
-            	] 
-            },
-            { title: 'Collections' }
-        ]
-    },
-    {
-        title: 'Inheritance',
-        children: [
-            { title: 'Abstract type' }
-        ]
-    }
-];
+// var data = [
+//     {
+//         title: 'Classes',
+//         children: [
+//             { 
+//             	title: 'Objects',
+//             	children: [
+//             		{ title: 'Attributes' },
+// 		            { title: 'Methods' }
+//             	] 
+//             },
+//             { title: 'Collections' }
+//         ]
+//     },
+//     {
+//         title: 'Inheritance',
+//         children: [
+//             { title: 'Abstract type' }
+//         ]
+//     }
+// ];
 
 function tree_ajax(myUrl) {
 	var ajx;
@@ -53,7 +55,7 @@ function tree_ajax(myUrl) {
 		if (ajx.readyState == 4 && ajx.status == 200) {
 		var data=[];
 			data.push(JSON.parse(ajx.responseText.replace("\n", "")));
-			console.log(data);
+			//console.log(data);
 			$('#tree1').tree({
 				data:data
 			});
@@ -70,24 +72,22 @@ function tree_ajax(myUrl) {
 }
 
 $( document ).ready(function() {
-	$('#tree1').tree({
-		data:data
-	});
-	$('#tree1').bind('tree.click',
-	function(event) {
-		// The clicked node is 'event.node'
-		var node = event.node;
-		$("#conceptId").val(node.name);
-	});
-// 	tree_ajax("/concepts");
+// 	$('#tree1').tree({
+// 		data:data
+// 	});
+// 	$('#tree1').bind('tree.click',
+// 	function(event) {
+// 		// The clicked node is 'event.node'
+// 		var node = event.node;
+// 		$("#conceptId").val(node.name);
+// 	});
+	tree_ajax("/concepts");
 });
 
 function addOption(){
 	var options=$(".option").length+1;
 	if(options<7){
-		var dom="<div class=\"option input-group\"><span class=\"input-group-addon\"><input type=\"checkbox\"  class=\"checko\" id=\"answer"+options+"\"></span><input type=\"text\" class=\"form-control optiono\"  id=\"option"+options+"\" value=\"Option "+options+"\"></div>";
-		
-		// "<div class=\"option\"><input type=\"checkbox\" class=\"checko\" id=\"answer"+options+"\"><input type=\"text\" class=\"optiono\"  id=\"option"+options+"\" value=\"Option "+options+"\" /></input></div>";
+		var dom="<div class=\"option input-group\"><span class=\"input-group-addon\"><input type=\"checkbox\"  class=\"checko\" id=\"answer"+options+"\"></span><input type=\"text\" class=\"form-control optiono\"  id=\"option"+options+"\" placeholder=\"Option "+options+"\"></div>";
 		$("#options").append(dom);
 	}
 }
@@ -111,7 +111,8 @@ function clearForm(){
 		}
 		return true;
 	});
-	$("#askQuestion").reset();
+	this.askQuestion.reset();
+// 	$("#askQuestion").reset();
 }
 
 function sub(){
@@ -203,16 +204,25 @@ function trans(){
       </ul>
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
-  </nav>
+</nav>
   
 <div class="container-fluid content">
-<form method="post" action="/Question/ask" id="askQuestion">
-<div id="question" class="question"><h1>Question</h1>
-<div class="question text"><input type="text" name="question" id="question" value="" placeholder="Enter your question"></input></div></div><!-- /.question -->
+<form method="post" action="/Question/ask" id="askQuestion" name="askQuestion">
+<!-- 
+<h1>Question</h1>
+
+<div class="question text"><input type="text" name="question" id="question" value="" placeholder="Enter your question"></input></div>
+ -->
+
+<div class="form-group">
+  <label for="question"><h1>Question:</h1></label>
+  <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea>
+</div>
+
 
 <h5 class="svellang">
 <button type="button" class="btn btn-primary-outline btn-sm" onclick="addOption()"><span class="glyphicon glyphicon-plus"></span></button>
-<div class="options" style="display:inline-block;margin-left:8px;margin-right:8px;">Options</div>
+<div class="optionhdr">Options</div>
 <button type="button" class="btn btn-primary-outline btn-sm" onclick="removeOption()"><span class="glyphicon glyphicon-minus"></span></button></h5>
 <br/>
 <div id="options">
@@ -221,28 +231,28 @@ function trans(){
 <span class="input-group-addon">
 <input type="checkbox"  class="checko" id="answer1">
 </span>
-<input type="text" class="form-control optiono"  id="option1" value="Option 1">
+<input type="text" class="form-control optiono"  id="option1" placeholder="Option 1">
 </div> <!-- ./input-group -->
 
 <div class="option input-group">
 <span class="input-group-addon">
 <input type="checkbox"  class="checko" id="answer2">
 </span>
-<input type="text" class="form-control optiono"  id="option2" value="Option 2">
+<input type="text" class="form-control optiono"  id="option2" placeholder="Option 2">
 </div> <!-- ./input-group -->
 
 <div class="option input-group">
 <span class="input-group-addon">
 <input type="checkbox"  class="checko" id="answer3">
 </span>
-<input type="text" class="form-control optiono"  id="option3" value="Option 3">
+<input type="text" class="form-control optiono"  id="option3" placeholder="Option 3">
 </div> <!-- ./input-group -->
 
 <div class="option input-group">
 <span class="input-group-addon">
 <input type="checkbox"  class="checko" id="answer4">
 </span>
-<input type="text" class="form-control optiono"  id="option4" value="Option 4">
+<input type="text" class="form-control optiono"  id="option4" placeholder="Option 4">
 </div> <!-- ./input-group -->
 
 </div>
@@ -257,12 +267,18 @@ function trans(){
 <label for="difficultyo2" data-value="Hard">Hard</label>
 </div><br/>
 <div id="tree1"></div>
+<div class="buttons">
+<input type="button" class="btn btn-primary btn" value="Send Form" onclick="sub()">
+<input type="button" class="btn btn-primary-outline btn" value="Clear Form" onclick="clearForm()">
+</div> <!-- /.buttons -->
+
+<!-- Begin: Hidden fields -->
 <input type="hidden" name="conceptId" id="conceptId" value="">
 <input type="hidden" name="options" id="optionId" value="">
 <input type="hidden" name="answers" id="checkId" value="">
 <input type="hidden" name="difficulty" id="difficulty" value="">
-<input type="button" class="btn btn-primary btn-sm" value="Send Form" onclick="sub()">
-<input type="button" class="btn btn-primary-outline btn-sm" value="Clear Form" onclick="clearForm()">
+<!-- End: Hidden fields -->
+
 </form>
 </div> <!-- /.container-fluid -->
 
