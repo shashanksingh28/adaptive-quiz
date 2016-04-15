@@ -8,6 +8,15 @@
 <link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
+<!-- Layout formatting -->
+<link rel="stylesheet" href="/stylesheets/layout.css">
+
+<!-- Our bootstrap style	http://startbootstrap.com/template-overviews/shop-item/ -->
+<!-- 
+<link rel="stylesheet" href="/stylesheets/bootstrap.css">
+ -->
+
+
 <!--Segment control-->
 <link rel="stylesheet" href="/stylesheets/segment_style.css">
 
@@ -17,45 +26,68 @@
 <script>
 var data = [
     {
-        label: 'Classes',
+        title: 'Classes',
         children: [
             { 
-            	label: 'Objects',
+            	title: 'Objects',
             	children: [
-            		{ label: 'Attributes' },
-		            { label: 'Methods' }
+            		{ title: 'Attributes' },
+		            { title: 'Methods' }
             	] 
             },
-            { label: 'Collections' }
+            { title: 'Collections' }
         ]
     },
     {
-        label: 'Inheritance',
+        title: 'Inheritance',
         children: [
-            { label: 'Abstract type' }
+            { title: 'Abstract type' }
         ]
     }
 ];
 
+function tree_ajax(myUrl) {
+	var ajx;
+	ajx = new XMLHttpRequest();
+	ajx.onreadystatechange = function() {
+		if (ajx.readyState == 4 && ajx.status == 200) {
+		var data=[];
+			data.push(JSON.parse(ajx.responseText.replace("\n", "")));
+			console.log(data);
+			$('#tree1').tree({
+				data:data
+			});
+			$('#tree1').bind('tree.click',
+			function(event) {
+				// The clicked node is 'event.node'
+				var node = event.node;
+				$("#conceptId").val(node.name);
+			});
+		}
+	}
+	ajx.open("GET", myUrl, true);
+	ajx.send();
+}
+
 $( document ).ready(function() {
-    $('#tree1').tree({
-        data: data
-    });
-    $('#tree1').bind(
-    'tree.click',
-    function(event) {
-        // The clicked node is 'event.node'
-        var node = event.node;
-        $("#conceptId").val(node.name);
-//         console.log(node.name);
-    }
-);
+	$('#tree1').tree({
+		data:data
+	});
+	$('#tree1').bind('tree.click',
+	function(event) {
+		// The clicked node is 'event.node'
+		var node = event.node;
+		$("#conceptId").val(node.name);
+	});
+// 	tree_ajax("/concepts");
 });
 
 function addOption(){
 	var options=$(".option").length+1;
 	if(options<7){
-		var dom="<div class=\"option\"><input type=\"checkbox\" class=\"checko\" id=\"answer"+options+"\"><input type=\"text\"   id=\"option"+options+"\" value=\"Option "+options+"\" /></input></div>";
+		var dom="<div class=\"option input-group\"><span class=\"input-group-addon\"><input type=\"checkbox\"  class=\"checko\" id=\"answer"+options+"\"></span><input type=\"text\" class=\"form-control optiono\"  id=\"option"+options+"\" value=\"Option "+options+"\"></div>";
+		
+		// "<div class=\"option\"><input type=\"checkbox\" class=\"checko\" id=\"answer"+options+"\"><input type=\"text\" class=\"optiono\"  id=\"option"+options+"\" value=\"Option "+options+"\" /></input></div>";
 		$("#options").append(dom);
 	}
 }
@@ -69,6 +101,7 @@ function removeOption(){
 
 function clearForm(){
 	$('#tree1').tree('selectNode',null);
+	$("#conceptId").val("");
 	var $tree = $('#tree1');
 	var tree = $tree.tree('getTree');
 	tree.iterate(function(node) {
@@ -140,7 +173,7 @@ function trans(){
 
 <body>
 
-  <nav class="navbar navbar-default">
+<nav class="navbar navbar-default">
     <div class="container-fluid">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -171,33 +204,50 @@ function trans(){
     </div><!-- /.navbar-collapse -->
   </div><!-- /.container-fluid -->
   </nav>
-
+  
+<div class="container-fluid content">
 <form method="post" action="/Question/ask" id="askQuestion">
+<div id="question" class="question"><h1>Question</h1>
+<div class="question text"><input type="text" name="question" id="question" value="" placeholder="Enter your question"></input></div></div><!-- /.question -->
 
-<!-- 
-	var newQuestion = Question({
-		//text : req.body.question,
-		//options : req.body.options[]//[req.body.option1, req.body.option2, req.body.option3, req.body.option4],
-		//answers: req.body.answers[]//[1,2,3]//Array of Number
-		//conceptId: 0,
-		difficulty: 0
-	});
- -->
-
-<div class="question">Question</div>
-<div class="question text"><input type="text" name="question" id="question" value="" placeholder="Enter your question"></input></div>
-
-<button type="button" class="glyphicon glyphicon-plus" onclick="addOption()"></button>
-<div class="options" style="display:inline-block">Options</div>
-<button type="button" class="glyphicon glyphicon-minus" onclick="removeOption()"></button>
-
+<h5 class="svellang">
+<button type="button" class="btn btn-primary-outline btn-sm" onclick="addOption()"><span class="glyphicon glyphicon-plus"></span></button>
+<div class="options" style="display:inline-block;margin-left:8px;margin-right:8px;">Options</div>
+<button type="button" class="btn btn-primary-outline btn-sm" onclick="removeOption()"><span class="glyphicon glyphicon-minus"></span></button></h5>
+<br/>
 <div id="options">
-<div class="option"><input type="checkbox" class="checko" id="answer1"><input type="text" class="optiono" id="option1" value="Option 1" /></input></div>
-<div class="option"><input type="checkbox" class="checko" id="answer2"><input type="text" class="optiono" id="option2" value="Option 2" /></input></div>
-<div class="option"><input type="checkbox" class="checko" id="answer3"><input type="text" class="optiono" id="option3" value="Option 3" /></input></div>
-<div class="option"><input type="checkbox" class="checko" id="answer4"><input type="text" class="optiono" id="option4" value="Option 4" /></input></div>
+
+<div class="option input-group">
+<span class="input-group-addon">
+<input type="checkbox"  class="checko" id="answer1">
+</span>
+<input type="text" class="form-control optiono"  id="option1" value="Option 1">
+</div> <!-- ./input-group -->
+
+<div class="option input-group">
+<span class="input-group-addon">
+<input type="checkbox"  class="checko" id="answer2">
+</span>
+<input type="text" class="form-control optiono"  id="option2" value="Option 2">
+</div> <!-- ./input-group -->
+
+<div class="option input-group">
+<span class="input-group-addon">
+<input type="checkbox"  class="checko" id="answer3">
+</span>
+<input type="text" class="form-control optiono"  id="option3" value="Option 3">
+</div> <!-- ./input-group -->
+
+<div class="option input-group">
+<span class="input-group-addon">
+<input type="checkbox"  class="checko" id="answer4">
+</span>
+<input type="text" class="form-control optiono"  id="option4" value="Option 4">
+</div> <!-- ./input-group -->
+
 </div>
-<div class="segmented-control" style="width: 20%; color: black">
+<br/>
+<div class="segmented-control" style="width: 250px; color: black">
 <input type="radio" name="difficultyo" id="difficultyo0" checked>
 <input type="radio" name="difficultyo" id="difficultyo1">
 <input type="radio" name="difficultyo" id="difficultyo2">
@@ -207,15 +257,14 @@ function trans(){
 <label for="difficultyo2" data-value="Hard">Hard</label>
 </div><br/>
 <div id="tree1"></div>
-<input type="text" name="conceptId" id="conceptId" value="">
-<input type="text" name="options" id="optionId" value="">
-<input type="text" name="answers" id="checkId" value="">
-<input type="text" name="difficulty" id="difficulty" value="">
-<input type="button" value="Send Form" onclick="sub()">
-<input type="button" value="Transparent me" onclick="trans()">
-<input type="button" value="Clear Form" onclick="clearForm()">
+<input type="hidden" name="conceptId" id="conceptId" value="">
+<input type="hidden" name="options" id="optionId" value="">
+<input type="hidden" name="answers" id="checkId" value="">
+<input type="hidden" name="difficulty" id="difficulty" value="">
+<input type="button" class="btn btn-primary btn-sm" value="Send Form" onclick="sub()">
+<input type="button" class="btn btn-primary-outline btn-sm" value="Clear Form" onclick="clearForm()">
 </form>
-
+</div> <!-- /.container-fluid -->
 
 </body>
 </html>

@@ -1,20 +1,30 @@
 <html>
 <head>
 <title>Question</title>
-<body>
- <form method="post" action="/Question">
 
+
+</head>
+<body>
+<% 
+inputType=Question.answer.length>1?"checkbox":"radio"; 
+hintDisabled="disabled";
+studentAnswered=[1,2];
+mode=0;//0: attempt, 1: view_result
+%>
+<form method="post" action="/Question">
 <p><%=Question.text%><br>
 <input type="hidden" name="id" value = <%=Question._id%> >
-<input type="radio" name="option" value = 0><%=Question.options[0]%><BR>
-<input type="radio" name="option" value = 1><%=Question.options[1]%><BR>
-<input type="radio" name="option" value = 2><%=Question.options[2]%><BR>
-<input type="radio" name="option" value = 3><%=Question.options[3]%><BR>
-<input type="text" name="explainationGiven">
+<% for(var i=0; i < Question.options.length; i++) { %>
+     <input type=<%=inputType%> name="options"><%=Question.options[i]%><BR>
+<% } %>
+<BR>
+Student comments<input type="text" name="explaination">
 </p>
-<br>
-<input type="submit" value="Send Form">
-<input type="reset" value="Clear Form">
+<input type="submit" value="Submit">
+<input type="reset" value="Clear">
+<input type="button" value="Show hint" <%=hintDisabled%>>
 </form>
 </body>
+<h2>Explanation</h2><hr>
+<%=Question%>
 </html>

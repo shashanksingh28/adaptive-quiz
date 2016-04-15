@@ -1,0 +1,39 @@
+.content{
+	margin:auto;
+	width:70%;
+	background-color:lightgray;
+	padding:20px;
+}
+
+#question{
+	background-color:teal;
+}
+
+h4{
+	margin-top:20px;
+	margin-bottom:20px;
+}
+
+#options{
+	display:inline-block;
+	width:100%;
+	margin-bottom:8px;
+}
+
+.option/*:nth-child(odd)*/{
+	float:left;
+	width:100%;
+	margin-bottom:8px;
+}
+
+h5.svellang{
+	margin-top:8px;
+}
+
+#options{
+	width:50%;
+}
+
+#tree1{
+	margin-bottom:8px;
+}
