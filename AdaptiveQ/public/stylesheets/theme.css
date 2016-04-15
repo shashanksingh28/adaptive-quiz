@@ -9,3 +9,7 @@
 body{
 	background-image:url("plasma.jpg");
 }
+
+.segmented-control{
+ color: #357ebd;
+}

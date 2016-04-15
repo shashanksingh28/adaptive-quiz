@@ -63,3 +63,7 @@ textarea{
 .buttons *{
 	margin:8px;
 }
+
+.segmented-control{
+ width: 250px; 
+}
