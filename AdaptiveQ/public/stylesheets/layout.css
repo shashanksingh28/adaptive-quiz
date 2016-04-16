@@ -1,12 +1,16 @@
 .content{
 	margin:auto;
 	width:70%;
-	background-color:lightgray;
 	padding:20px;
+	border-top-left-radius:5px;
+	border-top-right-radius:5px;
+	border-bottom-left-radius:5px;
+	border-bottom-right-radius:5px;
+	margin-bottom:20px;
 }
 
 #question{
-	background-color:teal;
+	width:100%;
 }
 
 h4{
@@ -26,14 +30,33 @@ h4{
 	margin-bottom:8px;
 }
 
+.optionhdr{
+	display:inline-block;
+	margin-left:8px;
+	margin-right:8px;
+}
+
 h5.svellang{
 	margin-top:8px;
 }
 
-#options{
-	width:50%;
-}
-
 #tree1{
 	margin-bottom:8px;
+}
+
+textarea{
+	resize:vertical;
+}
+
+.buttons{
+	display:inline-block;
+	margin-left:38%;
+}
+
+.buttons *{
+	margin:8px;
+}
+
+.segmented-control{
+ width: 250px; 
 }

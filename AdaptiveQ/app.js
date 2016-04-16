@@ -2,12 +2,11 @@ var express = require('express');
 var app = express();
 var mongo = require('mongoose');
 mongo.connect("52.33.119.37/adaptq_dev");
-// mongo.connect("mongodb://localhost:27017/AdaptiveQ");
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
 
-// For session management
+// For session managements
 var cookieParser = require('cookie-parser');
 var session = require('express-session');
 var mongoStore = require('connect-mongo')(session);
