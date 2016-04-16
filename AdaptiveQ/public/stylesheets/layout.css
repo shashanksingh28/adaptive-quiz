@@ -6,16 +6,11 @@
 	border-top-right-radius:5px;
 	border-bottom-left-radius:5px;
 	border-bottom-right-radius:5px;
-	font-weight:300;
 	margin-bottom:20px;
 }
 
 #question{
 	width:100%;
-}
-
-h1{
-	font-weight:300;
 }
 
 h4{
@@ -42,8 +37,6 @@ h4{
 }
 
 h5.svellang{
-	font-weight:200;
-	font-size:22px;
 	margin-top:8px;
 }
 

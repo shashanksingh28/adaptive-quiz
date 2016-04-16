@@ -30,6 +30,12 @@ ul.jqtree-tree {
     ul.jqtree-tree .jqtree-toggler.jqtree-toggler-right {
       margin-left: 0.5em; }
   ul.jqtree-tree .jqtree-element {
+  	-webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
     cursor: pointer;
     position: relative; }
   ul.jqtree-tree .jqtree-title {

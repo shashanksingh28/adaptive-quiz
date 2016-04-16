@@ -1,6 +1,7 @@
 .content{
 	background-color: rgba(255, 255, 255, 0.9);
 	box-shadow: 0px 10px 39px rgba(0,0,0,0.5);
+	font-weight:300;
 }
 
 #question{
@@ -12,4 +13,37 @@ body{
 
 .segmented-control{
  color: #357ebd;
+}
+
+h1{
+	font-weight:300;
+}
+
+h5.svellang{
+	font-weight:200;
+	font-size:22px;
+}
+
+label.form-control.optiono{
+    cursor: pointer;
+    background-color: rgba(255,255,255,0);
+    font-weight:normal;
+    -webkit-touch-callout: none;
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-ms-user-select: none;
+user-select: none;
+}
+
+.input-group-addon.correct{
+    background-color: rgb(185,217,135);
+}
+
+.input-group-addon.warning{
+    background-color: rgb(245,217,135);
+}
+
+.input-group-addon.incorrect{
+    background-color: rgb(217,135,135);
 }
