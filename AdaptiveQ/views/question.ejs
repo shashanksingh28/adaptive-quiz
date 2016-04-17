@@ -32,7 +32,7 @@
 </head>
 <body>
 <% 
-inputType=Question.answer.length>1?"checkbox":"radio"; 
+inputType=Question.answers.length>1?"checkbox":"radio"; 
 hintDisabled="disabled";
 studentAnswered=[1,2];
 mode=0;//0: attempt, 1: view_result
@@ -74,7 +74,7 @@ mode=0;//0: attempt, 1: view_result
 <div class="container-fluid content">
 <form method="post" action="/Question" id="attempt" name="attempt">
 <input type="hidden" name="id" value = <%=Question._id%> >
-<input type="text" id="explainationGiven">
+<input type="text" id="explainationGiven" name="explainationGiven">
 <div class="form-group">
   <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
   <h1><%=Question.text%></h1>
@@ -87,7 +87,7 @@ mode=0;//0: attempt, 1: view_result
 <% for(var i=0; i < Question.options.length; i++) { %>
 	<div class="option input-group">
 	<span class="input-group-addon">
-	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko">
+	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko" value = <%=i%>>
 	</span>
 	<label for="option<%=i%>" class="form-control optiono"><%=Question.options[i]%></label>
 	</div> <!-- ./input-group -->
