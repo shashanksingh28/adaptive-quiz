@@ -9,8 +9,9 @@ var userSchema = new Schema({
   password: String,
   name: String,
   records: Array,
-  created_at: Date,
-  updated_at: Date
+  created_at: Date,  
+  hintsLeft: Number
+
 });
 
 userSchema.plugin(autoIncrement.plugin, 'User');

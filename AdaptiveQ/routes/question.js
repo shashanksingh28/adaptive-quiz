@@ -41,68 +41,101 @@ function getQuestion(id){
 	return promise;
 }
 
-function attemptQuestion(questionId,givenAns,req,res){
+function attemptQuestion(question,givenAns,req,res){
+	console.log("start time" + req.session.startTime);
+	timeStart = req.session.startTime;
+	console.log("inside attempt" + timeStart);
+	console.log("given ans is " + givenAns);
+	console.log("Question is" + question);
+	console.log("inside attempt in getQuestion" + timeStart + " " + Date.now());
+	timeTaken = (Date.now() - timeStart)/1000;
+	console.log("time taken to answer" + timeTaken);
+	record = {
+		qid : question._id,
+		concept : question.concept,
+		score : 0.0,
+		attemptAt: Date,
+		hintTaken : false,
+		timeTaken : Number //in secs
+	}
+	console.log("explaination is" + req.body.explainationGiven)
+	console.log("user is" + req.session.user.name) 
 
-// check for answer and return null
-	getQuestion(questionId).then(function (question){
-		record = {
-			qid : questionId,
-			attempt : false
-		}
-		console.log("explaination is" + req.body.explainationGiven)
-		explaination = {
-			givenBy : req.session.userId,
-			text : req.body.explainationGiven,
-			noUpVotes: 0,
-			upVotedBy: []
+	explaination = {
+		givenById : req.session.user._id,
+		givenByName : req.session.user.name,			
+		text : req.body.explainationGiven,
+		noUpVotes: 0,
+		upVotedBy: []
 
-		}
-		console.log(question);
-		console.log("the question id is" + questionId);
-		var correctAns = question.options[question.answer];
-		console.log(correctAns);
-		if (question.answer == givenAns )
-		{
-			record.attempt=true
-			console.log("sahi javab");
-		}
-		else
-		{
-			console.log("galat javab");
-		}
-		console.log(req.session.email,record);
-		updateUser(req.session.email,record)
-		.then(function (updatedUser){
-			console.log("Attempt Recorded:"+updatedUser);
-			// TODO: Show user the right answer, his answer and explaination
-			//res.send("Attempt Recorded!");
+	}
+	console.log(question);
+	console.log("the question id is" + questionId);
+	var correctAns = question.options[question.answer];
+	console.log(correctAns);
+	if (question.answer == givenAns )
+	{
+		record.attempt=true
+		console.log("sahi javab");
+	}
+	else
+	{
+		console.log("galat javab");
+	}
+	console.log(req.session.email,record);
+	updateUser(req.session.email,record)
+	.then(function (updatedUser){
+		console.log("Attempt Recorded:"+updatedUser);
+		// TODO: Show user the right answer, his answer and explaination
+		//res.send("Attempt Recorded!");
+	},function (err){
+			console.log("error in update");
+			//TODO: redirect to error
+	});
+	if(record.attempt == true){
+		updateQuestion(explaination,questionId)
+		.then(function (updatedQuestion,questionId){
+			console.log("updatedQuestion succesfull"+updatedQuestion);
+			//res.send("updated question")
 		},function (err){
-				console.log("error in update");
-				//TODO: redirect to error
+			console.log("error in update");
 		});
-		if(record.attempt == true){
-			updateQuestion(explaination,questionId)
-			.then(function (updatedQuestion,questionId){
-				console.log("updatedQuestion succesfull"+updatedQuestion);
-				//res.send("updated question")
-			},function (err){
-				console.log("error in update");
-			});
-		}
-		//return res.render('explaination', {Attempt : record.attempt });
-		getQuestion(questionId)
-			.then(function (question){
-			return res.render('explaination', {Question : question, Attempt : record.attempt });
-			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":1}})
-			// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":2},$inc:{"explainations.$.noUpVotes":1}})
+	}
+	//return res.render('explaination', {Attempt : record.attempt });
+	getQuestion(questionId)
+		.then(function (question){
+		return res.render('explaination', {Question : question, Attempt : record.attempt });
+		// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":1}})
+		// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":2},$inc:{"explainations.$.noUpVotes":1}})
+	})
+	.catch(function (error){
+		console("caught exception");
+		// TODO: error page
+	});
+
+	
+}
+
+router.post('/', function(req, res){
+	// check authentication before showing question
+	if(!(req.session && req.session.email)){
+		res.redirect('/');
+	}
+
+	console.log("the id is" + req.body.id + req.originalUrl);
+	
+	//get the answer
+	givenAns = req.body.options;
+	console.log("given ans is " + givenAns);
+	getQuestion(qid).
+		then(function (question){
+			attemptQuestion(question,givenAns,req,res);
 		})
 		.catch(function (error){
-			console("caught exception");
 			// TODO: error page
 		});
 
-	});
-}
+});
 
 
 // Show a question with given id
@@ -132,6 +165,12 @@ router.get('/', function(req, res){
 			getQuestion(qid)
 			.then(function (question){
 			res.render('question', {Question : question});
+			console.log("old starttime" + req.session.startTime);
+			timeStart = Date.now();
+			console.log("setting starttime" + timeStart);
+
+			req.session.startTime = timeStart;
+			console.log("set starttime as " + req.session.startTime);
 			})
 			.catch(function (error){
 			// TODO: error page
@@ -141,6 +180,7 @@ router.get('/', function(req, res){
 			//TODo: remove this and and redirect to original 
 			getQuestion(qid)
 			.then(function (question){
+
 			res.render('question', {Question : question});
 			})
 			.catch(function (error){
@@ -156,20 +196,7 @@ router.get('/', function(req, res){
 	
 });
 
-router.post('/', function(req, res){
-	// check authentication before showing question
-	if(!(req.session && req.session.email)){
-		res.redirect('/');
-	}
 
-	console.log("the id is" + req.body.id + req.originalUrl);
-	console.log(req.body.option);
-	givenAns = req.body.option;
-	//res.render('explaination', {Attempt : "record.attempt" });
-	//explainationGiven =
-	explainationGiven = attemptQuestion(req.body.id,givenAns,req,res);
-
-});
 
 
 /*---------------------------------------------------------------------------
@@ -200,15 +227,13 @@ router.post('/ask', function(req, res){
 	var newQuestion = Question({
 		text: req.body.question,
 		options: options,
-		answer: answerss,
-		conceptId: req.body.conceptId,
+		answers: answerss,
+		concept: req.body.conceptId,
 		difficulty: req.body.difficulty,
-		created_at: Date.now(),
-		updated_at: Date.now(),
-		hint: "",
+		created_at: Date.now(),		
+		hint: req.body.hint,
 		explainations: []
 	});
-	console.log(newQuestion.answer);
 	console.log(newQuestion);
 
 	createQuestion(newQuestion)
@@ -218,7 +243,7 @@ router.post('/ask', function(req, res){
 			//to get all users to whom mail will be send
 			var userEmails = []; 
 			for (i in promise) {
-				console.log("user is eamil is" + promise[i].email + promise[i])
+				console.log("user is email is" + promise[i].email + promise[i])
   				userEmails.push(promise[i].email);
 			}
 			console.log("all users emails are" + userEmails);
@@ -228,7 +253,8 @@ router.post('/ask', function(req, res){
 			   	to : userEmails,
 			   	subject : "Question of the day",
 			  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b> https://www.google.com/?gws_rd=ssl </b>"
+			  	html : "<b>" + newQuestion.text + " </b>" + "<br>" + 
+			  			"Please click the link below to attempt the question"
 			}
 			console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){

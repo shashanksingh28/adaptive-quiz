@@ -24,11 +24,13 @@ router.post('/login', function(req, res, next){
 
         // check if password matches
         if(user.password == pass){
+          console.log("user is " + user);
           req.session.email = email;
           req.session.userId = user._id;
           req.session.user = user;
+          req.session.startTime = Date.now();
           if (user.email == "adaptq@gmail.com"){
-            console.log("Teacher is here")
+            console.log("Teacher is here");
             req.session.isTeacher = true;
             res.redirect('/question/ask');
           }
@@ -76,7 +78,9 @@ router.post('/register', function(req, res){
           email: req.body.email,
           password: req.body.password,
           name: req.body.username,
-          records: []
+          records: [],
+          created_at: Date.now(),
+          hintsLeft: 10
       	});
         createUser(newUser)
         .then(function(savedUser){
