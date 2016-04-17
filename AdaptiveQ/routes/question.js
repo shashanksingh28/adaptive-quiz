@@ -41,17 +41,25 @@ function getQuestion(id){
 	return promise;
 }
 
-function attemptQuestion(questionId,givenAns,req,res){
+function attemptQuestion(question,givenAns,req,res){
+	console.log("given ans is " + givenAns);
 
 // check for answer and return null
 	getQuestion(questionId).then(function (question){
 		record = {
-			qid : questionId,
-			attempt : false
+			qid : question._id,
+			concept : question.concept,
+			score : 0.0,
+			attemptAt: Date,
+			hintTaken : false,
+			timeTaken : Number //in secs
 		}
 		console.log("explaination is" + req.body.explainationGiven)
+		console.log("user is" + req.session.user.name) 
+
 		explaination = {
-			givenBy : req.session.userId,
+			givenBy : req.session.user._id,
+			givenByName : req.session.user.name,			
 			text : req.body.explainationGiven,
 			noUpVotes: 0,
 			upVotedBy: []
@@ -165,9 +173,13 @@ router.post('/', function(req, res){
 	console.log("the id is" + req.body.id + req.originalUrl);
 	console.log(req.body.option);
 	givenAns = req.body.option;
-	//res.render('explaination', {Attempt : "record.attempt" });
-	//explainationGiven =
-	explainationGiven = attemptQuestion(req.body.id,givenAns,req,res);
+	getQuestion(qid).
+		then(function (question){
+			explainationGiven = attemptQuestion(question,givenAns,req,res);
+		})
+		.catch(function (error){
+			// TODO: error page
+		});
 
 });
 
@@ -200,15 +212,13 @@ router.post('/ask', function(req, res){
 	var newQuestion = Question({
 		text: req.body.question,
 		options: options,
-		answer: answerss,
-		conceptId: req.body.conceptId,
+		answers: answerss,
+		concept: req.body.conceptId,
 		difficulty: req.body.difficulty,
-		created_at: Date.now(),
-		updated_at: Date.now(),
+		created_at: Date.now(),		
 		hint: "",
 		explainations: []
 	});
-	console.log(newQuestion.answer);
 	console.log(newQuestion);
 
 	createQuestion(newQuestion)
@@ -218,7 +228,7 @@ router.post('/ask', function(req, res){
 			//to get all users to whom mail will be send
 			var userEmails = []; 
 			for (i in promise) {
-				console.log("user is eamil is" + promise[i].email + promise[i])
+				console.log("user is email is" + promise[i].email + promise[i])
   				userEmails.push(promise[i].email);
 			}
 			console.log("all users emails are" + userEmails);
@@ -228,7 +238,8 @@ router.post('/ask', function(req, res){
 			   	to : userEmails,
 			   	subject : "Question of the day",
 			  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b> https://www.google.com/?gws_rd=ssl </b>"
+			  	html : "<b>" + newQuestion.text + " </b>" + "<br>" + 
+			  			"Please click the link below to attempt the question"
 			}
 			console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){

@@ -24,11 +24,12 @@ router.post('/login', function(req, res, next){
 
         // check if password matches
         if(user.password == pass){
+          console.log("user is " + user);
           req.session.email = email;
           req.session.userId = user._id;
           req.session.user = user;
           if (user.email == "adaptq@gmail.com"){
-            console.log("Teacher is here")
+            console.log("Teacher is here");
             req.session.isTeacher = true;
             res.redirect('/question/ask');
           }

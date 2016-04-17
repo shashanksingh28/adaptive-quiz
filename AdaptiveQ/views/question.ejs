@@ -74,7 +74,7 @@ mode=0;//0: attempt, 1: view_result
 <div class="container-fluid content">
 <form method="post" action="/Question" id="attempt" name="attempt">
 <input type="hidden" name="id" value = <%=Question._id%> >
-
+<input type="text" id="explainationGiven">
 <div class="form-group">
   <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
   <h1><%=Question.text%></h1>
@@ -142,8 +142,6 @@ mode=0;//0: attempt, 1: view_result
 <input type="button" class="btn btn-primary-outline" value="Show hint" <%=hintDisabled%> onclick="clearForm()">
 <input type="reset" class="btn btn-primary-outline" value="Clear Form" onclick="clearForm()">
 </div> <!-- /.buttons -->
-
-
 
 </form>
 </div> <!-- /.container-fluid -->
