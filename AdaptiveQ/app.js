@@ -1,7 +1,8 @@
 var express = require('express');
 var app = express();
 var mongo = require('mongoose');
-mongo.connect("mongodb://localhost:27017/adaptq");
+
+mongo.connect("52.35.105.224/adaptq_dev");
 
 var path = require('path');
 var favicon = require('serve-favicon');
