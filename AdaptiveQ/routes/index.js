@@ -14,16 +14,17 @@ function findConceptByTitle(title, concepts){
   return null;
 }
 
-function makeTree(concept, concepts){
+function makeTree(concept, concepts, parentTitle){
   if(!concept || concept == null) return null;
   var node = {};
   node.id = concept._id;
-  node.title = concept.title;
+  node.name = concept.title;
   node.children = [];
+  node.parent = parentTitle;
   if(!concept.children) return node;
   for(var i = 0; i < concept.children.length; ++i){
     var childConcept = findConceptByTitle(concept.children[i], concepts);
-    var childNode = makeTree(childConcept, concepts);
+    var childNode = makeTree(childConcept, concepts, node.name);
     node.children.push(childNode);
   }
   return node;
@@ -38,7 +39,7 @@ router.get('/concepts', function(req, res, next){
     else {
       //console.log(concepts);
       var root = findConceptByTitle('Javaroot', concepts);
-      var tree = makeTree(root, concepts);
+      var tree = makeTree(root, concepts, 'null');
       console.log(tree);
       res.send(tree);
     }
