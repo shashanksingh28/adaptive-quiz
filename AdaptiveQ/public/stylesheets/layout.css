@@ -1,4 +1,16 @@
+.navbar{
+//begin navbar fixed
+
+	top:0;
+	z-index:100;
+	position:fixed;
+	width:100%;
+}
+
 .content{
+	position:relative;
+	top:60px;
+	//end navbar fixed
 	margin:auto;
 	width:70%;
 	padding:20px;

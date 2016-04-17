@@ -24,6 +24,11 @@ h5.svellang{
 	font-size:22px;
 }
 
+label.svellang{
+	font-weight:200;
+	font-size:22px;
+}
+
 label.form-control.optiono{
     cursor: pointer;
     background-color: rgba(255,255,255,0);
