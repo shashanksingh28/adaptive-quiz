@@ -175,6 +175,10 @@ router.post('/', function(req, res){
 /*---------------------------------------------------------------------------
 Question Asked related functions
 -----------------------------------------------------------------------------*/
+function getUsers(){
+	var promise = Users.find().exec();
+	return promise
+}
 
 function createQuestion(question){
 	console.log("saving quetion in db")
@@ -209,36 +213,44 @@ router.post('/ask', function(req, res){
 
 	createQuestion(newQuestion)
 	.then(function (promise){
+		getUsers().then(function(promise){
+			console.log("all users are" + promise);
+			//to get all users to whom mail will be send
+			var userEmails = []; 
+			for (i in promise) {
+				console.log("user is eamil is" + promise[i].email + promise[i])
+  				userEmails.push(promise[i].email);
+			}
+			console.log("all users emails are" + userEmails);
+			console.log("Saved : "+newQuestion);
+			var mailOptions={
+				from : "adapt.q@gmail.com",
+			   	to : userEmails,
+			   	subject : "Question of the day",
+			  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
+			  	html : "<b> https://www.google.com/?gws_rd=ssl </b>"
+			}
+			console.log(mailOptions);
+			smtpTransport.sendMail(mailOptions, function(error, response){
+			if(error){
+				console.log(error);
+				res.end("error");
+			}
+			else{
+				console.log("Message sent: " + response.message);
+			}
+			
+			});
 
-		console.log("Saved : "+newQuestion);
-		var mailOptions={
-			from : "adapt.q@gmail.com",
-		   	to : "adapt.q@gmail.com, dhiraj92@gmail.com",
-		   	subject : "Question of the day",
-		  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-		  	html : "<b> https://www.google.com/?gws_rd=ssl </b>"
-		}
-		console.log(mailOptions);
-		smtpTransport.sendMail(mailOptions, function(error, response){
-		if(error){
-			console.log(error);
-			res.end("error");
-		}
-		else{
-			console.log("Message sent: " + response.message);
-		}
-		
+			res.redirect('/question/ask');
+
+			},function (err){
+					console.log("error in update explaination" + err);     
+	   		});
 		});
+	});
 
-		res.redirect('/question/ask');
-
-		},function (err){
-				console.log("error in update explaination" + err);     
-   		});
-});
-
-
-
+		
 
 
 /*---------------------------------------------------------------------------
