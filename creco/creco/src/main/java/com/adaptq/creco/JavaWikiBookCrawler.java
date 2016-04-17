@@ -19,9 +19,7 @@ import org.jsoup.select.Elements;
 import com.adaptq.creco.model.Nugget;
 
 /**
- * Crawler for the wikibook
- * <a href="https://en.wikibooks.org/wiki/Java_Programming">The Java Programming
- * Language</a>
+ * Crawler for the wikibook <a href="https://en.wikibooks.org/wiki/Java_Programming">The Java Programming Language</a>
  * 
  * @author Ajinkya Patil
  * @version 1.0
@@ -32,7 +30,7 @@ public class JavaWikiBookCrawler implements Crawler {
 	private String dumpLocation;
 	private static final String TARGET = "https://en.wikibooks.org/wiki/Java_Programming";
 
-	public JavaWikiBookCrawler() {
+	private JavaWikiBookCrawler() {
 		visitedUris = new HashSet<String>();
 		dumpLocation = "/";
 	}
@@ -40,6 +38,8 @@ public class JavaWikiBookCrawler implements Crawler {
 	public JavaWikiBookCrawler(String location) {
 		visitedUris = new HashSet<String>();
 		dumpLocation = location;
+		System.out.println(
+				"Dump location for JavaWikiBookCrawler: " + Paths.get(dumpLocation).toAbsolutePath().toString());
 	}
 
 	@Override
@@ -53,15 +53,11 @@ public class JavaWikiBookCrawler implements Crawler {
 	}
 
 	@Override
-	public void crawl(final String url, final String target)
-			throws IOException {
+	public void crawl(final String url, final String target) throws IOException {
 		// TODO use regex, add blacklist
-		if (url.contains(".pdf") || url.contains("@") || url.contains(":8")
-				|| url.contains(".jpg")
-				|| !url.contains("en.wikibooks.org/wiki/Java_Programming")
-				|| url.contains("#") || url.contains("Print_version")
-				|| url.contains("Development_stages")
-				|| url.contains("Conventions")) {
+		if (url.contains(".pdf") || url.contains("@") || url.contains(":8") || url.contains(".jpg")
+				|| !url.contains("en.wikibooks.org/wiki/Java_Programming") || url.contains("#")
+				|| url.contains("Print_version") || url.contains("Development_stages") || url.contains("Conventions")) {
 			return;
 		}
 
@@ -72,19 +68,15 @@ public class JavaWikiBookCrawler implements Crawler {
 			final List<Nugget> nuggets = scavenge(doc, url);
 			for (Nugget nugget : nuggets) {
 				if (!nugget.getContents().isEmpty()) {
-					final Path path = Paths.get(dumpLocation + File.separator
-							+ nugget.getFileName() + ".txt");
+					final Path path = Paths.get(dumpLocation + File.separator + nugget.getFileName() + ".txt");
 					if (!path.toFile().exists()) {
-						if (!Files.exists(
-								path.toFile().getParentFile().toPath())) {
-							Files.createDirectories(
-									path.toFile().getParentFile().toPath());
+						if (!Files.exists(path.toFile().getParentFile().toPath())) {
+							Files.createDirectories(path.toFile().getParentFile().toPath());
 						}
 						Files.createFile(path);
 					}
 					writer = Files.newBufferedWriter(path);
-					writer.write(nugget.getUrl() + "\n" + nugget.getTitle()
-							+ "\n" + nugget.getContents());
+					writer.write(nugget.getUrl() + "\n" + nugget.getTitle() + "\n" + nugget.getContents());
 					writer.close();
 				}
 			}
@@ -93,8 +85,7 @@ public class JavaWikiBookCrawler implements Crawler {
 		Elements links = null;
 		Elements selects = null;
 		if (target.equals(url)) {
-			int contentIndex = doc.getElementById("Contents").parent()
-					.elementSiblingIndex();
+			int contentIndex = doc.getElementById("Contents").parent().elementSiblingIndex();
 			selects = doc.getElementsByIndexGreaterThan(contentIndex);
 			links = selects.select("a[href]");
 		} else {
@@ -136,22 +127,17 @@ public class JavaWikiBookCrawler implements Crawler {
 
 			if ("h2".equals(part.tagName())) {
 				if (isFirst) {
-					String file = mainTitle.replaceAll("[\\W]", "_") + "\\"
-							+ mainTitle.replaceAll("[\\W]", "_");
-					nuggets.add(
-							new Nugget(url, mainTitle, file, intro.toString()));
+					String file = mainTitle.replaceAll("[\\W]", "_") + "\\" + mainTitle.replaceAll("[\\W]", "_");
+					nuggets.add(new Nugget(url, mainTitle, file, intro.toString()));
 					isIntro = false;
 
-					header = part.getElementsByClass("mw-headline").first()
-							.text();
+					header = part.getElementsByClass("mw-headline").first().text();
 					isFirst = false;
 					continue;
 				}
 				String partUrl = url + "#" + header.replace(" ", "_");
-				String file = mainTitle.replaceAll("[\\W]", "_") + "\\"
-						+ header.replaceAll("[\\W]", "_");
-				nuggets.add(new Nugget(partUrl, mainTitle + " - " + header,
-						file, contents.toString()));
+				String file = mainTitle.replaceAll("[\\W]", "_") + "\\" + header.replaceAll("[\\W]", "_");
+				nuggets.add(new Nugget(partUrl, mainTitle + " - " + header, file, contents.toString()));
 				contents = new StringBuffer("");
 				header = part.getElementsByClass("mw-headline").first().text();
 				continue;
@@ -163,8 +149,7 @@ public class JavaWikiBookCrawler implements Crawler {
 		}
 		if (header != null && !header.isEmpty()) {
 			String partUrl = url + "#" + header.replace(" ", "_");
-			String file = mainTitle.replaceAll("[\\W]", "_") + "\\"
-					+ header.replaceAll("[\\W]", "_");
+			String file = mainTitle.replaceAll("[\\W]", "_") + "\\" + header.replaceAll("[\\W]", "_");
 			nuggets.add(new Nugget(partUrl, header, file, contents.toString()));
 		}
 		return nuggets;

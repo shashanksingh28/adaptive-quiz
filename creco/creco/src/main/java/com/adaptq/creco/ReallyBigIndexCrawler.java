@@ -20,9 +20,7 @@ import org.jsoup.select.Elements;
 import com.adaptq.creco.model.Nugget;
 
 /**
- * Crawler for the Oracle's
- * <a href="https://docs.oracle.com/javase/tutorial/reallybigindex.html">Java
- * Tutorials</a>.
+ * Crawler for the Oracle's <a href="https://docs.oracle.com/javase/tutorial/reallybigindex.html">Java Tutorials</a>.
  * 
  * @author Ajinkya Patil
  * @version 1.0
@@ -41,6 +39,8 @@ public class ReallyBigIndexCrawler implements Crawler {
 	public ReallyBigIndexCrawler(String location) {
 		visitedUris = new HashSet<String>();
 		dumpLocation = location;
+		System.out.println(
+				"Dump location for ReallyBigIndexCrawler: " + Paths.get(dumpLocation).toAbsolutePath().toString());
 	}
 
 	@Override
@@ -56,13 +56,11 @@ public class ReallyBigIndexCrawler implements Crawler {
 	@Override
 	public void crawl(String url, String target) throws IOException {
 		// TODO use regex, add blacklist
-		if (url.contains(".pdf") || url.contains("@") || url.contains(":8")
-				|| url.contains(".jpg") || url.contains("#")
-				|| url.contains("QAndE") || url.contains(".zip")) {
+		if (url.contains(".pdf") || url.contains("@") || url.contains(":8") || url.contains(".jpg") || url.contains("#")
+				|| url.contains("/QandE/") || url.contains(".zip")) {
 			return;
 		}
-		if (!target.equals(url)
-				&& !url.contains("docs.oracle.com/javase/tutorial/essential")
+		if (!target.equals(url) && !url.contains("docs.oracle.com/javase/tutorial/essential")
 				&& !url.contains("docs.oracle.com/javase/tutorial/java")) {
 			return;
 		}
@@ -74,19 +72,15 @@ public class ReallyBigIndexCrawler implements Crawler {
 			final List<Nugget> nuggets = scavenge(doc, url);
 			for (Nugget nugget : nuggets) {
 				if (!nugget.getContents().isEmpty()) {
-					final Path path = Paths.get(dumpLocation + File.separator
-							+ nugget.getFileName() + ".txt");
+					final Path path = Paths.get(dumpLocation + File.separator + nugget.getFileName() + ".txt");
 					if (!path.toFile().exists()) {
-						if (!Files.exists(
-								path.toFile().getParentFile().toPath())) {
-							Files.createDirectories(
-									path.toFile().getParentFile().toPath());
+						if (!Files.exists(path.toFile().getParentFile().toPath())) {
+							Files.createDirectories(path.toFile().getParentFile().toPath());
 						}
 						Files.createFile(path);
 					}
 					writer = Files.newBufferedWriter(path);
-					writer.write(nugget.getUrl() + "\n" + nugget.getTitle()
-							+ "\n" + nugget.getContents());
+					writer.write(nugget.getUrl() + "\n" + nugget.getTitle() + "\n" + nugget.getContents());
 					writer.close();
 				}
 			}

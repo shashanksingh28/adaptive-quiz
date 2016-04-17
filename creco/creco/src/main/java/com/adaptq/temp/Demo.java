@@ -12,7 +12,7 @@ public class Demo {
 			throws IOException, ParseException, SolrServerException {
 		String query = "string";
 		Creco reco = new Creco("http://localhost:8983/solr/adaptq");
-		//reco.crawlAndIndex();
+		reco.crawlAndIndex();
 		String output = reco.search(query.replaceAll("[\\W]", " "));
 		System.out.println(output);
 	}

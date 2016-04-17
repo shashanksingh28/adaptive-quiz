@@ -13,6 +13,6 @@ public class CrawlersConstants {
 	public static final int CRAWLER_ORACLERBI = 2;
 
 	// Dump directory locations for crawlers
-	public static final String LOC_JWIKIBOOK = "adaptq/jwiki";
-	public static final String LOC_ORACLERBI = "adaptq/rbi";
+	public static final String LOC_JWIKIBOOK = "../datadump/jwiki";
+	public static final String LOC_ORACLERBI = "../datadump/rbi";
 }
