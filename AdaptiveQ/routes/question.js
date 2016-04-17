@@ -4,6 +4,7 @@ var router = express.Router();
 // mongoose data models
 var Question = require('../models/questionModel');
 var Users = require('../models/userModel');
+//setup smtp for mailing
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
     auth: {
@@ -137,8 +138,16 @@ router.get('/', function(req, res){
 			});
 		}
 		else{
+			//TODo: remove this and and redirect to original 
+			getQuestion(qid)
+			.then(function (question){
+			res.render('question', {Question : question});
+			})
+			.catch(function (error){
+			// TODO: error page
+			});
 			//TODO: change to his anser qiven for question
-			res.redirect('/');
+			//res.redirect('/');
 		}
 
 	},function (err){
@@ -161,8 +170,6 @@ router.post('/', function(req, res){
 	explainationGiven = attemptQuestion(req.body.id,givenAns,req,res);
 
 });
-//setup smtp for mailing
-
 
 
 /*---------------------------------------------------------------------------
@@ -199,23 +206,28 @@ router.post('/ask', function(req, res){
 	});
 	console.log(newQuestion.answer);
 	console.log(newQuestion);
+
 	createQuestion(newQuestion)
-	.then(function (promise){	
+	.then(function (promise){
+
 		console.log("Saved : "+newQuestion);
 		var mailOptions={
 			from : "adapt.q@gmail.com",
-		   	to : "adapt.q@gmail.com",
+		   	to : "adapt.q@gmail.com, dhiraj92@gmail.com",
 		   	subject : "Question of the day",
-		  	text : newQuestion.text + " your question"
+		  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
+		  	html : "<b> https://www.google.com/?gws_rd=ssl </b>"
 		}
 		console.log(mailOptions);
 		smtpTransport.sendMail(mailOptions, function(error, response){
 		if(error){
-		console.log(error);
-		res.end("error");
-		}else{
-		console.log("Message sent: " + response.message);
+			console.log(error);
+			res.end("error");
 		}
+		else{
+			console.log("Message sent: " + response.message);
+		}
+		
 		});
 
 		res.redirect('/question/ask');
