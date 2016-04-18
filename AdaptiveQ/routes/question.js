@@ -73,16 +73,30 @@ function attemptQuestion(question,givenAns,req,res){
 	//console.log("the question id is" + questionId);
 	//var correctAns = question.options[question.answers];
 	//console.log(correctAns);
-	if (question.answers[0] == givenAns )
-	{
-		record.score=1.0;
-		console.log("sahi javab");
+	var noOfCorrect = 0 ;
+	for (var i = 0; i < givenAns.length; i++) {
+		for (var j = 0; j < question.answers.length; j++) {
+			if(givenAns[i] == question.answers[j]){
+				noOfCorrect++;
+			}
+		};		 
+	};
+	console.log("No of correctAns " + noOfCorrect);
+	noOfWrong = givenAns.length - noOfCorrect;
+	console.log("No of noOfWrong " + noOfWrong);
+	noOfWrongW = noOfWrong/question.options.length;
+	console.log("No of noOfWrongW " + noOfWrongW);
+	score = (noOfCorrect - noOfWrongW)/question.answers.length;
+	console.log("No of score " + score);
+	score = score * (question.difficulty + 1) * 100;
+	console.log("No of score " + score);
+	score = score/(timeTaken * 3);
+	console.log("No of score " + score);
+	if(score < 0.0){
+		score = 0.0
 	}
-	else
-	{
-		
-		console.log("galat javab");
-	}
+	console.log("Score for answer is " + score);
+	record.score=score;
 	console.log(req.session.email,record);
 	updateUser(req.session.email,record)
 	.then(function (updatedUser){
@@ -102,7 +116,7 @@ function attemptQuestion(question,givenAns,req,res){
 			console.log("error in update");
 		});
 	}
-	return res.render('explaination', {Question : question, Attempt : record.attempt });
+	return res.render('explaination', {Question : question, Attempt : record });
 	
 
 	
@@ -117,8 +131,9 @@ router.post('/', function(req, res){
 	console.log("the id is" + req.body.id + req.originalUrl);
 	
 	//get the answer
-	givenAns = req.body.options;
-	console.log("given ans is " + givenAns);
+	givenAns = req.body.options.toString();
+	var Ansarray = givenAns.split(',');
+	console.log("given ans is " + Ansarray);
 	getQuestion(qid).
 		then(function (question){
 			attemptQuestion(question,givenAns,req,res);
@@ -144,10 +159,12 @@ router.get('/', function(req, res){
 		check = 0
 		//console.log("Got user" + User );
 		records = User.records;
+		var attemptRecord;
 		//console.log(records);
 		for (var i = 0; i < records.length; i++) {
-			console.log(records[i]);
+			//console.log(records[i]);
 			if( qid == records[i].qid ){
+				attemptRecord = records[i];
 				console.log("found qid");
 				check = 1;
 				break;
@@ -170,17 +187,13 @@ router.get('/', function(req, res){
 			});
 		}
 		else{
+
 			//TODo: remove this and and redirect to original 
 			getQuestion(qid)
 			.then(function (question){
-			
-			console.log("old starttime" + req.session.startTime);
-			timeStart = Date.now();
-			console.log("setting starttime" + timeStart);
-
-			req.session.startTime = timeStart;
-			console.log("set starttime as " + req.session.startTime);
-			res.render('question', {Question : question});
+			console.log("Already attempted" + attemptRecord.score);
+			res.render('explaination', {Question : question, Attempt : attemptRecord });
+	
 			})
 			.catch(function (error){
 			// TODO: error page
