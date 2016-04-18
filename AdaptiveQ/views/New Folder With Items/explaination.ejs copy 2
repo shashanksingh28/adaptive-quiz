@@ -1,0 +1,27 @@
+<html>
+<head>
+<title>Question</title>
+<% test = Question._id; %>
+<script>
+   var qid = <%= test  %>;  //var test is now assigned to getTest which will only work on browsers
+   console.log(qid);  // successfully prints 101 on browser
+</script>
+<body>
+<input type="text" id ="exp" name="explainationGiven">
+<input id ="upvote" type="submit" value="Send Form">
+
+ <table id="userList">
+ 	
+  <tr>
+    <th>Given By</th>
+    <th>Text</th>
+    <th>NoOfUpvotes</th>
+  </tr>
+ 
+</table> 
+</body>
+
+
+<script src='http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js'></script>
+<script src="/js/explain.js"></script>
+</html>
