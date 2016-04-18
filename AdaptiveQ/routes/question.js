@@ -41,7 +41,7 @@ function getQuestion(id){
 	return promise;
 }
 function updateHint(){
-	
+
 }
 
 function attemptQuestion(question,givenAns,req,res){
@@ -53,19 +53,19 @@ function attemptQuestion(question,givenAns,req,res){
 	console.log("inside attempt in getQuestion" + timeStart + " " + Date.now());
 	timeTaken = (Date.now() - timeStart)/1000;
 	console.log("time taken to answer" + timeTaken);
-	hint = req.hintTaken;
+	hint = req.body.hintTaken;
 	record = {
 		qid : question._id,
 		concept : question.concept,
 		givenAns : givenAns,
 		score : 0.0,
 		attemptAt: Date,
-		hintTaken : hint,
+		hintTaken : false,
 		timeTaken : Number //in secs
 	}
-	if(hint){
+	/*if(hint){
 		updateHint(req.session.user._id);
-	}
+	}*/
 	
 	console.log("explaination is" + req.body.explainationGiven)
 	console.log("user is" + req.session.user.name) 
