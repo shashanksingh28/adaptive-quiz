@@ -40,7 +40,9 @@ function getQuestion(id){
 	var promise = Question.findById(id).exec();
 	return promise;
 }
-function updateHint()
+function updateHint(){
+	
+}
 
 function attemptQuestion(question,givenAns,req,res){
 	console.log("start time" + req.session.startTime);
