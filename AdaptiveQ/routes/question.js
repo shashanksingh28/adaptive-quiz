@@ -68,18 +68,19 @@ function attemptQuestion(question,givenAns,req,res){
 		noUpVotes: 0,
 		upVotedBy: []
 
-	}
-	console.log(question);
-	console.log("the question id is" + questionId);
-	var correctAns = question.options[question.answer];
-	console.log(correctAns);
-	if (question.answer == givenAns )
+	};
+	console.log(explaination);
+	//console.log("the question id is" + questionId);
+	//var correctAns = question.options[question.answers];
+	//console.log(correctAns);
+	if (question.answers[0] == givenAns )
 	{
-		record.attempt=true
+		record.score=1.0;
 		console.log("sahi javab");
 	}
 	else
 	{
+		
 		console.log("galat javab");
 	}
 	console.log(req.session.email,record);
@@ -101,17 +102,8 @@ function attemptQuestion(question,givenAns,req,res){
 			console.log("error in update");
 		});
 	}
-	//return res.render('explaination', {Attempt : record.attempt });
-	getQuestion(questionId)
-		.then(function (question){
-		return res.render('explaination', {Question : question, Attempt : record.attempt });
-		// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":1}})
-		// db.questions.update({'_id':0,"explainations.givenBy":1},{$push:{"explainations.$.upVotedBy":2},$inc:{"explainations.$.noUpVotes":1}})
-	})
-	.catch(function (error){
-		console("caught exception");
-		// TODO: error page
-	});
+	return res.render('explaination', {Question : question, Attempt : record.attempt });
+	
 
 	
 }
@@ -150,9 +142,9 @@ router.get('/', function(req, res){
 	//Checking if user attempted the question already
 	getUser(userId).then(function (User){		
 		check = 0
-		console.log("Got user" + User );
+		//console.log("Got user" + User );
 		records = User.records;
-		console.log(records);
+		//console.log(records);
 		for (var i = 0; i < records.length; i++) {
 			console.log(records[i]);
 			if( qid == records[i].qid ){
@@ -164,13 +156,14 @@ router.get('/', function(req, res){
 		if(check == 0){
 			getQuestion(qid)
 			.then(function (question){
-			res.render('question', {Question : question});
+			
 			console.log("old starttime" + req.session.startTime);
 			timeStart = Date.now();
 			console.log("setting starttime" + timeStart);
 
 			req.session.startTime = timeStart;
 			console.log("set starttime as " + req.session.startTime);
+			res.render('question', {Question : question});
 			})
 			.catch(function (error){
 			// TODO: error page
@@ -180,7 +173,13 @@ router.get('/', function(req, res){
 			//TODo: remove this and and redirect to original 
 			getQuestion(qid)
 			.then(function (question){
+			
+			console.log("old starttime" + req.session.startTime);
+			timeStart = Date.now();
+			console.log("setting starttime" + timeStart);
 
+			req.session.startTime = timeStart;
+			console.log("set starttime as " + req.session.startTime);
 			res.render('question', {Question : question});
 			})
 			.catch(function (error){
