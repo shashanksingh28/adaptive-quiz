@@ -1,7 +1,13 @@
 <html>
 <head>
-<title>Question</title>
 
+<script src="/js/explain.js"></script>
+<title>Question</title>
+<% test = Question._id; %>
+<script>
+   var qid = <%= test  %>;  //var test is now assigned to getTest which will only work on browsers
+   console.log(qid);  // successfully prints 101 on browser
+</script>
 
 <!--Common-->
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
@@ -32,10 +38,8 @@
 </head>
 <body>
 <% 
-inputType=Question.answers.length>1?"checkbox":"radio"; 
-hintDisabled = "disabled";
-if(Question.hint.length>0)
-	hintDisabled="disabled";
+inputType=Question.answer.length>1?"checkbox":"radio"; 
+hintDisabled="disabled";
 studentAnswered=[1,2];
 mode=0;//0: attempt, 1: view_result
 %>
@@ -89,38 +93,55 @@ mode=0;//0: attempt, 1: view_result
 <% for(var i=0; i < Question.options.length; i++) { %>
 	<div class="option input-group">
 	<span class="input-group-addon">
-	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko" value = <%=i%>>
+	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko">
 	</span>
 	<label for="option<%=i%>" class="form-control optiono"><%=Question.options[i]%></label>
 	</div> <!-- ./input-group -->
 <% } %>
 
-<!-- 
 <div class="option input-group">
 	<span class="input-group-addon correct">
 	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko">
 	</span>
 	<label for="option<%=i%>" class="form-control optiono">Correct option</label>
-</div> <!~~ ./input-group ~~>
+</div> <!-- ./input-group -->
 <div class="option input-group">
 	<span class="input-group-addon warning">
 	<input type=<%=inputType%> name="options" id="option<%=i+1%>" class="checko">
 	</span>
 	<label for="option<%=i+1%>" class="form-control optiono">Warning option</label>
-</div> <!~~ ./input-group ~~>
+</div> <!-- ./input-group -->
 <div class="option input-group">
 	<span class="input-group-addon incorrect">
 	<input type=<%=inputType%> name="options" id="option<%=i+2%>" class="checko">
 	</span>
 	<label for="option<%=i+2%>" class="form-control optiono">Incorrect option</label>
-</div> <!~~ ./input-group ~~>
- -->
+</div> <!-- ./input-group -->
 
 </div>
 <br>
-<div class="form-group">
-  <label for="explanation" class="svellang">Explanation</label>
-  <textarea class="form-control" rows="5" id="explainationGiven" placeholder="Provide your explanation here" name="explainationGiven"></textarea>
+<div id="accordion">
+  <h3>Adaptive Web</h3>
+  <div>
+    <p>Information systems suffer from an inability to satisfy the heterogeneous needs of many users. For example, Web courses present the same static learning material to students with widely differing knowledge of the subject. Most online stores still offer the same selection of "featured items" to customers with different needs and preferences.</p>
+  </div>
+  <h3>Mobile Computing</h3>
+  <div>
+    <p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
+  </div>
+  <h3>Intro to theoretical computer sci</h3>
+  <div>
+    <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
+    <ul>
+      <li>List item one</li>
+      <li>List item two</li>
+      <li>List item three</li>
+    </ul>
+  </div>
+  <h3>Section 4</h3>
+  <div>
+    <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+  </div>
 </div>
 <div class="buttons">
 <input type="submit" class="btn btn-primary" value="Submit" onclick="sub()">
@@ -128,42 +149,59 @@ mode=0;//0: attempt, 1: view_result
 <input type="reset" class="btn btn-primary-outline" value="Clear Form" onclick="clearForm()">
 </div> <!-- /.buttons -->
 
-<div id="hint">
-<%
-if(Question.hint.length>0)
-{
-%>
-Hint:<br/>
-<%= Question.hint%>
-<%
-}
-%>
-</div>
+
 
 </form>
-<div id="voteList">
-<div id = 1>
-<h5 style="display:inline-block">Dhiraj</h5> said:<br/>
-Ad est iudico doming, hinc urbanitas an qui, lucilius reprimique an ius. Tale volutpat ocurreret eam et. Ex brute nihil sed, fugit solet minimum et vel. Ignota essent nam ei, eos diam stet nullam te.
-<br/>
-<div style="margin-top:8px">
-<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +' >Unvote</button><div id ="noUpVotes" style="display:inline-block;margin-left:8px;">221</div>
-<hr>
-</div>
-</div>
-<div id = 1>
-<h5 style="display:inline-block">Sriram</h5> said:<br/>
-Lorem ipsum dolor sit amet, et dicat viris suscipiantur per, sit dicit tritani sententiae in, quidam expetendis vix id. Usu ea suas probo ferri, vis viris deserunt definiebas at. Et definiebas eloquentiam his. Est ne labores delicatissimi, pri perfecto delicatissimi at.
-<br/>
-<div style="margin-top:8px">
-<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +' >Vote</button><div id ="noUpVotes" style="display:inline-block;margin-left:8px;">10</div>
-<hr>
-</div>
-</div>
-</div> <!-- /.voteList -->
-<input type="button" class="btn btn-primary-outline" value="Show more" onclick="sub()">
 </div> <!-- /.container-fluid -->
 
+
+<BR>
+Student comments<input type="text" name="explaination">
+<input type="submit" value="Submit">
+<input type="reset" value="Clear">
+<input type="button" value="Show hint" <%=hintDisabled%>>
 </form>
 </body>
+<h2>Explanation</h2><hr>
+<%=Question%>
+
+
+<input type="text" id ="exp" name="explainationGiven">
+<input id ="upvote" type="submit" value="Send Form">
+
+ <table id="userList">
+ 	
+  <tr>
+    <th>Given By</th>
+    <th>Text</th>
+    <th>NoOfUpvotes</th>
+  </tr>
+ 
+</table> 
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<html>
+<head>
+<title>Question</title>
+
+<body>
+
+</body>
+
+
+</html>
+
