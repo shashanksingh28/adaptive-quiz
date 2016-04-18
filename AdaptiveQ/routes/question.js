@@ -314,6 +314,20 @@ function updateQuestionExp(id,givenBy,uid){
 	return promise;
 }
 
+function updateQuestionExpDec(id,givenBy,uid){
+
+	console.log("User is " + id);
+	console.log("Given by " + givenBy);
+	t = id + givenBy;
+	console.log("Total" + t);
+	var promise = Question.update({'_id':id,
+		"explainations.givenBy":givenBy},
+		{$pull:{"explainations.$.upVotedBy":uid},
+		$inc:{"explainations.$.noUpVotes": -1}}).exec();
+
+	return promise;
+}
+
 router.get('/explain', function(req, res){
 	res.render('explaination');
 
@@ -337,6 +351,21 @@ router.post('/explainUpdate', function(req, res) {
 	console.log(Explain.givenBy);
 	console.log("User in session is " + req.session.userId);
 	updateQuestionExp(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.userId)
+		.then(function (updatedUser){
+			console.log("Explain updated");
+			  res.send({ msg: '' });
+		},function (err){
+				console.log("error in update explaination");     
+   		});
+});
+
+router.post('/explainUpdateDec', function(req, res) {
+	console.log("From ajax got this " + req.body.Qid);
+
+	Explain = req.body;
+	console.log(Explain.givenBy);
+	console.log("User in session is " + req.session.userId);
+	updateQuestionExpDec(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.userId)
 		.then(function (updatedUser){
 			console.log("Explain updated");
 			  res.send({ msg: '' });

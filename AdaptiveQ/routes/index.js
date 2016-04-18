@@ -49,6 +49,7 @@ router.get('/concepts', function(req, res, next){
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+  //debugger;
     if(req.session && req.session.userId){
       // show dashboard here
       res.render('dashboard');
