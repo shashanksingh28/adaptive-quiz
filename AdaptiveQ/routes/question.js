@@ -40,6 +40,7 @@ function getQuestion(id){
 	var promise = Question.findById(id).exec();
 	return promise;
 }
+function updateHint()
 
 function attemptQuestion(question,givenAns,req,res){
 	console.log("start time" + req.session.startTime);
@@ -50,15 +51,20 @@ function attemptQuestion(question,givenAns,req,res){
 	console.log("inside attempt in getQuestion" + timeStart + " " + Date.now());
 	timeTaken = (Date.now() - timeStart)/1000;
 	console.log("time taken to answer" + timeTaken);
+	hint = req.hintTaken;
 	record = {
 		qid : question._id,
 		concept : question.concept,
 		givenAns : givenAns,
 		score : 0.0,
 		attemptAt: Date,
-		hintTaken : false,
+		hintTaken : hint,
 		timeTaken : Number //in secs
 	}
+	if(hint){
+		updateHint(req.session.user._id);
+	}
+	
 	console.log("explaination is" + req.body.explainationGiven)
 	console.log("user is" + req.session.user.name) 
 
@@ -108,16 +114,17 @@ function attemptQuestion(question,givenAns,req,res){
 			console.log("error in update");
 			//TODO: redirect to error
 	});
-	if(record.attempt == true){
-		updateQuestion(explaination,questionId)
-		.then(function (updatedQuestion,questionId){
-			console.log("updatedQuestion succesfull"+updatedQuestion);
-			//res.send("updated question")
-		},function (err){
-			console.log("error in update");
-		});
-	}
-	return res.render('explaination', {Question : question, Attempt : record });
+	
+	updateQuestion(explaination,questionId)
+	.then(function (updatedQuestion,questionId){
+		console.log("updatedQuestion succesfull"+updatedQuestion);
+		//res.send("updated question")
+		return res.render('explaination', {Question : question, Attempt : record });
+	},function (err){
+		console.log("error in update");
+	});
+	
+	
 	
 
 	
