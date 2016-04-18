@@ -53,6 +53,7 @@ function attemptQuestion(question,givenAns,req,res){
 	record = {
 		qid : question._id,
 		concept : question.concept,
+		givenAns : givenAns,
 		score : 0.0,
 		attemptAt: Date,
 		hintTaken : false,
