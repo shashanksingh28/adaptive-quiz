@@ -33,11 +33,9 @@
 <body>
 <% 
 inputType=Question.answers.length>1?"checkbox":"radio"; 
-hintDisabled = "disabled";
-if(Question.hint.length>0)
+hintDisabled = "";
+if(User.hintsLeft<=0 && Question.hint.length>0)
 	hintDisabled="disabled";
-studentAnswered=[1,2];
-mode=0;//0: attempt, 1: view_result
 %>
 <nav class="navbar navbar-default">
     <div class="container-fluid">
@@ -119,7 +117,7 @@ mode=0;//0: attempt, 1: view_result
 </div>
 <br>
 <div class="form-group">
-  <label for="explanation" class="svellang">Explanation</label>
+  <label for="explainationGiven" class="svellang">Explanation</label>
   <textarea class="form-control" rows="5" id="explainationGiven" placeholder="Provide your explanation here" name="explainationGiven"></textarea>
 </div>
 <div class="buttons">
@@ -141,30 +139,10 @@ Hint:<br/>
 </div>
 
 </form>
-<div id="voteList">
-<div id = 1>
-<h5 style="display:inline-block">Dhiraj</h5> said:<br/>
-Ad est iudico doming, hinc urbanitas an qui, lucilius reprimique an ius. Tale volutpat ocurreret eam et. Ex brute nihil sed, fugit solet minimum et vel. Ignota essent nam ei, eos diam stet nullam te.
-<br/>
-<div style="margin-top:8px">
-<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +' >Unvote</button><div id ="noUpVotes" style="display:inline-block;margin-left:8px;">221</div>
-<hr>
-</div>
-</div>
-<div id = 1>
-<h5 style="display:inline-block">Sriram</h5> said:<br/>
-Lorem ipsum dolor sit amet, et dicat viris suscipiantur per, sit dicit tritani sententiae in, quidam expetendis vix id. Usu ea suas probo ferri, vis viris deserunt definiebas at. Et definiebas eloquentiam his. Est ne labores delicatissimi, pri perfecto delicatissimi at.
-<br/>
-<div style="margin-top:8px">
-<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +' >Vote</button><div id ="noUpVotes" style="display:inline-block;margin-left:8px;">10</div>
-<hr>
-</div>
-</div>
-</div> <!-- /.voteList -->
-<input type="button" class="btn btn-primary-outline" value="Show more" onclick="sub()">
+
 </div> <!-- /.container-fluid -->
 <%=Question%><br/>
-<%=User%>
+
 </form>
 </body>
 </html>

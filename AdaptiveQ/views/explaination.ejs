@@ -124,12 +124,34 @@ mode=0;//0: attempt, 1: view_result
 </div>
 <br>
 <div class="buttons">
-<input type="button" class="btn btn-primary" value="View explanations" onclick="toggleExplanation()">
+<input type="button" class="btn btn-primary" value="View explanations" ><!-- onclick="toggleExplanation()" -->
 </div> <!-- /.buttons -->
 <div id="voteList">
 
 </div> <!-- /.voteList -->
-
+<!-- 
+<div id="voteList">
+<div id = 1>
+<h5 style="display:inline-block">Dhiraj</h5> said:<br/>
+Ad est iudico doming, hinc urbanitas an qui, lucilius reprimique an ius. Tale volutpat ocurreret eam et. Ex brute nihil sed, fugit solet minimum et vel. Ignota essent nam ei, eos diam stet nullam te.
+<br/>
+<div style="margin-top:8px">
+<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +' >Unvote</button><div id ="noUpVotes" style="display:inline-block;margin-left:8px;">221</div>
+<hr>
+</div>
+</div>
+<div id = 1>
+<h5 style="display:inline-block">Sriram</h5> said:<br/>
+Lorem ipsum dolor sit amet, et dicat viris suscipiantur per, sit dicit tritani sententiae in, quidam expetendis vix id. Usu ea suas probo ferri, vis viris deserunt definiebas at. Et definiebas eloquentiam his. Est ne labores delicatissimi, pri perfecto delicatissimi at.
+<br/>
+<div style="margin-top:8px">
+<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +' >Vote</button><div id ="noUpVotes" style="display:inline-block;margin-left:8px;">10</div>
+<hr>
+</div>
+</div>
+</div> <!~~ /.voteList ~~>
+ -->
+<input type="button" class="btn btn-primary-outline" value="Show more" onclick="sub()">
 
 </form>
 </div> <!-- /.container-fluid -->
@@ -145,6 +167,7 @@ Student comments<input type="text" name="explaination">
 </form>
 </body>
 
+<!-- 
 <div id="accordion">
   <h3>Adaptive Web</h3>
   <div>
@@ -168,6 +191,7 @@ Student comments<input type="text" name="explaination">
     <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
   </div>
 </div>
+ -->
 <h2>Explanation</h2><hr>
 <%=Question%>
 <br/>
