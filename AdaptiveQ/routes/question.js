@@ -181,7 +181,7 @@ router.get('/', function(req, res){
 
 			req.session.startTime = timeStart;
 			console.log("set starttime as " + req.session.startTime);
-			res.render('question', {Question : question});
+			res.render('question', {Question : question, User : req.session.user});
 			})
 			.catch(function (error){
 			// TODO: error page
