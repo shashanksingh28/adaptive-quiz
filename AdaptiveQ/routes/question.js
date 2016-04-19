@@ -13,33 +13,10 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
     }
 });
 
-
 /*---------------------------------------------------------------------------
 Question Display related functions
 -----------------------------------------------------------------------------*/
-function getUser(userId){
-	var promise = Users.findById(userId).exec();
-	return promise
-}
 
-function updateQuestion(explaination,qid) {
-	console.log("explaination is " + explaination);
-	console.log("question id is" + qid);
-	var promise = Question.update({'_id': qid},
-		{$push:{'explainations':explaination}}).exec();
-	return promise;
-}
-function updateUser(user,record){
-	console.log("User is " + user)
-	var promise = Users.update({'email': user},
-		{$push:{'records':record}}).exec();
-	return promise;
-}
-
-function getQuestion(id){
-	var promise = Question.findById(id).exec();
-	return promise;
-}
 function updateHint(){
 
 }
@@ -107,10 +84,10 @@ function attemptQuestion(question,givenAns,req,res){
 	console.log("Score for answer is " + score);
 	record.score=score;
 	console.log(req.session.email,record);
-	updateUser(req.session.email,record)
+	User.addRecordToUserId(req.session.user._id,record)
 	.then(function (updatedUser){
 		console.log("Attempt Recorded:"+updatedUser);
-			updateQuestion(explaination,question._id)
+			Question.addExplanation(question._id, explaination)
 			.then(function (updatedQuestion,questionId){
 				console.log("updatedQuestion succesfull"+updatedQuestion);
 				//res.send("updated question")
@@ -135,7 +112,7 @@ router.post('/', function(req, res){
 	givenAns = req.body.options.toString();
 	var Ansarray = givenAns.split(',');
 	console.log("given ans is " + Ansarray);
-	getQuestion(qid).
+	Question.getQuestionById(qid).
 		then(function (question){
 			attemptQuestion(question,givenAns,req,res);
 		})
@@ -150,7 +127,7 @@ router.get('/', function(req, res){
 	userId = req.session.userId;
 	qid = req.query.id;
 	//Checking if user attempted the question already
-	getUser(userId).then(function (User){
+	User.getUserById(userId).then(function (User){
 		check = 0
 		//console.log("Got user" + User );
 		records = User.records;
@@ -166,7 +143,7 @@ router.get('/', function(req, res){
 			}
 		}
 		if(check == 0){
-			getQuestion(qid)
+			Quetsion.getQuestionById(qid)
 			.then(function (question){
 
 			console.log("old starttime" + req.session.startTime);
@@ -184,7 +161,7 @@ router.get('/', function(req, res){
 		else{
 
 			//TODo: remove this and and redirect to original
-			getQuestion(qid)
+			Question.getQuestionById(qid)
 			.then(function (question){
 			console.log("Already attempted" + attemptRecord.score);
 			res.render('explaination', {Question : question, Attempt : attemptRecord });
@@ -204,21 +181,9 @@ router.get('/', function(req, res){
 });
 
 
-
-
 /*---------------------------------------------------------------------------
 Question Asked related functions
 -----------------------------------------------------------------------------*/
-function getUsers(){
-	var promise = Users.find().exec();
-	return promise
-}
-
-function createQuestion(question){
-	console.log("saving quetion in db")
-	var promise = question.save();
-	return promise;
-}
 
 // Give page to create question
 router.get('/ask', function(req, res){
@@ -231,21 +196,12 @@ router.post('/ask', function(req, res){
 	answerss = JSON.parse(req.body.answers);
 	options = JSON.parse(req.body.options);
 	console.log(req.body.conceptId);
-	var newQuestion = Question({
-		text: req.body.question,
-		options: options,
-		answers: answerss,
-		concept: req.body.conceptId,
-		difficulty: req.body.difficulty,
-		created_at: Date.now(),
-		hint: req.body.hint,
-		explainations: []
-	});
-	console.log(newQuestion);
 
-	createQuestion(newQuestion)
+  // TODO change req.body.conceptId to req.body.concept
+	Question.createQuestion(req.body.question,options,answerss,req.body.concept,req.body.difficulty,req.body.hint)
 	.then(function (promise){
-		getUsers().then(function(promise){
+		User.getAllUsers()
+    .then(function(promise){
 			console.log("all users are" + promise);
 			//to get all users to whom mail will be send
 			var userEmails = [];
@@ -330,7 +286,7 @@ router.get('/explain', function(req, res){
 
 router.get('/explainlist', function(req, res) {
     	console.log("populate explainlist" + req.query.id);
-    	getQuestion(req.query.id)
+    	Question.getQuestionById(req.query.id)
 	.then(function (question){
 		explainations = question.explainations;
 		explainations.sort(sortByProperty('noUpVotes'));

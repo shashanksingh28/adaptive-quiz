@@ -10,7 +10,7 @@ var questionSchema = new Schema({
   answers: Array,//Array of Number
   concept: String,//String
   difficulty: Number,//Number {0,1,2}
-  created_at: Date,  
+  created_at: Date,
   hint: String,
   explainations: Array
 });
@@ -18,5 +18,28 @@ var questionSchema = new Schema({
 questionSchema.plugin(autoIncrement.plugin, 'Question');
 
 var Question = mongo.model('Question', questionSchema);
+
+Question.addQuestion = function(text,options,answers,conceptName,difficulty,hint){
+  var newQuestion = Question({
+		text: text,
+		options: options,
+		answers: answers,
+		concept: conceptName,
+		difficulty: difficulty,
+    hint: hint,
+		created_at: Date.now(),
+		explainations: []
+	});
+  return newQuestion.save();
+}
+
+Question.getQuestionById = function(qId){
+  return Question.findById(qId).exec();
+};
+
+Question.addExplanation = function(qId, explanation){
+  return Question.update({'_id': qid},{$push:{'explainations':explanation}}).exec();
+};
+
 
 module.exports = Question;

@@ -26,7 +26,6 @@ app.use(session({
 
 console.log("App started at http://localhost:3000");
 
-
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");
 
@@ -51,12 +50,14 @@ app.use('/', routes);
 
 // Common place for authentication on all requests dealing with Questions
 app.get('*', function(req, res, next) {
-  if(!(req.session && req.session.email)){
+  if(!(req.session && req.session.user)){
     req.session.redirect_to = req.url;
 		res.render('login');
 	}
   else{
-    next();
+    if(next){
+      next();
+    }
   }
 });
 // Anything that needs authentication should go below this
