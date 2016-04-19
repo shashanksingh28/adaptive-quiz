@@ -36,6 +36,7 @@ router.post('/login', function(req, res, next){
           }
           else{
             // Check if need to redirect after authentication
+            console.log("Saved Session here :" + req.session.redirect_to);
             if(req.session.redirect_to != null){
               var url = req.session.redirect_to;
               req.session.redirect_to = null;
@@ -45,7 +46,7 @@ router.post('/login', function(req, res, next){
               res.redirect('/');
             }
           }
-        
+
         }
         else {
           // TODO password error

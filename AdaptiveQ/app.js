@@ -42,22 +42,33 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
-
-var routes = require('./routes/index');
 var users = require('./routes/users');
+var routes = require('./routes/index');
 var question = require('./routes/question');
-app.use('/', routes);
+var analytics = require('./routes/analytics')
 app.use('/users', users);
+app.use('/', routes);
+
+// Common place for authentication on all requests dealing with Questions
+app.get('*', function(req, res, next) {
+  if(!(req.session && req.session.email)){
+    req.session.redirect_to = req.url;
+		res.render('login');
+	}
+  else{
+    next();
+  }
+});
+// Anything that needs authentication should go below this
 app.use('/question', question);
+app.use('/analytics', analytics);
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
   err.status = 404;
   next(err);
 });
-
-// error handlers
 
 // development error handler
 // will print stacktrace
