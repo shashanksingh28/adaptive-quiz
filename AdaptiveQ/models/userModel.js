@@ -26,7 +26,7 @@ User.getUserById = function(id){
 };
 
 User.getAllUsers = function(){
-  return Users.find().exec();
+  return User.find().exec();
 };
 
 User.createUser = function(email, password, name){

@@ -18,8 +18,10 @@ var questionSchema = new Schema({
 questionSchema.plugin(autoIncrement.plugin, 'Question');
 
 var Question = mongo.model('Question', questionSchema);
-
+//Question.addQuestion(req.body.question,options,answerss,req.body.concept,req.body.difficulty,req.body.hint)
+  
 Question.addQuestion = function(text,options,answers,conceptName,difficulty,hint){
+  console.log("in add" + text);
   var newQuestion = Question({
 		text: text,
 		options: options,
@@ -30,6 +32,7 @@ Question.addQuestion = function(text,options,answers,conceptName,difficulty,hint
 		created_at: Date.now(),
 		explainations: []
 	});
+  console.log("newQuestion");
   return newQuestion.save();
 }
 

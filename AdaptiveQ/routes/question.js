@@ -197,8 +197,21 @@ router.post('/ask', function(req, res){
 	console.log(req.body.conceptId);
 
   // TODO change req.body.conceptId to req.body.concept
-	Question.createQuestion(req.body.question,options,answerss,req.body.concept,req.body.difficulty,req.body.hint)
+  	//debugger;
+  	console.log("adding ques")
+  		/*var newQuestion = Question({
+		text: req.body.question,
+		options: options,
+		answers: answerss,
+		concept: req.body.conceptId,
+		difficulty: req.body.difficulty,
+		created_at: Date.now(),
+		hint: req.body.hint,
+		explainations: []
+	});*/
+	Question.addQuestion(req.body.question,options,answerss,req.body.conceptId,req.body.difficulty,req.body.hint)
 	.then(function (promise){
+		console.log("question added");
 		User.getAllUsers()
     .then(function(promise){
 			console.log("all users are" + promise);
@@ -209,13 +222,13 @@ router.post('/ask', function(req, res){
   				userEmails.push(promise[i].email);
 			}
 			console.log("all users emails are" + userEmails);
-			console.log("Saved : "+newQuestion);
+			
 			var mailOptions={
 				from : "adapt.q@gmail.com",
 			   	to : userEmails,
 			   	subject : "Question of the day",
-			  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b>" + newQuestion.text + " </b>" + "<br>" +
+			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
+			  	html : "<b>" + req.body.question + " </b>" + "<br>" +
 			  			"Please click the link below to attempt the question"
 			}
 			console.log(mailOptions);
