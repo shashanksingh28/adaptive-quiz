@@ -31,18 +31,26 @@ function attemptQuestion(question,givenAns,req,res){
 	timeTaken = (Date.now() - timeStart)/1000;
 	console.log("time taken to answer" + timeTaken);
 	hint = req.body.hintTaken;
+	console.log("hint tken" + hint);
 	record = {
 		qid : question._id,
 		concept : question.concept,
 		givenAns : givenAns,
 		score : 0.0,
 		attemptAt: Date,
-		hintTaken : false,
+		hintTaken : hint,
 		timeTaken : Number //in secs
 	}
-	/*if(hint){
-		updateHint(req.session.user._id);
-	}*/
+	if(hint){
+		console.log("decreasing hint count in user");
+		User.updateHint(req.session.user._id).then(function (question){
+			console.log("decreasing hint count in user succes");
+		})
+		.catch(function (error){
+			// TODO: error page
+		});
+
+	}
 
 	console.log("explaination is" + req.body.explainationGiven)
 	console.log("user is" + req.session.user.name)

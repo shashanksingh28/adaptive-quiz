@@ -45,4 +45,10 @@ User.addRecordToUserId = function(userId,record){
   return User.update({'_id': userId},{$push:{'records':record}}).exec();
 };
 
+//User.updateHint(req.session.user._id);
+User.updateHint = function(userId){
+  return User.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
+  
+}
+
 module.exports = User;
