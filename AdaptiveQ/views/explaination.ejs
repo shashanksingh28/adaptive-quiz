@@ -34,8 +34,18 @@
       collapsible: true,
       active:false
     });
+    $("#voteList").hide();
   });
-  
+  function toggleExplanation(btn){
+  	if($("#voteList").is(":visible")){
+  		$("#voteList").hide();
+  		$(btn).val("View explanations");
+  	}
+  	else{
+  		$("#voteList").show();
+  		$(btn).val("Hide explanations");
+  	}
+  }
   </script>
   
   
@@ -147,7 +157,7 @@ mode=0;//0: attempt, 1: view_result
 </div>
 <br>
 <div class="buttons">
-<input type="button" class="btn btn-primary" value="View explanations" ><!-- onclick="toggleExplanation()" -->
+<input type="button" class="btn btn-primary" value="View explanations"  onclick="toggleExplanation(this)" >
 </div> <!-- /.buttons -->
 <!-- 
 <div id="voteList">

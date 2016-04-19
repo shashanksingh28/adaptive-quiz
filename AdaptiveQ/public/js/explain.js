@@ -21,7 +21,8 @@ function populateTable(id) {
         // For each item in our JSON, add a table row and cells to the content string
         $.each(userListData, function(){
 			divContent += '<div id = ' + this.givenById + '>';
-            divContent += '<h5 style="display:inline-block">' + this.givenById/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
+            divContent += '<h5 style="display:inline-block">' + this.givenByName/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
+            this.text=this.text.replace(/\n/g, "<br />");;
             divContent += '' + this.text + '<br/>';
             divContent += '<div style="margin-top:8px">';
             divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Vote</button> '+'<div id ="noUpVotes" style="display:inline-block;margin-left:8px;">' + this.noUpVotes +'</div>';
