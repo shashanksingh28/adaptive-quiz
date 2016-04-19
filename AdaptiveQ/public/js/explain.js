@@ -20,20 +20,16 @@ function populateTable(id) {
         console.log(userListData);
         // For each item in our JSON, add a table row and cells to the content string
         $.each(userListData, function(){
-
-            // tableContent += '<tr id = ' + this.givenBy + '>';
-//             tableContent += '<td>' + this.givenBy + '</td>';
-//             tableContent += '<td>' + this.text + '</td>';
-//             tableContent += '<td id ="noUpVotes">' + this.noUpVotes +'</td>';
-//             tableContent += '<td>' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +'>Click Me!</button> '+'</td>';
-//             tableContent += '</tr>';
 			divContent += '<div id = ' + this.givenById + '>';
-            divContent += '<h5>' + this.givenById/*TODO: Change to Username of student who gave this explanation*/ + '</h5>';
-            divContent += '' + this.text + '';
-            divContent += '<div id ="noUpVotes">' + this.noUpVotes +'</div>';
-            divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Click Me!</button> '+'';
-            divContent += '</div>';
+            divContent += '<h5 style="display:inline-block">' + this.givenById/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
+            divContent += '' + this.text + '<br/>';
+            divContent += '<div style="margin-top:8px">';
+            divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Vote</button> '+'<div id ="noUpVotes" style="display:inline-block;margin-left:8px;">' + this.noUpVotes +'</div>';
+            divContent += '<hr></div></div></div>';
         });
+
+
+
 
         // Inject the whole content string into our existing HTML table
 //         $('#userList').append(tableContent);

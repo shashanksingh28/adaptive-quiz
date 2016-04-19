@@ -27,7 +27,13 @@
       collapsible: true,
       active:false
     });
+    $("#hint").hide()
   });
+  function dispHint(){
+  	$("#hintBtn").attr("disabled",true);
+  	$("#hint").show();
+  	$("#hintTaken").val(true);
+  }
   </script>
 </head>
 <body>
@@ -122,7 +128,7 @@ if(User.hintsLeft<=0 || Question.hint.length<=0)
 </div>
 <div class="buttons">
 <input type="submit" class="btn btn-primary" value="Submit" onclick="sub()">
-<input type="button" class="btn btn-primary-outline" value="Show hint" <%=hintDisabled%> onclick="clearForm()">
+<input type="button" id="hintBtn" class="btn btn-primary-outline" value="Show hint" <%=hintDisabled%> onclick="dispHint()">
 <input type="reset" class="btn btn-primary-outline" value="Clear Form" onclick="clearForm()">
 </div> <!-- /.buttons -->
 
@@ -131,13 +137,13 @@ if(User.hintsLeft<=0 || Question.hint.length<=0)
 if(Question.hint.length>0)
 {
 %>
-Hint:<br/>
+<label class="svellang">Hint</label><br/>
 <%= Question.hint%>
 <%
 }
 %>
 </div>
-
+<input name="hintTaken" type="hidden" id="hintTaken" value=false />
 </form>
 
 </div> <!-- /.container-fluid -->
