@@ -110,6 +110,14 @@ function attemptQuestion(question,givenAns,req,res){
 	updateUser(req.session.email,record)
 	.then(function (updatedUser){
 		console.log("Attempt Recorded:"+updatedUser);
+			updateQuestion(explaination,question._id)
+			.then(function (updatedQuestion,questionId){
+				console.log("updatedQuestion succesfull"+updatedQuestion);
+				//res.send("updated question")
+				return res.render('explaination', {Question : question, Attempt : record });
+			},function (err){
+				console.log("error in update");
+			});
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
 	},function (err){
@@ -117,14 +125,7 @@ function attemptQuestion(question,givenAns,req,res){
 			//TODO: redirect to error
 	});
 	
-	updateQuestion(explaination,questionId)
-	.then(function (updatedQuestion,questionId){
-		console.log("updatedQuestion succesfull"+updatedQuestion);
-		//res.send("updated question")
-		return res.render('explaination', {Question : question, Attempt : record });
-	},function (err){
-		console.log("error in update");
-	});
+
 	
 	
 	
@@ -306,7 +307,7 @@ Questions Explaination related functions
 -----------------------------------------------------------------------------*/
 var sortByProperty = function (property) {
     return function (x, y) {
-        return ((x[property] === y[property]) ? 0 : ((x[property] > y[property]) ? 1 : -1));
+        return ((x[property] === y[property]) ? 0 : ((x[property] < y[property]) ? 1 : -1));
     };
 };
 
@@ -317,7 +318,7 @@ function updateQuestionExp(id,givenBy,uid){
 	t = id + givenBy;
 	console.log("Total" + t);
 	var promise = Question.update({'_id':id,
-		"explainations.givenBy":givenBy},
+		"explainations.givenById":givenBy},
 		{$push:{"explainations.$.upVotedBy":uid},
 		$inc:{"explainations.$.noUpVotes":1}}).exec();
 
@@ -331,7 +332,7 @@ function updateQuestionExpDec(id,givenBy,uid){
 	t = id + givenBy;
 	console.log("Total" + t);
 	var promise = Question.update({'_id':id,
-		"explainations.givenBy":givenBy},
+		"explainations.givenById":givenBy},
 		{$pull:{"explainations.$.upVotedBy":uid},
 		$inc:{"explainations.$.noUpVotes": -1}}).exec();
 
@@ -344,13 +345,13 @@ router.get('/explain', function(req, res){
 });
 
 router.get('/explainlist', function(req, res) {
-    	console.log(req.query.id);
+    	console.log("populate explainlist" + req.query.id);
     	getQuestion(req.query.id)
 	.then(function (question){
 		explainations = question.explainations;
 		explainations.sort(sortByProperty('noUpVotes'));
 		console.log("sorted explainations are" + explainations);
-		res.json(question);
+		res.json(explainations);
 	})
 });
 
@@ -373,9 +374,9 @@ router.post('/explainUpdateDec', function(req, res) {
 	console.log("From ajax got this " + req.body.Qid);
 
 	Explain = req.body;
-	console.log(Explain.givenBy);
+	console.log("given by" + Explain +Explain.givenBy);
 	console.log("User in session is " + req.session.userId);
-	updateQuestionExpDec(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.userId)
+	updateQuestionExpDec(parseInt(Explain.Qid),parseInt(Explain.givenById),req.session.userId)
 		.then(function (updatedUser){
 			console.log("Explain updated");
 			  res.send({ msg: '' });
