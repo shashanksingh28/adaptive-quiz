@@ -22,7 +22,7 @@ User.getUserByEmail = function(email){
 };
 
 User.getUserById = function(id){
-  return Users.findById(userId).exec();
+  return User.findById(userId).exec();
 };
 
 User.getAllUsers = function(){
@@ -42,7 +42,7 @@ User.createUser = function(email, password, name){
 };
 
 User.addRecordToUserId = function(userId,record){
-  return Users.update({'_id': userId},{$push:{'records':record}}).exec();
+  return User.update({'_id': userId},{$push:{'records':record}}).exec();
 };
 
 module.exports = User;

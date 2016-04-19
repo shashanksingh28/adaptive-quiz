@@ -3,7 +3,7 @@ var nodemailer = require("nodemailer");
 var router = express.Router();
 // mongoose data models
 var Question = require('../models/questionModel');
-var Users = require('../models/userModel');
+var User = require('../models/userModel');
 //setup smtp for mailing
 var smtpTransport = nodemailer.createTransport("SMTP",{
     service: "Gmail",
@@ -82,8 +82,7 @@ function attemptQuestion(question,givenAns,req,res){
 		score = 0.0
 	}
 	console.log("Score for answer is " + score);
-	record.score=score;
-	console.log(req.session.email,record);
+	record.score=score;	
 	User.addRecordToUserId(req.session.user._id,record)
 	.then(function (updatedUser){
 		console.log("Attempt Recorded:"+updatedUser);
@@ -124,7 +123,7 @@ router.post('/', function(req, res){
 
 // Show a question with given id
 router.get('/', function(req, res){
-	userId = req.session.userId;
+	userId = req.session.user._id;
 	qid = req.query.id;
 	//Checking if user attempted the question already
 	User.getUserById(userId).then(function (User){
@@ -143,7 +142,7 @@ router.get('/', function(req, res){
 			}
 		}
 		if(check == 0){
-			Quetsion.getQuestionById(qid)
+			Question.getQuestionById(qid)
 			.then(function (question){
 
 			console.log("old starttime" + req.session.startTime);
