@@ -21,7 +21,6 @@ router.post('/login', function(req, res, next){
     .then(function (user){
       //console.log("user id is" + user._id);
       if(user.email){
-
         // check if password matches
         if(user.password == pass){
           console.log("user is " + user);
@@ -36,7 +35,7 @@ router.post('/login', function(req, res, next){
           }
           else{
             // Check if need to redirect after authentication
-            console.log("Saved Session here :" + req.session.redirect_to);
+            //console.log(req.session.redirect_to);
             if(req.session.redirect_to != null){
               var url = req.session.redirect_to;
               req.session.redirect_to = null;
