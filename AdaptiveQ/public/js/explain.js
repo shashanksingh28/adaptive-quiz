@@ -14,7 +14,9 @@ function populateTable(id) {
     $.getJSON( '/question/explainlist?id='+ id, function( data ) {
 
         // Stick our user data array into a userlist variable in the global object
-        userListData = data.explainations;
+        userListData = data;
+        console.log("the data is " + data);
+        console.log(data);
         console.log(userListData);
         // For each item in our JSON, add a table row and cells to the content string
         $.each(userListData, function(){
@@ -25,11 +27,11 @@ function populateTable(id) {
 //             tableContent += '<td id ="noUpVotes">' + this.noUpVotes +'</td>';
 //             tableContent += '<td>' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +'>Click Me!</button> '+'</td>';
 //             tableContent += '</tr>';
-			divContent += '<div id = ' + this.givenBy + '>';
-            divContent += '<h5>' + this.givenBy/*TODO: Change to Username of student who gave this explanation*/ + '</h5>';
+			divContent += '<div id = ' + this.givenById + '>';
+            divContent += '<h5>' + this.givenById/*TODO: Change to Username of student who gave this explanation*/ + '</h5>';
             divContent += '' + this.text + '';
             divContent += '<div id ="noUpVotes">' + this.noUpVotes +'</div>';
-            divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenBy +'>Click Me!</button> '+'';
+            divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Click Me!</button> '+'';
             divContent += '</div>';
         });
 
@@ -57,7 +59,8 @@ function updateExp(givenBy){
             'Qid': qid,
             'givenBy' : givenBy 
         };
-
+    console.log("explain is updateExp " + Explain);
+    console.log(Explain);
         // Use AJAX to post the object to our adduser service
         $.ajax({
             type: 'POST',
