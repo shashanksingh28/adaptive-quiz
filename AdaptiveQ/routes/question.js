@@ -66,13 +66,13 @@ function attemptQuestion(question,givenAns,req,res){
 	/*if(hint){
 		updateHint(req.session.user._id);
 	}*/
-	
+
 	console.log("explaination is" + req.body.explainationGiven)
-	console.log("user is" + req.session.user.name) 
+	console.log("user is" + req.session.user.name)
 
 	explaination = {
 		givenById : req.session.user._id,
-		givenByName : req.session.user.name,			
+		givenByName : req.session.user.name,
 		text : req.body.explainationGiven,
 		noUpVotes: 0,
 		upVotedBy: []
@@ -88,7 +88,7 @@ function attemptQuestion(question,givenAns,req,res){
 			if(givenAns[i] == question.answers[j]){
 				noOfCorrect++;
 			}
-		};		 
+		};
 	};
 	console.log("No of correctAns " + noOfCorrect);
 	noOfWrong = givenAns.length - noOfCorrect;
@@ -124,23 +124,13 @@ function attemptQuestion(question,givenAns,req,res){
 			console.log("error in update");
 			//TODO: redirect to error
 	});
-	
 
-	
-	
-	
-
-	
 }
 
+// attempy a question
 router.post('/', function(req, res){
-	// check authentication before showing question
-	if(!(req.session && req.session.email)){
-		res.redirect('/');
-	}
-
 	console.log("the id is" + req.body.id + req.originalUrl);
-	
+
 	//get the answer
 	givenAns = req.body.options.toString();
 	var Ansarray = givenAns.split(',');
@@ -155,18 +145,12 @@ router.post('/', function(req, res){
 
 });
 
-
 // Show a question with given id
 router.get('/', function(req, res){
-	// check authentication before showing question
-	if(!(req.session && req.session.email)){
-		req.session.redirect_to = '/question'+req.url;
-		res.redirect('/');
-	}
 	userId = req.session.userId;
 	qid = req.query.id;
 	//Checking if user attempted the question already
-	getUser(userId).then(function (User){		
+	getUser(userId).then(function (User){
 		check = 0
 		//console.log("Got user" + User );
 		records = User.records;
@@ -184,7 +168,7 @@ router.get('/', function(req, res){
 		if(check == 0){
 			getQuestion(qid)
 			.then(function (question){
-			
+
 			console.log("old starttime" + req.session.startTime);
 			timeStart = Date.now();
 			console.log("setting starttime" + timeStart);
@@ -199,12 +183,12 @@ router.get('/', function(req, res){
 		}
 		else{
 
-			//TODo: remove this and and redirect to original 
+			//TODo: remove this and and redirect to original
 			getQuestion(qid)
 			.then(function (question){
 			console.log("Already attempted" + attemptRecord.score);
 			res.render('explaination', {Question : question, Attempt : attemptRecord });
-	
+
 			})
 			.catch(function (error){
 			// TODO: error page
@@ -214,9 +198,9 @@ router.get('/', function(req, res){
 		}
 
 	},function (err){
-		console.log("error in getting user");     
-	});		
-	
+		console.log("error in getting user");
+	});
+
 });
 
 
@@ -253,7 +237,7 @@ router.post('/ask', function(req, res){
 		answers: answerss,
 		concept: req.body.conceptId,
 		difficulty: req.body.difficulty,
-		created_at: Date.now(),		
+		created_at: Date.now(),
 		hint: req.body.hint,
 		explainations: []
 	});
@@ -264,7 +248,7 @@ router.post('/ask', function(req, res){
 		getUsers().then(function(promise){
 			console.log("all users are" + promise);
 			//to get all users to whom mail will be send
-			var userEmails = []; 
+			var userEmails = [];
 			for (i in promise) {
 				console.log("user is email is" + promise[i].email + promise[i])
   				userEmails.push(promise[i].email);
@@ -276,7 +260,7 @@ router.post('/ask', function(req, res){
 			   	to : userEmails,
 			   	subject : "Question of the day",
 			  	text : newQuestion.text + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b>" + newQuestion.text + " </b>" + "<br>" + 
+			  	html : "<b>" + newQuestion.text + " </b>" + "<br>" +
 			  			"Please click the link below to attempt the question"
 			}
 			console.log(mailOptions);
@@ -288,18 +272,18 @@ router.post('/ask', function(req, res){
 			else{
 				console.log("Message sent: " + response.message);
 			}
-			
+
 			});
 
 			res.redirect('/question/ask');
 
 			},function (err){
-					console.log("error in update explaination" + err);     
+					console.log("error in update explaination" + err);
 	   		});
 		});
 	});
 
-		
+
 
 
 /*---------------------------------------------------------------------------
@@ -366,7 +350,7 @@ router.post('/explainUpdate', function(req, res) {
 			console.log("Explain updated");
 			  res.send({ msg: '' });
 		},function (err){
-				console.log("error in update explaination");     
+				console.log("error in update explaination");
    		});
 });
 
@@ -381,7 +365,7 @@ router.post('/explainUpdateDec', function(req, res) {
 			console.log("Explain updated");
 			  res.send({ msg: '' });
 		},function (err){
-				console.log("error in update explaination");     
+				console.log("error in update explaination");
    		});
 });
 
