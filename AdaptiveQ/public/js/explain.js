@@ -76,6 +76,8 @@ function updateExp(givenBy){
 
 // DOM Ready =============================================================
 $(document).ready(function() {
+
+  	$('[data-toggle="tooltip"]').tooltip()
     populateTable(qid)
     //var getQuestion = <%= Question %>
 

@@ -34,7 +34,7 @@
 <% 
 inputType=Question.answers.length>1?"checkbox":"radio"; 
 hintDisabled = "";
-if(User.hintsLeft<=0 && Question.hint.length>0)
+if(User.hintsLeft<=0 || Question.hint.length<=0)
 	hintDisabled="disabled";
 %>
 <nav class="navbar navbar-default">

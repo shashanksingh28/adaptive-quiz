@@ -11,6 +11,7 @@
 
 <!--Common-->
 <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+<script src="/js/tether.min.js"></script>
 <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 
@@ -93,33 +94,55 @@ mode=0;//0: attempt, 1: view_result
 <br/>
 <div id="options">
 
-<% for(var i=0; i < Question.options.length; i++) { %>
-	<div class="option input-group">
-	<span class="input-group-addon">
-	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko">
+<% for(var i=0; i < Question.options.length; i++) { 
+		var color="";
+		var tooltip="";
+		var arrActualOptions = Question.answers;
+		var checked="";
+		if(arrActualOptions.indexOf(i)>-1 && Attempt.givenAns.indexOf(i)>-1){
+			color="correct";
+			tooltip="data-toggle=tooltip data-placement=auto title=Correct";
+			checked="checked";
+		}
+		if(arrActualOptions.indexOf(i)>-1 && Attempt.givenAns.indexOf(i)<0){
+			color="warning";
+			tooltip="data-toggle=tooltip data-placement=auto title=Missed";
+		}
+		if(arrActualOptions.indexOf(i)<0 && Attempt.givenAns.indexOf(i)>-1){
+			color="incorrect";
+			tooltip="data-toggle=tooltip data-placement=auto title=Incorrect";
+			checked="checked";
+		}
+%>
+	<div class="option input-group" <%=tooltip%>>
+	<span class="input-group-addon <%=color%>">
+	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko" disabled <%=checked%>>
 	</span>
-	<label for="option<%=i%>" class="form-control optiono"><%=Question.options[i]%></label>
+	<label for="option<%=i%>" class="form-control optiono disabled"><%=Question.options[i]%></label>
 	</div> <!-- ./input-group -->
 <% } %>
 
-<div class="option input-group">
+<!-- 
+<div class="option input-group" data-toggle="tooltip" data-placement="auto" title="Correct option">
 	<span class="input-group-addon correct">
 	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko">
 	</span>
-	<label for="option<%=i%>" class="form-control optiono">Correct option</label>
-</div> <!-- ./input-group -->
+	<label for="option<%=i%>" class="form-control optiono">Correct clicked</label>
+</div> <!~~ ./input-group ~~>
 <div class="option input-group">
 	<span class="input-group-addon warning">
 	<input type=<%=inputType%> name="options" id="option<%=i+1%>" class="checko">
 	</span>
-	<label for="option<%=i+1%>" class="form-control optiono">Warning option</label>
-</div> <!-- ./input-group -->
+	<label for="option<%=i+1%>" class="form-control optiono">Missed to click option</label>
+</div> <!~~ ./input-group ~~>
 <div class="option input-group">
 	<span class="input-group-addon incorrect">
 	<input type=<%=inputType%> name="options" id="option<%=i+2%>" class="checko">
 	</span>
-	<label for="option<%=i+2%>" class="form-control optiono">Incorrect option</label>
-</div> <!-- ./input-group -->
+	<label for="option<%=i+2%>" class="form-control optiono">Incorrectly selected option</label>
+</div> <!~~ ./input-group ~~>
+ -->
+
 
 </div>
 <br>

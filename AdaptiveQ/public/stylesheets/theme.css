@@ -41,6 +41,10 @@ label.form-control.optiono{
 user-select: none;
 }
 
+label.form-control.optiono.disabled{
+    cursor: default;
+}
+
 .input-group-addon.correct{
     background-color: rgb(185,217,135);
 }
