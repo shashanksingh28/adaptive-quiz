@@ -20,7 +20,7 @@ function populateTable(id) {
         console.log(userListData);
         // For each item in our JSON, add a table row and cells to the content string
         $.each(userListData, function(){
-			divContent += '<div id = ' + this.givenById + '>';
+			divContent += '<div class="explainList" id = ' + this.givenById + '>';
             divContent += '<h5 style="display:inline-block">' + this.givenByName/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
             this.text=this.text.replace(/\n/g, "<br />");;
             divContent += '' + this.text + '<br/>';
@@ -36,6 +36,11 @@ function populateTable(id) {
 //         $('#userList').append(tableContent);
 		$('#voteList').append(divContent);
         $('.likeButton').on('click',voteExp);
+        
+    	$( ".explainList" ).each(function( index ) {
+		  		if(index>=numExplains)
+		  			$(this).hide();
+		});
     });
 }
 
@@ -76,9 +81,9 @@ function updateExp(givenBy){
 
 // DOM Ready =============================================================
 $(document).ready(function() {
-
-  	$('[data-toggle="tooltip"]').tooltip()
-    populateTable(qid)
+	
+  	$('[data-toggle="tooltip"]').tooltip();
+    populateTable(qid);
     //var getQuestion = <%= Question %>
 
     console.log("inside js");    
