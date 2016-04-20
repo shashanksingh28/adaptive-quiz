@@ -1,31 +1,7 @@
-var treeData = [
-  {
-    "name": "Top Level",
-    "parent": "null",
-    "children": [
-      {
-        "name": "Level 2: A",
-        "parent": "Top Level",
-        "children": [
-          {
-            "name": "Son of A",
-            "parent": "Level 2: A"
-          },
-          {
-            "name": "Daughter of A",
-            "parent": "Level 2: A"
-          }
-        ]
-      },
-      {
-        "name": "Level 2: B",
-        "parent": "Top Level"
-      }
-    ]
-  }
-];
+// treedata should have name and parent
 
 function loadViz(data){
+
   console.log(data);
 
   // ************** Generate the tree diagram	 *****************
@@ -49,8 +25,6 @@ function loadViz(data){
     .append("g")
   	.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
-  console.log(data);
-  console.log(treeData);
   root = data;
   root.x0 = height / 2;
   root.y0 = 0;
@@ -149,11 +123,11 @@ function loadViz(data){
   // Toggle children on click.
   function click(d) {
     if (d.children) {
-  	d._children = d.children;
-  	d.children = null;
+    	d._children = d.children;
+    	d.children = null;
     } else {
-  	d.children = d._children;
-  	d._children = null;
+    	d.children = d._children;
+    	d._children = null;
     }
     update(d);
   }
@@ -161,7 +135,7 @@ function loadViz(data){
 }
 
 $(document).ready(function(){
-  $.ajax({url: "/concepts", success: function(result){
+  $.ajax({url: "/analytics/getConceptTree", success: function(result){
       loadViz(result);
     }
   });
