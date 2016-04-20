@@ -4,7 +4,7 @@ var userListData = [];
 // Fill table with data
 
 
-function populateTable(id) {
+function populateTable(id,arrayGivenBy) {
 
     // Empty content string
 //     var tableContent = '';
@@ -15,6 +15,7 @@ function populateTable(id) {
 
         // Stick our user data array into a userlist variable in the global object
         userListData = data;
+        console.log("givenByIds are as " + arrayGivenBy);
         console.log("the data is " + data);
         console.log(data);
         console.log(userListData);
@@ -84,7 +85,7 @@ function updateExp(givenBy){
 $(document).ready(function() {
 	
   	$('[data-toggle="tooltip"]').tooltip();
-    populateTable(qid);
+    populateTable(qid,arrayGivenBy);
     //var getQuestion = <%= Question %>
 
     console.log("inside js");    
