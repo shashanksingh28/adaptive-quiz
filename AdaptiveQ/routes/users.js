@@ -21,9 +21,11 @@ router.post('/login', function(req, res, next){
             if(req.session.redirect_to != null){
               var url = req.session.redirect_to;
               req.session.redirect_to = null;
+              console.log("redirecting to :"+url);
               res.redirect(url);
             }
             else {
+              console.log("going to /");
               res.redirect('/');
             }
           }
