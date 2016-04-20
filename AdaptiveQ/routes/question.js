@@ -177,7 +177,7 @@ router.get('/', function(req, res){
 			userId = req.session.user._id;
 			upvotedExp = {
 				upvoted : false,
-				givenById : 0
+				givenById : []
 			}	
 			console.log("Already attempted" + attemptRecord.score + "User" + userId);
 			for (var i = question.explainations.length - 1; i >= 0; i--) {
@@ -185,11 +185,11 @@ router.get('/', function(req, res){
 				for (var j = question.explainations[i].upVotedBy.length - 1; j >= 0; j--) {
 					if(question.explainations[i].upVotedBy[j] == userId){
 						upvotedExp.upvoted = true;
-						upvotedExp.givenById = question.explainations[i].givenById;
+						upvotedExp.givenById.push(question.explainations[i].givenById); 
 					}
 				};
 			};
-
+			
 			console.log("upvotedExp is");
 			console.log(upvotedExp);
 

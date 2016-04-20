@@ -13,6 +13,7 @@ router.post('/login', function(req, res, next){
           req.session.startTime = Date.now();
           if (user.email == "adaptq@gmail.com"){
             console.log("Teacher is here");
+            req.session.user = user;
             req.session.isTeacher = true;
             res.redirect('/question/ask');
           }
