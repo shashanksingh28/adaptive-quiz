@@ -1,5 +1,10 @@
 // treedata should have name and parent
 
+function lerp(a, b, t) {
+  var x = a + t * (b - a);
+  return x;
+}
+
 function loadViz(data){
 
   console.log(data);
@@ -50,16 +55,31 @@ function loadViz(data){
     var nodeEnter = node.enter().append("g")
   	  .attr("class", "node")
   	  .attr("transform", function(d) { return "translate(" + source.y0 + "," + source.x0 + ")"; })
-  	  .on("click", click);
+  	  .on("click", click)
+      .style("cursor", function(d){
+        return d.children ? "pointer" : "default";
+      });
 
     nodeEnter.append("circle")
+      // make this co-related to the number of questions?
   	  .attr("r", 1e-6)
-  	  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+  	  .style("fill", function(d) {
+          if (d.mScore == -1){
+            return "#fff";
+          }
+          var greenAmount = lerp(255, 0, d.mScore/100);
+          var redAmount = lerp(0, 255, d.mScore/100);
+          var rgb = "rgb("+redAmount+","+greenAmount+",0)";
+          return rgb;
+          //return d._children ? "lightsteelblue" : "#fff";
+       });
 
     nodeEnter.append("text")
   	  .attr("x", function(d) { return d.children || d._children ? -13 : 13; })
   	  .attr("dy", ".35em")
-  	  .attr("text-anchor", function(d) { return d.children || d._children ? "end" : "start"; })
+  	  .attr("text-anchor", function(d) {
+        return d.children || d._children ? "end" : "start";
+      })
   	  .text(function(d) { return d.name; })
   	  .style("fill-opacity", 1e-6);
 
@@ -70,7 +90,16 @@ function loadViz(data){
 
     nodeUpdate.select("circle")
   	  .attr("r", 10)
-  	  .style("fill", function(d) { return d._children ? "lightsteelblue" : "#fff"; });
+  	  .style("fill", function(d) {
+        if (d.mScore == -1){
+          return "#fff";
+        }
+        var redAmount = lerp(255, 0, d.mScore/100);
+        var greenAmount = lerp(0, 255, d.mScore/100);
+        var rgb = "rgb("+redAmount+","+greenAmount+",0)";
+        return rgb;
+        //return d._children ? "lightsteelblue" : "#fff";
+       });
 
     nodeUpdate.select("text")
   	  .style("fill-opacity", 1);
@@ -95,8 +124,8 @@ function loadViz(data){
     link.enter().insert("path", "g")
   	  .attr("class", "link")
   	  .attr("d", function(d) {
-  		var o = {x: source.x0, y: source.y0};
-  		return diagonal({source: o, target: o});
+  		    var o = {x: source.x0, y: source.y0};
+  		    return diagonal({source: o, target: o});
   	  });
 
     // Transition links to their new position.
