@@ -101,8 +101,8 @@ function attemptQuestion(question,givenAns,req,res){
 				upvotedExp = {
 					upvoted : false,
 					givenById : 0
-				};				
-				return res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp});
+				};	
+				return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp});
 			},function (err){
 				console.log("error in update");
 			});
