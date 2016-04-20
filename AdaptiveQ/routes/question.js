@@ -100,7 +100,7 @@ function attemptQuestion(question,givenAns,req,res){
 				//res.send("updated question")
 				upvotedExp = {
 					upvoted : false,
-					givenById : 0
+					givenById : []
 				};	
 				return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp});
 			},function (err){
