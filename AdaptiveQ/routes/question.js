@@ -189,7 +189,7 @@ router.get('/', function(req, res){
 					}
 				};
 			};
-			
+
 			console.log("upvotedExp is");
 			console.log(upvotedExp);
 
@@ -343,8 +343,8 @@ router.post('/explainUpdate', function(req, res) {
 
 	Explain = req.body;
 	console.log(Explain.givenBy);
-	console.log("User in session is " + req.session.userId);
-	updateQuestionExp(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.userId)
+	console.log("User in session is " + req.session.user._id);
+	updateQuestionExp(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.user._id)
 		.then(function (updatedUser){
 			console.log("Explain updated");
 			  res.send({ msg: '' });
