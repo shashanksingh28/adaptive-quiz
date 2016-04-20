@@ -44,7 +44,7 @@ function attemptQuestion(question,givenAns,req,res){
 	if(hint){
 		console.log("decreasing hint count in user");
 		User.updateHint(req.session.user._id).then(function (question){
-			console.log("decreasing hint count in user succes");
+			console.log("decreasing hint count in user success");
 		})
 		.catch(function (error){
 			// TODO: error page
@@ -98,7 +98,11 @@ function attemptQuestion(question,givenAns,req,res){
 			.then(function (updatedQuestion,questionId){
 				console.log("updatedQuestion succesfull"+updatedQuestion);
 				//res.send("updated question")
-				return res.render('explaination', {Question : question, Attempt : record });
+				upvotedExp = {
+					upvoted : false,
+					givenById : 0
+				};				
+				return res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp});
 			},function (err){
 				console.log("error in update");
 			});
@@ -170,8 +174,27 @@ router.get('/', function(req, res){
 			//TODo: remove this and and redirect to original
 			Question.getQuestionById(qid)
 			.then(function (question){
-			console.log("Already attempted" + attemptRecord.score);
-			res.render('explaination', {Question : question, Attempt : attemptRecord });
+			userId = req.session.user._id;
+			upvotedExp = {
+				upvoted : false,
+				givenById : 0
+			}	
+			console.log("Already attempted" + attemptRecord.score + "User" + userId);
+			for (var i = question.explainations.length - 1; i >= 0; i--) {
+				console.log("givenBy by" + question.explainations[i].givenByName);
+				for (var j = question.explainations[i].upVotedBy.length - 1; j >= 0; j--) {
+					if(question.explainations[i].upVotedBy[j] == userId){
+						upvotedExp.upvoted = true;
+						upvotedExp.givenById = question.explainations[i].givenById;
+					}
+				};
+			};
+
+			console.log("upvotedExp is");
+			console.log(upvotedExp);
+
+
+			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp});
 
 			})
 			.catch(function (error){
