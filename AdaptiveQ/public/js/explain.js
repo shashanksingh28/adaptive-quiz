@@ -25,7 +25,7 @@ function populateTable(id) {
             this.text=this.text.replace(/\n/g, "<br />");;
             divContent += '' + this.text + '<br/>';
             divContent += '<div style="margin-top:8px">';
-            divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Vote</button> '+'<div id ="noUpVotes" style="display:inline-block;margin-left:8px;">' + this.noUpVotes +'</div>';
+            divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Vote</button> '+'<div id ="noUpVotes" style="display:inline-block;margin-left:8px;">' + this.noUpVotes + '&nbsp;' + this.upVotedBy+'</div>';
             divContent += '<hr></div></div></div>';
         });
 
@@ -33,7 +33,6 @@ function populateTable(id) {
 
 
         // Inject the whole content string into our existing HTML table
-//         $('#userList').append(tableContent);
 		$('#voteList').append(divContent);
         $('.likeButton').on('click',voteExp);
         
@@ -41,6 +40,9 @@ function populateTable(id) {
 		  		if(index>=numExplains)
 		  			$(this).hide();
 		});
+		
+  		if(numExplains>=$(".explainList").length)
+  			$("#btnShowMore").attr("disabled",true);
     });
 }
 
@@ -72,7 +74,6 @@ function updateExp(givenBy){
         }).done(function( response ) {
             if (response.msg === '') {
                 console.log("Updated successful");         
-
             }
         });
 
