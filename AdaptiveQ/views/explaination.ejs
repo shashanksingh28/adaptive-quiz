@@ -122,17 +122,18 @@ mode=0;//0: attempt, 1: view_result
 		var color="";
 		var tooltip="";
 		var arrActualOptions = Question.answers;
+    var givenAns = JSON.stringify(Attempt.givenAns);
 		var checked="";
-		if(arrActualOptions.indexOf(i)>-1 && Attempt.givenAns.indexOf(i)>-1){
+		if(arrActualOptions.indexOf(i)>-1 && givenAns.indexOf(i)>-1){
 			color="correct";
 			tooltip="data-toggle=tooltip data-placement=auto title=Correct";
 			checked="checked";
 		}
-		if(arrActualOptions.indexOf(i)>-1 && Attempt.givenAns.indexOf(i)<0){
+		if(arrActualOptions.indexOf(i)>-1 && givenAns.indexOf(i)<0){
 			color="warning";
 			tooltip="data-toggle=tooltip data-placement=auto title=Missed";
 		}
-		if(arrActualOptions.indexOf(i)<0 && Attempt.givenAns.indexOf(i)>-1){
+		if(arrActualOptions.indexOf(i)<0 && givenAns.indexOf(i)>-1){
 			color="incorrect";
 			tooltip="data-toggle=tooltip data-placement=auto title=Incorrect";
 			checked="checked";
