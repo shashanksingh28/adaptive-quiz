@@ -3,7 +3,6 @@ var router = express.Router();
 var Concepts = require('../models/conceptModel');
 var User = require('../models/userModel');
 
-// Get the mean score of the user only for this concept
 function getUserConceptMean(concept, user){
   var total = 0;
   var count = 0;
@@ -19,6 +18,8 @@ function getUserConceptMean(concept, user){
 
   return total / count;
 }
+
+//############## Concept Tree Functions ##############
 
 // same as above with plural
 function getUsersConceptMean(concept, users){
@@ -114,6 +115,88 @@ router.get('/getConceptTree', function(req, res, next){
           }, function (err){console.log("Error fetching users");})
       }
     });
+});
+
+//######## User Score Matrix related functions ########
+
+function getUserPercentile(user, usersScores){
+  //First get users total
+  var userTotalScore = 0;
+  for (var userId in usersScores) {
+    //console.log("Checking for userId:"+user._id);
+    if (usersScores.hasOwnProperty(userId)) {
+        if(userId == user._id)
+        {
+          for(var key in usersScores[userId])
+          {
+            if(usersScores[userId].hasOwnProperty(key))
+            {
+              var score = usersScores[userId][key];
+              if (score != -1)
+                userTotalScore += score;
+            }
+          }
+          //console.log(userId+" : "+userTotalScore);
+          break;
+        }
+    }
+  }
+
+  var totalCount = 1;
+  var above  = 0;
+  for (var userId in usersScores) {
+    if (usersScores.hasOwnProperty(userId)) {
+        if(userId != user._id)
+        {
+          totalCount += 1;
+          var totalScore =  0;
+          for(var key in usersScores[userId])
+          {
+            if(usersScores[userId].hasOwnProperty(key))
+            {
+              var score = usersScores[userId][key];
+              if (score != -1)
+                totalScore += score;
+            }
+          }
+          if(totalScore > userTotalScore){
+            above += 1;
+          }
+        }
+    }
+  }
+  //console.log("above:"+above+ " total : "+ totalCount);
+  var abovePercent = above / totalCount * 100;
+  return 100 - abovePercent;
+}
+
+
+router.get('/getScoreAnalytics', function(req,res, next){
+  Concepts.getAllConcepts()
+  .then(function (allConcepts){
+    User.getAllUsers()
+    .then(function (allUsers){
+      var currentUser = null;
+      var usersScores = {};
+      for(var i = 0; i < allUsers.length; ++i){
+        var obj = {};
+        // Get current user
+        if (allUsers[i]._id == req.session.user._id){
+          currentUser = allUsers[i];
+        }
+        for(var j = 0; j < allConcepts.length; ++j){
+          var key = allConcepts[j].title;
+          var value = getUserConceptMean(key, allUsers[i]);
+          obj[key] = value;
+        }
+        usersScores[allUsers[i]._id] = obj;
+      }
+      response={};
+      response['allScores'] = usersScores;
+      response['userPercentile'] = getUserPercentile(currentUser, usersScores);
+      res.send(response);
+    });
+  });
 });
 
 module.exports = router;
