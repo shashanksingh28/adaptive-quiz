@@ -170,6 +170,31 @@ function getUserPercentile(user, usersScores){
   return 100 - abovePercent;
 }
 
+function getNearestNeighbor(user, userScores){
+  var minAbs = 0;
+  var closestUser = null;
+  for (var userId in usersScores) {
+    if (usersScores.hasOwnProperty(userId)) {
+        if(userId != user._id)
+        {
+          for(var key in usersScores[userId])
+          {
+            if(usersScores[userId].hasOwnProperty(key))
+            {
+              var score = usersScores[userId][key];
+              if (score != -1){
+                totalScore += score;
+              }                
+            }
+          }
+          if(totalScore > userTotalScore){
+            above += 1;
+          }
+        }
+    }
+  }
+}
+
 
 router.get('/getScoreAnalytics', function(req,res, next){
   Concepts.getAllConcepts()
