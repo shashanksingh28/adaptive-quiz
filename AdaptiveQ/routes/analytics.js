@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Concepts = require('../models/conceptModel');
 var User = require('../models/userModel');
+var cossimilarity = require( 'compute-cosine-similarity' );
 
 function getUserConceptMean(concept, user){
   var total = 0;
@@ -170,6 +171,16 @@ function getUserPercentile(user, usersScores){
   return 100 - abovePercent;
 }
 
+function getSimilarity(usersScores)
+{
+  console.log("in getSimilarity");
+  var x = [ 5, 23, 2, 5, 9 ],
+  y = [ 3, 21, 2, 5, 14 ];
+ 
+var s = cossimilarity( x, y );
+console.log("in getSimilarity" + s);
+return s;
+}
 
 router.get('/getScoreAnalytics', function(req,res, next){
   Concepts.getAllConcepts()
@@ -194,6 +205,7 @@ router.get('/getScoreAnalytics', function(req,res, next){
       response={};
       response['allScores'] = usersScores;
       response['userPercentile'] = getUserPercentile(currentUser, usersScores);
+      response['similarity rank'] = getSimilarity(usersScores);
       res.send(response);
     });
   });
