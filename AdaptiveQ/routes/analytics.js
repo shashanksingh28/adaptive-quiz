@@ -183,29 +183,45 @@ console.log("in getSimilarity" + s);
 return s;
 }
 
-function getNearestNeighbor(user, userScores){
+function getNearestNeighbor(user, usersScores){
+  console.log("in getNearestNeighbor");
   var minAbs = 0;
   var closestUser = null;
+  var userData = [];
+  console.log("in getNearestNeighbor for");
   for (var userId in usersScores) {
+    console.log(userId);
     if (usersScores.hasOwnProperty(userId)) {
+      console.log("loop in" + userId + "session id" + user._id)
         if(userId != user._id)
         {
+          var currentUserData = []
+          var sessionUserData = []
           for(var key in usersScores[userId])
           {
+            console.log("for key" + key);
             if(usersScores[userId].hasOwnProperty(key))
             {
+              var userScore = usersScores[user._id][key];
               var score = usersScores[userId][key];
-              if (score != -1){
-                totalScore += score;
+              if (score != -1 && userScore != -1){
+                console.log("matched the key is" + key);
+                currentUserData.push(score);
+                sessionUserData.push(userScore);
+                //totalScore += score;
               }                
             }
           }
-          if(totalScore > userTotalScore){
-            above += 1;
-          }
+          console.log( "the currentUser" + currentUserData + "the sessionUserData" + sessionUserData);
+          var s = cossimilarity( currentUserData, sessionUserData );
+          console.log("the similarity score is" + s);
+          userData.push({"id" : userId, "score":s});
+
         }
     }
   }
+  console.log(userData);
+  return userData;
 }
 
 
@@ -233,7 +249,7 @@ router.get('/getScoreAnalytics', function(req,res, next){
       response={};
       response['allScores'] = usersScores;
       response['userPercentile'] = getUserPercentile(currentUser, usersScores);
-      response['similarity rank'] = getSimilarity(usersScores);
+      response['similarity rank'] = getNearestNeighbor(req.session.user,usersScores);
       res.send(response);
     });
   });
