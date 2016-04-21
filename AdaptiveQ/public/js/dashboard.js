@@ -94,8 +94,8 @@ function loadViz(data){
         if (d.mScore == -1){
           return "#fff";
         }
-        var redAmount = lerp(255, 0, d.mScore/100);
-        var greenAmount = lerp(0, 255, d.mScore/100);
+        var redAmount = lerp(255, 0, d.mScore/2);
+        var greenAmount = lerp(0, 255, d.mScore/2);
         var rgb = "rgb("+redAmount+","+greenAmount+",0)";
         return rgb;
         //return d._children ? "lightsteelblue" : "#fff";
