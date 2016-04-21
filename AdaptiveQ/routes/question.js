@@ -39,7 +39,7 @@ function attemptQuestion(question,givenAns,req,res){
 		score : 0.0,
 		attemptAt: Date,
 		hintTaken : hint,
-		timeTaken : Number //in secs
+		timeTaken : timeTaken //in secs
 	}
 	if(hint){
 		console.log("decreasing hint count in user");
@@ -75,6 +75,9 @@ function attemptQuestion(question,givenAns,req,res){
 			}
 		};
 	};
+	//(percentage correct answer between 0-1) + 10*diff/(10*diff + ln(timeInSec))
+	console.log("no of givenAns" + givenAns);
+	console.log("no of givenAns length" + givenAns.length);
 	console.log("No of correctAns " + noOfCorrect);
 	noOfWrong = givenAns.length - noOfCorrect;
 	console.log("No of noOfWrong " + noOfWrong);
@@ -82,9 +85,11 @@ function attemptQuestion(question,givenAns,req,res){
 	console.log("No of noOfWrongW " + noOfWrongW);
 	score = (noOfCorrect - noOfWrongW)/question.answers.length;
 	console.log("No of score " + score);
-	score = score * (question.difficulty + 1) * 100;
-	console.log("No of score " + score);
-	score = score/(timeTaken * 3);
+	score = score + (question.difficulty + 1) * 10;
+	divisor = (question.difficulty + 1) * 10;
+	divisor = divisor + Math.log(timeTaken)
+	console.log("divisor " + divisor);
+	score = score/(divisor);
 	console.log("No of score " + score);
 	if(score < 0.0){
 		score = 0.0
@@ -125,7 +130,7 @@ router.post('/', function(req, res){
 	console.log("given ans is " + Ansarray);
 	Question.getQuestionById(qid).
 		then(function (question){
-			attemptQuestion(question,givenAns,req,res);
+			attemptQuestion(question,Ansarray,req,res);
 		})
 		.catch(function (error){
 			// TODO: error page
