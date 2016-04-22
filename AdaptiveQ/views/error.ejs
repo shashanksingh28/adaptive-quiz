@@ -1,3 +1,4 @@
+
 <html>
 <head>
 <title>Unforced Error</title>
@@ -32,13 +33,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Unforced Error 404</a>
+      <a class="navbar-brand" href="#">Unforced Error 404
+      </a>
     </div>
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">Break the Racket in Anger? <span class="sr-only">(current)</span></a></li>
+        <li class="active"><a href="#">Timeout? <span class="sr-only">(current)</span></a></li>
         <li><a href="#">Serve Again?</a></li>
       </ul>
 
@@ -48,22 +50,24 @@
 </nav>
 
 
-<div class="container-fluid content">
+<a href="javascript:history.go(-1)">
 
-<div class="form-group">
-  <label for="question"><h1>DAGNABBIT!</h1></label>
-</div>
+  <div class="container-fluid content" align="center">
+  <div class="form-group">
+    <label for="question"><h1>Thats a FEDERROR!</h1></label>
+    <h4>Click here to Go Back!</h4>
+    <br>
+    <img class="errorbg" src="/stylesheets/error.png"></img>
+  </div>
+  <br/>
 
-<br/>
-<%=message%><br />
-<%=error%><br />
-<%=error.status%><br />
-<%=error.stack%><br />
+  <%=message%><br />
+  <%=error%><br />
+  <%=error.status%><br />
+  <%=error.stack%><br />
 
-<div id="errorbg"></div> 
-
-</div> <!-- /.container-fluid -->
-
+  </div> <!-- /.container-fluid -->
+</a>
 </body>
 
 </html>

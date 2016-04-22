@@ -29,8 +29,9 @@ label.svellang{
 	font-size:22px;
 }
 
-div.errorbg{
-	background-image:url("plasma.jpg");
+.errorbg{
+	max-width: 1100px;
+	max-height: 550px;
 }
 
 label.form-control.optiono{
