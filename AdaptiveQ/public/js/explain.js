@@ -57,6 +57,16 @@ updateExp(id)
 
 }
 
+function voteExpDec() {
+var id = $(this).attr('rel');
+console.log("id" + id)
+console.log("current value" + $('#voteList #'+ id + ' #noUpVotes').html());
+var i = parseInt($('#voteList #'+ id + ' #noUpVotes').html());
+$('#voteList #'+ id + ' #noUpVotes').html(i-1);
+updateExpDec(id)
+
+}
+
 function updateExp(givenBy){
 
 
@@ -79,6 +89,31 @@ function updateExp(givenBy){
         });
 
 }
+
+function updateExpDec(givenBy){
+
+
+    var Explain = {
+            'Qid': qid,
+            'givenBy' : givenBy 
+        };
+    console.log("explain is updateExp " + Explain);
+    console.log(Explain);
+        // Use AJAX to post the object to our adduser service
+        $.ajax({
+            type: 'POST',
+            data: Explain,
+            url: '/question/explainUpdateDec',
+            dataType: 'JSON'
+        }).done(function( response ) {
+            if (response.msg === '') {
+                console.log("Updated successful");         
+            }
+        });
+
+}
+
+
 
 
 // DOM Ready =============================================================

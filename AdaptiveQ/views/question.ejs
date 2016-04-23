@@ -83,7 +83,10 @@ if(User.hintsLeft<=0 || Question.hint.length<=0)
 
 <div class="form-group">
   <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
-  <h1><%=Question.text%></h1>
+  <% 
+  text=Question.text.replace(/\n/g, "<br/>");
+  %>
+  <h1><%-text%></h1>
   <!-- <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea> -->
 </div>
 

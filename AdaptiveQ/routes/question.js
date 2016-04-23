@@ -362,9 +362,9 @@ router.post('/explainUpdateDec', function(req, res) {
 	console.log("From ajax got this " + req.body.Qid);
 
 	Explain = req.body;
-	console.log("given by" + Explain +Explain.givenBy);
-	console.log("User in session is " + req.session.userId);
-	updateQuestionExpDec(parseInt(Explain.Qid),parseInt(Explain.givenById),req.session.userId)
+	console.log("given by" + Explain.givenBy);
+	console.log("User in session is " + req.session.user._id);
+	updateQuestionExpDec(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.user._id)
 		.then(function (updatedUser){
 			console.log("Explain updated");
 			  res.send({ msg: '' });
