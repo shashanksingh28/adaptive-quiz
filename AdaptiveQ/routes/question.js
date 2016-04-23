@@ -41,7 +41,7 @@ function attemptQuestion(question,givenAns,req,res){
 		hintTaken : hint,
 		timeTaken : timeTaken //in secs
 	}
-	if(hint){
+	if(hint == true){
 		console.log("decreasing hint count in user");
 		User.updateHint(req.session.user._id).then(function (question){
 			console.log("decreasing hint count in user success");
@@ -99,18 +99,28 @@ function attemptQuestion(question,givenAns,req,res){
 	User.addRecordToUserId(req.session.user._id,record)
 	.then(function (updatedUser){
 		console.log("Attempt Recorded:"+updatedUser);
+		upvotedExp = {
+			upvoted : false,
+			givenById : []
+		};	
+		if(explaination.text.length > 0){
 			Question.addExplanation(question._id, explaination)
 			.then(function (updatedQuestion,questionId){
 				console.log("updatedQuestion succesfull"+updatedQuestion);
 				//res.send("updated question")
-				upvotedExp = {
-					upvoted : false,
-					givenById : []
-				};	
+
 				return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp});
 			},function (err){
 				console.log("error in update");
 			});
+
+		}
+
+		else{
+			console.log("explaination empty no update")
+			return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp});
+		}
+			
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
 	},function (err){
