@@ -37,9 +37,10 @@ function attemptQuestion(question,givenAns,req,res){
 		concept : question.concept,
 		givenAns : givenAns,
 		score : 0.0,
-		attemptAt: Date,
+		attemptAt: Date.now(),
 		hintTaken : hint,
-		timeTaken : timeTaken //in secs
+		timeTaken : timeTaken,
+		//in secs
 	}
 	if(hint == true){
 		console.log("decreasing hint count in user");
@@ -245,26 +246,18 @@ router.post('/ask', function(req, res){
   // TODO change req.body.conceptId to req.body.concept
   	//debugger;
   	console.log("adding ques")
-  		/*var newQuestion = Question({
-		text: req.body.question,
-		options: options,
-		answers: answerss,
-		concept: req.body.conceptId,
-		difficulty: req.body.difficulty,
-		created_at: Date.now(),
-		hint: req.body.hint,
-		explainations: []
-	});*/
 	Question.addQuestion(req.body.question,options,answerss,req.body.conceptId,req.body.difficulty,req.body.hint)
 	.then(function (promise){
+		var id = promise._id;
+		console.log(promise);
 		console.log("question added");
 		User.getAllUsers()
     .then(function(promise){
-			console.log("all users are" + promise);
+			//console.log("all users are" + promise);
 			//to get all users to whom mail will be send
 			var userEmails = [];
 			for (i in promise) {
-				console.log("user is email is" + promise[i].email + promise[i])
+				//console.log("user is email is" + promise[i].email + promise[i])
   				userEmails.push(promise[i].email);
 			}
 			console.log("all users emails are" + userEmails);
@@ -274,8 +267,9 @@ router.post('/ask', function(req, res){
 			   	to : userEmails,
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b>" + req.body.question + " </b>" + "<br>" +
-			  			"Please click the link below to attempt the question"
+			  	html : "<b>" + "Hello click here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
+			  			"Please click the link below to attempt the question" + " <br> " + "http://localhost:3000/question?id=" + id + " <br> " +
+			  			" <a href = http://localhost:3000/question?id=" + id +"></a> "
 			}
 			console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){

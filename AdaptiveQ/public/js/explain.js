@@ -23,7 +23,7 @@ function populateTable(id,arrayGivenBy) {
         $.each(userListData, function(){
 			divContent += '<div class="explainList" id = ' + this.givenById + '>';
             divContent += '<h5 style="display:inline-block">' + this.givenByName/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
-            this.text=this.text.replace(/\n/g, "<br />");;
+            this.text=this.text.replace(/\n/g, "<br />");
             divContent += '' + this.text + '<br/>';
             divContent += '<div style="margin-top:8px">';
             divContent += '' + '<button type="button" class = "likeButton" id = "likeButton" rel=' + this.givenById +'>Vote</button> '+'<div id ="noUpVotes" style="display:inline-block;margin-left:8px;">' + this.noUpVotes + '&nbsp;' + this.upVotedBy+'</div>';
