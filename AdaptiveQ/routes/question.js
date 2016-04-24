@@ -141,77 +141,121 @@ router.post('/', function(req, res){
 router.get('/', requireLogin, function(req, res){
 	userId = req.session.user._id;
 	qid = req.query.id;
-	//Checking if user attempted the question already
-	User.getUserById(userId).then(function (User){
-		check = 0
-		//console.log("Got user" + User );
-		records = User.records;
-		var attemptRecord;
-		//console.log(records);
-		for (var i = 0; i < records.length; i++) {
-			//console.log(records[i]);
-			if( qid == records[i].qid ){
-				attemptRecord = records[i];
-				console.log("found qid");
-				check = 1;
-				break;
-			}
-		}
-		if(check == 0){
-			Question.getQuestionById(qid)
-			.then(function (question){
+  concept = req.query.concept;
+  all = req.query.all;
+  if(qid){
+  	//Checking if user attempted the question already
+  	User.getUserById(userId).then(function (User){
+  		check = 0
+  		//console.log("Got user" + User );
+  		records = User.records;
+  		var attemptRecord;
+  		//console.log(records);
+  		for (var i = 0; i < records.length; i++) {
+  			//console.log(records[i]);
+  			if( qid == records[i].qid ){
+  				attemptRecord = records[i];
+  				console.log("found qid");
+  				check = 1;
+  				break;
+  			}
+  		}
+  		if(check == 0){
+  			Question.getQuestionById(qid)
+  			.then(function (question){
 
-			console.log("old starttime" + req.session.startTime);
-			timeStart = Date.now();
-			console.log("setting starttime" + timeStart);
+  			console.log("old starttime" + req.session.startTime);
+  			timeStart = Date.now();
+  			console.log("setting starttime" + timeStart);
 
-			req.session.startTime = timeStart;
-			console.log("set starttime as " + req.session.startTime);
-			res.render('question', {Question : question, User : req.session.user});
-			})
-			.catch(function (error){
-			// TODO: error page
-			});
-		}
-		else{
+  			req.session.startTime = timeStart;
+  			console.log("set starttime as " + req.session.startTime);
+  			res.render('question', {Question : question, User : req.session.user});
+  			})
+  			.catch(function (error){
+  			// TODO: error page
+  			});
+  		}
+  		else{
+  			//TODo: remove this and and redirect to original
+  			Question.getQuestionById(qid)
+  			.then(function (question){
+  			userId = req.session.user._id;
+  			upvotedExp = {
+  				upvoted : false,
+  				givenById : []
+  			}
+  			console.log("Already attempted" + attemptRecord.score + "User" + userId);
+  			for (var i = question.explainations.length - 1; i >= 0; i--) {
+  				console.log("givenBy by" + question.explainations[i].givenByName);
+  				for (var j = question.explainations[i].upVotedBy.length - 1; j >= 0; j--) {
+  					if(question.explainations[i].upVotedBy[j] == userId){
+  						upvotedExp.upvoted = true;
+  						upvotedExp.givenById.push(question.explainations[i].givenById);
+  					}
+  				};
+  			};
 
-			//TODo: remove this and and redirect to original
-			Question.getQuestionById(qid)
-			.then(function (question){
-			userId = req.session.user._id;
-			upvotedExp = {
-				upvoted : false,
-				givenById : []
-			}
-			console.log("Already attempted" + attemptRecord.score + "User" + userId);
-			for (var i = question.explainations.length - 1; i >= 0; i--) {
-				console.log("givenBy by" + question.explainations[i].givenByName);
-				for (var j = question.explainations[i].upVotedBy.length - 1; j >= 0; j--) {
-					if(question.explainations[i].upVotedBy[j] == userId){
-						upvotedExp.upvoted = true;
-						upvotedExp.givenById.push(question.explainations[i].givenById);
-					}
-				};
-			};
+  			console.log("upvotedExp is");
+  			console.log(upvotedExp);
 
-			console.log("upvotedExp is");
-			console.log(upvotedExp);
+  			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp, Userid:userId});
+  			})
+  			.catch(function (error){
+  			// TODO: error page
+  			});
+  			//TODO: change to his anser qiven for question
+  			//res.redirect('/');
+  		}
 
-
-			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp, Userid:userId});
-
-			})
-			.catch(function (error){
-			// TODO: error page
-			});
-			//TODO: change to his anser qiven for question
-			//res.redirect('/');
-		}
-
-	},function (err){
-		console.log("error in getting user");
-	});
-
+  	},function (err){
+  		console.log("error in getting user");
+  	 });
+  }else if(concept){
+    Question.getQuestionIdsOfConcept(concept)
+    .then(function (questions){
+      User.getUserById(userId)
+      .then(function (user){
+        var response = [];
+        // for user to see different links of attempted and not attempted
+        for(var i = 0; i < questions.length; ++i){
+          var css_class = 'unvisited';
+          for(var j = 0; j < user.records.length; ++j){
+            if (user.records[j].qid == questions[i]._id){
+              css_class = 'visited';
+              break;
+            }
+          }
+          var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+          console.log(url);
+          response.push(url);
+        }
+        res.send(response);
+      });
+    });
+  }else if(all){
+    Question.getAllQuestionIds()
+    .then(function (questions){
+      User.getUserById(userId)
+      .then(function (user){
+        var response = [];
+        // for user to see different links of attempted and not attempted
+        for(var i = 0; i < questions.length; ++i){
+          var css_class = 'unvisited';
+          for(var j = 0; j < user.records.length; ++j){
+            if (user.records[j].qid == questions[i]._id){
+              css_class = 'visited';
+              break;
+            }
+          }
+          var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+          console.log(url);
+          response.push(url);
+        }
+        res.send(response);
+      });
+    });
+  }
 });
 
 
@@ -376,24 +420,34 @@ router.post('/addUpdateDec', function(req, res) {
 		upVotedBy: []
 
 	};
-	console.log(explaination );
-	console.log(req.body.qid );
+	console.log(explaination);
+	console.log(req.body.qid);
 
 	Question.addExplanation(req.body.qid, explaination)
 	.then(function (updatedQuestion,questionId){
 		console.log("updatedQuestion succesfull"+updatedQuestion);
-		//res.send("updated question")
-
-
 		 res.send({ msg: 'done', explaination : explaination});
 	},function (err){
 		console.log("error in add ");
 	});
 
-
+});
+/*
+router.get('/', requireLogin, function(req,res, next){
+  var conceptName = req.query.concept;
+  console.log(conceptName);
+  Question.getQuestionsOfConcept(conceptName)
+  .then(function (questions){
+    var response = [];
+    console.log(questions);
+    for(var i = 0; i < questions.length; ++i){
+      var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '"> Question : '+ questions[i]._id+'</a>';
+      console.log(url);
+      response.push(url);
+    }
+    res.send(response);
+  });
 
 });
-
-
-
+*/
 module.exports = router;
