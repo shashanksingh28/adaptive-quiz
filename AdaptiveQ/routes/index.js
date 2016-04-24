@@ -9,9 +9,6 @@ router.get('/concepts', function(req, res, next){
   });
 });
 
-function getMean(){
-
-}
 /* GET home page. */
 router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
@@ -31,8 +28,7 @@ router.get('/mean', function(req, res, next) {
       console.log(req.session.user._id);
     User.getUserById(req.session.user._id)
     .then(function(users){
-
-      MeanData = users;
+      MeanData = users.records;
       console.log(MeanData);
       res.send({mean:MeanData});
 
