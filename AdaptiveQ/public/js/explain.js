@@ -53,7 +53,6 @@ function populateTable(id,arrayGivenBy) {
               if(numExplains>=$(".explainList").length)
               $("#btnShowMore").attr("disabled",true);
               });
->>>>>>> d69818daa13f759b35257aff76d0f0f5bcf1a1f8
 }
 
 function voteExp() {
