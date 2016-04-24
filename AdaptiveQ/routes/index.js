@@ -23,7 +23,7 @@ router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
       // show dashboard here
       //MeanData = getMean();
-      res.render('dashboard');
+      res.render('dashboard',isTeacher : req.session.isTeacher);
     }
     else
     {

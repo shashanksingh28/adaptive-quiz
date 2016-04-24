@@ -170,7 +170,7 @@ router.get('/', requireLogin, function(req, res){
 
   			req.session.startTime = timeStart;
   			console.log("set starttime as " + req.session.startTime);
-  			res.render('question', {Question : question, User : req.session.user});
+  			res.render('question', {Question : question, User : req.session.user, isTeacher : req.session.isTeacher});
   			})
   			.catch(function (error){
   			// TODO: error page
@@ -199,7 +199,7 @@ router.get('/', requireLogin, function(req, res){
   			console.log("upvotedExp is");
   			console.log(upvotedExp);
 
-  			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp, Userid:userId});
+  			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp, Userid:userId, isTeacher : req.session.isTeacher});
   			})
   			.catch(function (error){
   			// TODO: error page
@@ -265,7 +265,7 @@ Question Asked related functions
 
 // Give page to create question
 router.get('/ask', function(req, res){
-  	res.render('askquestion');
+  	res.render('askquestion', isTeacher : req.session.isTeacher);
   });
 // save new question
 router.post('/ask', function(req, res){
@@ -364,7 +364,7 @@ function updateQuestionExpDec(id,givenBy,uid){
 }
 
 router.get('/explain', function(req, res){
-	res.render('explaination');
+	res.render('explaination',isTeacher : req.session.isTeacher);
 
 });
 
