@@ -189,7 +189,8 @@ $(document).ready(function() {
                   $('[data-toggle="tooltip"]').tooltip();
                   populateTable(qid,arrayGivenBy);
                   //var getQuestion = <%= Question %>
-                  
+                     if(arrayGivenBy.indexOf(uid)>-1)
+   						$('#explanatory').hide();
                   console.log("inside js");
                   //     $('#upvote').on('click',showMsg);
                   
