@@ -10,18 +10,12 @@ var logger = require('morgan');
 
 // For session managements
 var cookieParser = require('cookie-parser');
-var session = require('express-session');
-var mongoStore = require('connect-mongo')(session);
-app.use(cookieParser());
-var secret = 'PgkXR<;u&G7VUL>r';
+var session = require('client-sessions');
 app.use(session({
-  resave: true,
-  saveUninitialized: true,
-  secret: secret,
-  store: new mongoStore({
-    mongooseConnection: mongo.connection,
-    collection: 'sessions' // defaults
-  })
+  cookieName: 'session',
+  secret: 'PgkXR<;u&G7VUL>r',
+  duration: 20 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
 }));
 
 console.log("App started at http://localhost:3000");
@@ -41,26 +35,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-var users = require('./routes/users');
 var routes = require('./routes/index');
 var question = require('./routes/question');
 var analytics = require('./routes/analytics')
-app.use('/users', users);
-app.use('/', routes);
 
-// Common place for authentication on all requests dealing with Questions
-app.get('*', function(req, res, next) {
-  if(!(req.session && req.session.user)){
-    req.session.redirect_to = req.url;
-		res.render('login');
-	}
-  else{
-    if(next){
-      next();
-    }
-  }
-});
-// Anything that needs authentication should go below this
+app.use('/', routes);
 app.use('/question', question);
 app.use('/analytics', analytics);
 

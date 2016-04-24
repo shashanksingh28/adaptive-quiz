@@ -13,6 +13,16 @@ var smtpTransport = nodemailer.createTransport("SMTP",{
     }
 });
 
+function requireLogin (req, res, next) {
+  if (!req.session.user) {
+    req.session.redirect_to = '/question' + req.url;
+    res.redirect('/');
+  } else {
+    next();
+  }
+};
+
+
 /*---------------------------------------------------------------------------
 Question Display related functions
 -----------------------------------------------------------------------------*/
@@ -96,16 +106,10 @@ function attemptQuestion(question,givenAns,req,res){
 		score = 0.0
 	}
 	console.log("Score for answer is " + score);
-	record.score=score;	
+	record.score=score;
 	User.addRecordToUserId(req.session.user._id,record)
 	.then(function (updatedUser){
 		console.log("Attempt Recorded:"+updatedUser);
-		upvotedExp = {
-			upvoted : false,
-			givenById : []
-		};	
-		
-			
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
 	},function (err){
@@ -134,7 +138,7 @@ router.post('/', function(req, res){
 });
 
 // Show a question with given id
-router.get('/', function(req, res){
+router.get('/', requireLogin, function(req, res){
 	userId = req.session.user._id;
 	qid = req.query.id;
 	//Checking if user attempted the question already
@@ -178,14 +182,14 @@ router.get('/', function(req, res){
 			upvotedExp = {
 				upvoted : false,
 				givenById : []
-			}	
+			}
 			console.log("Already attempted" + attemptRecord.score + "User" + userId);
 			for (var i = question.explainations.length - 1; i >= 0; i--) {
 				console.log("givenBy by" + question.explainations[i].givenByName);
 				for (var j = question.explainations[i].upVotedBy.length - 1; j >= 0; j--) {
 					if(question.explainations[i].upVotedBy[j] == userId){
 						upvotedExp.upvoted = true;
-						upvotedExp.givenById.push(question.explainations[i].givenById); 
+						upvotedExp.givenById.push(question.explainations[i].givenById);
 					}
 				};
 			};
@@ -245,7 +249,7 @@ router.post('/ask', function(req, res){
   				userEmails.push(promise[i].email);
 			}
 			console.log("all users emails are" + userEmails);
-			
+
 			var mailOptions={
 				from : "adapt.q@gmail.com",
 			   	to : userEmails,
@@ -379,7 +383,7 @@ router.post('/addUpdateDec', function(req, res) {
 	.then(function (updatedQuestion,questionId){
 		console.log("updatedQuestion succesfull"+updatedQuestion);
 		//res.send("updated question")
-		
+
 
 		 res.send({ msg: 'done', explaination : explaination});
 	},function (err){
