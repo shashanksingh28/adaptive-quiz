@@ -432,22 +432,5 @@ router.post('/addUpdateDec', function(req, res) {
 	});
 
 });
-/*
-router.get('/', requireLogin, function(req,res, next){
-  var conceptName = req.query.concept;
-  console.log(conceptName);
-  Question.getQuestionsOfConcept(conceptName)
-  .then(function (questions){
-    var response = [];
-    console.log(questions);
-    for(var i = 0; i < questions.length; ++i){
-      var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '"> Question : '+ questions[i]._id+'</a>';
-      console.log(url);
-      response.push(url);
-    }
-    res.send(response);
-  });
 
-});
-*/
 module.exports = router;
