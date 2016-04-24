@@ -129,6 +129,37 @@ function updateExpDec(givenBy){
     
 }
 
+function appendTable(data){
+  
+  console.log(data);
+
+}
+
+function sub(){
+
+  var text = $('#explainationGiven').val();
+
+  console.log("explain given" + text);
+  //console.log(text.val());
+
+  var explain = {
+    qid : qid,
+    ExplainText : text
+  };
+      $.ajax({
+           type: 'POST',
+           data: explain,
+           url: '/question/addUpdateDec',
+           dataType: 'JSON'
+           }).done(function( response ) {
+                   if (response.msg == 'done') {
+                   console.log("added successful" );
+                        appendTable(response.explaination);    
+                   }
+          });
+
+//populateTable(qid,arrayGivenBy); 
+}
 
 
 

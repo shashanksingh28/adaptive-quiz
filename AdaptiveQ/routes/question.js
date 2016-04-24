@@ -104,23 +104,7 @@ function attemptQuestion(question,givenAns,req,res){
 			upvoted : false,
 			givenById : []
 		};	
-		if(explaination.text.length > 0){
-			Question.addExplanation(question._id, explaination)
-			.then(function (updatedQuestion,questionId){
-				console.log("updatedQuestion succesfull"+updatedQuestion);
-				//res.send("updated question")
-
-				return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp});
-			},function (err){
-				console.log("error in update");
-			});
-
-		}
-
-		else{
-			console.log("explaination empty no update")
-			return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp});
-		}
+		
 			
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
@@ -376,6 +360,36 @@ router.post('/explainUpdateDec', function(req, res) {
 				console.log("error in update explaination");
    		});
 });
+
+router.post('/addUpdateDec', function(req, res) {
+	console.log("From ajax got this " + req.body.ExplainText);
+	Explain = req.body.ExplainText;
+	explaination = {
+		givenById : req.session.user._id,
+		givenByName : req.session.user.name,
+		text : Explain,
+		noUpVotes: 0,
+		upVotedBy: []
+
+	};
+	console.log(explaination );
+	console.log(req.body.qid );
+
+	Question.addExplanation(req.body.qid, explaination)
+	.then(function (updatedQuestion,questionId){
+		console.log("updatedQuestion succesfull"+updatedQuestion);
+		//res.send("updated question")
+		
+
+		 res.send({ msg: 'done', explaination : explaination});
+	},function (err){
+		console.log("error in add ");
+	});
+
+
+
+});
+
 
 
 module.exports = router;
