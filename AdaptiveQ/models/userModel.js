@@ -22,7 +22,8 @@ User.getUserByEmail = function(email){
 };
 
 User.getUserById = function(id){
-  return User.findById(userId).exec();
+
+  return User.findById(id).exec();
 };
 
 User.getAllUsers = function(){
