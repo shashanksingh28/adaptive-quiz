@@ -17,6 +17,45 @@ function requireLogin (req, res, next) {
   }
 };
 
+function getMean(data){
+  var meandate = {  };
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i].attemptAt;
+    var da = new Date(d);
+    console.log(da);
+    var dat = da.getDate();
+    var mon = da.getMonth() + 1;
+    var yr = da.getFullYear();
+    date = ""+ dat + mon + yr;
+    console.log(date);
+    if (meandate.hasOwnProperty(date)){
+      console.log("in if")
+      console.log(meandate);
+      console.log(meandate[date].mean);
+      console.log(meandate[date].num);
+      console.log(data[i].score);
+      meandate[date].mean += data[i].score;
+      meandate[date].num += 1;
+      console.log("in if")
+    }
+    else{
+      console.log("in else")
+      meandate[date] = {
+      mean : data[i].score,
+      num  : 1       } ;
+      console.log(meandate);
+    }
+
+    //meandata.date = date
+
+
+  };
+  finalmean = {};
+  for (var key in meandate) {
+    finalmean[key] = meandate[key].mean/meandate[key].num;
+  }
+  return finalmean;
+}
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -39,7 +78,8 @@ router.get('/mean', function(req, res, next) {
     .then(function(users){
       MeanData = users.records;
       console.log(MeanData);
-      res.send({mean:MeanData});
+      DayMeanData = getMean(MeanData);
+      res.send(DayMeanData);
 
       },function (err){
           console.log("error in update explaination" + err);
