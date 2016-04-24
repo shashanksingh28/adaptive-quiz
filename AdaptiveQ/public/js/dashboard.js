@@ -9,13 +9,13 @@ function loadData(rawdata){
 
 
 var margin = {top: 20, right: 50, bottom: 30, left: 50},
-    width = 960 - margin.left - margin.right,
+    width = 700 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%d-%b-%y").parse,
     bisectDate = d3.bisector(function(d) { return d.date; }).left,
     formatValue = d3.format(",.2f"),
-    formatCurrency = function(d) { return "$" + formatValue(d); };
+    formatCurrency = function(d) { return " "+ formatValue(d); };
 
 var x = d3.time.scale()
     .range([0, width]);
@@ -278,7 +278,7 @@ $(document).ready(function(){
 		 loadViz(result);
 		 }
 	});
-  $.ajax({url: "/mean", success: function(result){
+  $.ajax({url: "/analytics/mean", success: function(result){
       console.log("result");     
      loadData(result);
      }
