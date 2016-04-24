@@ -4732,10 +4732,21 @@ select[multiple].input-group-sm>.input-group-btn>.btn {
     color: #ccc
 }
 
+.navbar-brand.active {
+    color: #333;
+    background-color: rgba(255,255,255,0.85);
+}
+
+
 .navbar-default .navbar-brand:hover,
 .navbar-default .navbar-brand:focus {
     color: #eee;
     background-color: transparent
+}
+
+.navbar-brand.active:hover,.navbar-brand.active:focus {
+    color: #000;
+    background-color: rgba(255,255,255,0.85);
 }
 
 .navbar-default .navbar-text {

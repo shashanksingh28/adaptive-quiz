@@ -32,6 +32,7 @@ function updateHint(){
 }
 
 function attemptQuestion(question,givenAns,req,res){
+	userId = req.session.user._id;
 	console.log("start time" + req.session.startTime);
 	timeStart = req.session.startTime;
 	console.log("inside attempt" + timeStart);
@@ -63,18 +64,8 @@ function attemptQuestion(question,givenAns,req,res){
 
 	}
 
-	console.log("explaination is" + req.body.explainationGiven)
+	//console.log("explaination is" + req.body.explainationGiven)
 	console.log("user is" + req.session.user.name)
-
-	explaination = {
-		givenById : req.session.user._id,
-		givenByName : req.session.user.name,
-		text : req.body.explainationGiven,
-		noUpVotes: 0,
-		upVotedBy: []
-
-	};
-	console.log(explaination);
 	//console.log("the question id is" + questionId);
 	//var correctAns = question.options[question.answers];
 	//console.log(correctAns);
@@ -96,11 +87,11 @@ function attemptQuestion(question,givenAns,req,res){
 	console.log("No of noOfWrongW " + noOfWrongW);
 	score = (noOfCorrect - noOfWrongW)/question.answers.length;
 	console.log("No of score " + score);
-	score = score + (question.difficulty + 1) * 10;
-	divisor = (question.difficulty + 1) * 10;
-	divisor = divisor + Math.log(timeTaken)
+	dividend = (question.difficulty + 1) * 10;
+	divisor = dividend + Math.log(timeTaken);
+	timediff = dividend/divisor;
 	console.log("divisor " + divisor);
-	score = score/(divisor);
+	score = score + timediff;
 	console.log("No of score " + score);
 	if(score < 0.0){
 		score = 0.0
@@ -110,6 +101,12 @@ function attemptQuestion(question,givenAns,req,res){
 	User.addRecordToUserId(req.session.user._id,record)
 	.then(function (updatedUser){
 		console.log("Attempt Recorded:"+updatedUser);
+		upvotedExp = {
+  			upvoted : false,
+  			givenById : []
+  		}
+		return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp, Userid:userId});
+		
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
 	},function (err){
