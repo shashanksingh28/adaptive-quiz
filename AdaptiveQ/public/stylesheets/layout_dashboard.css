@@ -1,0 +1,88 @@
+.navbar{
+	top:0;
+	z-index:100;
+	position:fixed;
+	width:100%;
+}
+
+.concept-tree,.right-pane{
+	position:relative;
+	top:60px;
+	border-radius:5px;
+	margin-bottom:20px;
+}
+
+.concept-tree{
+	float:left;
+	margin-left:20px !important;
+	width:60%;
+	min-height:100%;
+}
+
+.right-pane{
+	float:right;
+	margin-right:20px !important;
+	width:34%;
+	height:100%;
+}
+
+#question{
+	width:100%;
+}
+
+h4{
+	margin-top:20px;
+	margin-bottom:20px;
+}
+
+#options{
+	display:inline-block;
+	width:100%;
+	margin-bottom:8px;
+}
+
+.option/*:nth-child(odd)*/{
+	float:left;
+	width:100%;
+	margin-bottom:8px;
+}
+
+.optionhdr{
+	display:inline-block;
+	margin-left:8px;
+	margin-right:8px;
+}
+
+h5.svellang{
+	margin-top:8px;
+}
+
+#tree1{
+	margin-bottom:8px;
+}
+
+textarea{
+	resize:vertical;
+}
+
+.buttons{
+	display:inline-block;
+	margin-left:38%;
+}
+
+.buttons *{
+	margin:8px;
+}
+
+.segmented-control{
+ width: 250px; 
+}
+
+hr{
+	margin-top:8px;
+	margin-bottom:8px;
+}
+
+label.svellang{
+	
+}
