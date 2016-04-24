@@ -22,10 +22,10 @@
 	float:right;
 	margin-right:20px !important;
 	width:34%;
-	height:100%;
 }
 
 .bottom-pane{
+	width:60%;
 	margin:20px;
 	clear:left;
 }
