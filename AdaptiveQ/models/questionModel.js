@@ -19,7 +19,7 @@ questionSchema.plugin(autoIncrement.plugin, 'Question');
 
 var Question = mongo.model('Question', questionSchema);
 //Question.addQuestion(req.body.question,options,answerss,req.body.concept,req.body.difficulty,req.body.hint)
-  
+
 Question.addQuestion = function(text,options,answers,conceptName,difficulty,hint){
   console.log("in add" + text);
   var newQuestion = Question({
@@ -44,7 +44,12 @@ Question.addExplanation = function(qId, explanation){
   return Question.update({'_id': qid},{$push:{'explainations':explanation}}).exec();
 };
 
+Question.getQuestionIdsOfConcept = function(conceptName){
+  return Question.find({concept:conceptName},{ _id : 1 }).exec();
+}
 
-
+Question.getAllQuestionIds = function(){
+  return Question.find({},{ _id : 1 }).exec();
+}
 
 module.exports = Question;
