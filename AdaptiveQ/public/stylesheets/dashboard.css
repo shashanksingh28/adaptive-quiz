@@ -19,8 +19,11 @@
 }
 
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/master
 .axis path,
 .axis line {
   fill: none;
@@ -34,7 +37,7 @@
 
 .line {
   fill: none;
-  stroke: steelblue;
+  stroke: maroon;
   stroke-width: 1.5px;
 }
 

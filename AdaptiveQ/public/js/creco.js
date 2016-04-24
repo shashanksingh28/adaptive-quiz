@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 
-var request = require("../node_modules/request");
-var java = require("../node_modules/java");
+var request = require("../../node_modules/request");
+var java = require("../../node_modules/java");
 
-java.classpath.push("../lib/creco-1.0.jar");
+java.classpath.push("../../lib/creco-1.0.jar");
 var conn = "http://localhost:8983/solr/adaptq/";
 var creco = java.newInstanceSync("com.adaptq.creco.Creco", conn);
 
@@ -25,11 +25,17 @@ exports.search = function(concept, desc, count, get) {
   var searchConcept = CONCEPT_FLD + "\"" + concept + "\"";
   var searchDesc = CONCEPT_DESC + "\"" + desc + "\"^" + descBoost;
 
-  var url = conn + "select?"
-    + QUERY + searchConcept + " " + searchDesc
-    + SORT + "score+desc"
-    + RESPONSE_WRITER + "json"
-    + ROWS + count;
+  var url = conn + "select?" + QUERY;
+  if (searchConcept != null) {
+    url = url + searchConcept;
+    if (searchDesc != null) {
+      url = url + " ";
+    }
+  }
+  if (searchDesc != null) {
+    url = url + searchDesc;
+  }
+  url = url + SORT + "score+desc" + RESPONSE_WRITER + "json" + ROWS + count;
 
   request(url, function(error, response, body) {
     get(body);

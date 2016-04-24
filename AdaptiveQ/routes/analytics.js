@@ -197,10 +197,8 @@ function getNearestNeighbor(user, usersScores){
   var userData = {};
   var simScore = [];
   var sessionUserMean = 0.0;
-  for (var userId in usersScores) {
-    console.log(userId);
-    if (usersScores.hasOwnProperty(userId)) {
-      console.log("loop in" + userId + "session id" + user._id)
+  for (var userId in usersScores) {    
+    if (usersScores.hasOwnProperty(userId)) {     
         if(userId != user._id)
         {
           var currentUserData = []
@@ -211,8 +209,7 @@ function getNearestNeighbor(user, usersScores){
           var currentUserm = 0.0;
           var currentNo = 0;
           for(var key in usersScores[userId])
-          {
-            console.log("for key" + key);
+          {            
             if(usersScores[userId].hasOwnProperty(key))
             {
               var userScore = usersScores[user._id][key];
@@ -227,8 +224,7 @@ function getNearestNeighbor(user, usersScores){
                 sessionUserm += userScore;
                 sessionNo += 1;
               }
-              if (score != -1 && userScore != -1){
-                console.log("matched the key is" + key);
+              if (score != -1 && userScore != -1){               
                 currentUserData.push(score);
                 sessionUserData.push(userScore);
                 //totalScore += score;
@@ -239,30 +235,30 @@ function getNearestNeighbor(user, usersScores){
               }
             }
           }
-          console.log( "the currentUser" + currentUserData + "the sessionUserData" + sessionUserData);
+          //console.log( "the currentUser" + currentUserData + "the sessionUserData" + sessionUserData);
           var s = cossimilarity( currentUserData, sessionUserData );
-          console.log("the similarity score is" + s);
-          console.log("total for" + userId + "is" + currentUserm + "no of" + currentNo );
+          //console.log("the similarity score is" + s);
+          //console.log("total for" + userId + "is" + currentUserm + "no of" + currentNo );
           userData[userId] = {"score":s, "hasScoreFor" : hasScoreFor, "mean" : currentUserm/currentNo};
           sessionUserMean = sessionUserm/sessionNo;
           simScore.push({"key": userId, "value": s});
         }
     }
   }
-  console.log("total for" + user._id + "is mean" + sessionUserMean);
-  console.log(simScore);
+  //console.log("total for" + user._id + "is mean" + sessionUserMean);
+  //console.log(simScore);
   simScore.sort(function(a, b){
     return b.value - a.value;
   });
-  console.log("sorted are " + simScore);
-  console.log(simScore);
-  console.log(userData);
+  //console.log("sorted are " + simScore);
+  //console.log(simScore);
+  //console.log(userData);
   recommendation = {};
   recommendationBy = {};
   for (var i = 0 ; i < 2 ; i++) {
     uid = simScore[i].key;
     userCurr = userData[uid];
-    console.log(userCurr);
+    //console.log(userCurr);
     for (var j = 0 ; j < userCurr.hasScoreFor.length; j++){
 
       sc = userCurr.score * (userCurr.hasScoreFor[j].score - userCurr.mean) ;
@@ -276,16 +272,16 @@ function getNearestNeighbor(user, usersScores){
         recommendationBy[userCurr.hasScoreFor[j].key] = [userCurr.score];
       }
 
-      console.log(sc);
+      //console.log(sc);
 
     }
-    console.log("each iteration later");
-    console.log(recommendation);
+    //console.log("each iteration later");
+    //console.log(recommendation);
 
   };
-  console.log("recommendation");
-  console.log(recommendation);
-  console.log(recommendationBy);
+  //console.log("recommendation");
+  //console.log(recommendation);
+  //console.log(recommendationBy);
 
   for (var key in recommendation) {
   if (recommendation.hasOwnProperty(key)) {
@@ -328,10 +324,85 @@ router.get('/getScoreAnalytics', requireLogin, function(req,res, next){
       response={};
       response['allScores'] = usersScores;
       response['userPercentile'] = getUserPercentile(currentUser, usersScores);
-      response['similarity rank'] = getNearestNeighbor(req.session.user,usersScores);
+      response['predictedScores'] = getNearestNeighbor(req.session.user,usersScores);
       res.send(response);
     });
   });
+});
+
+function getMean(data){
+  var meandate = {  };
+  for (var i = 0; i < data.length; i++) {
+    var d = data[i].attemptAt;
+    var da = new Date(d);
+    console.log(da);
+    var dat = da.getDate();
+    var mon = da.getMonth() + 1;
+    var yr = da.getFullYear();
+    date = ""+ mon+ dat + yr;
+    console.log(date);
+    if (meandate.hasOwnProperty(date)){
+      console.log("in if")
+      console.log(meandate);
+      console.log(meandate[date].mean);
+      console.log(meandate[date].num);
+      console.log(data[i].score);
+      meandate[date].mean += data[i].score;
+      meandate[date].num += 1;
+      console.log("in if")
+    }
+    else{
+      console.log("in else")
+      meandate[date] = {
+      mean : data[i].score,
+      num  : 1       } ;
+      
+    }
+  };
+  console.log("meandate is")
+  console.log(meandate);
+  finalmean = {};
+  for (var key in meandate) {
+    for (var keyin in meandate) {
+      if (parseInt(keyin) < parseInt(key)){
+
+        meandate[key].mean += meandate[keyin].mean;
+        meandate[key].num += meandate[keyin].num;
+
+      }
+    
+    
+  }
+  //console.log("done inner for");
+  //console.log( meandate);
+    finalmean[key] = meandate[key].mean/meandate[key].num;
+  }
+
+  console.log(finalmean);
+  return finalmean;
+}
+
+router.get('/mean', function(req, res, next) {
+    if(req.session && req.session.user){
+      // show dashboard here
+      console.log(req.session.user._id);
+    User.getUserById(req.session.user._id)
+    .then(function(users){
+      MeanData = users.records;
+      console.log(MeanData);
+      DayMeanData = getMean(MeanData);
+      res.send(DayMeanData);
+
+      },function (err){
+          console.log("error in update explaination" + err);
+        });
+
+
+    }
+    else
+    {
+      res.render('login');
+    }
 });
 
 module.exports = router;
