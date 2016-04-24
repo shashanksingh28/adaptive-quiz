@@ -5,7 +5,7 @@
 	width:100%;
 }
 
-.concept-tree,.right-pane{
+.concept-tree,.right-pane,.bottom-pane{
 	position:relative;
 	top:60px;
 	border-radius:5px;
@@ -16,7 +16,6 @@
 	float:left;
 	margin-left:20px !important;
 	width:60%;
-	min-height:100%;
 }
 
 .right-pane{
@@ -24,6 +23,11 @@
 	margin-right:20px !important;
 	width:34%;
 	height:100%;
+}
+
+.bottom-pane{
+	margin:20px;
+	clear:left;
 }
 
 #question{
