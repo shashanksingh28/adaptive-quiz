@@ -106,7 +106,7 @@ function attemptQuestion(question,givenAns,req,res){
   			givenById : []
   		}
 		return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp, Userid:userId});
-		
+
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
 	},function (err){
@@ -262,7 +262,7 @@ Question Asked related functions
 
 // Give page to create question
 router.get('/ask', function(req, res){
-  	res.render('askquestion', isTeacher : req.session.isTeacher);
+  	res.render('askquestion', {isTeacher : req.session.isTeacher});
   });
 // save new question
 router.post('/ask', function(req, res){
@@ -361,7 +361,7 @@ function updateQuestionExpDec(id,givenBy,uid){
 }
 
 router.get('/explain', function(req, res){
-	res.render('explaination',isTeacher : req.session.isTeacher);
+	res.render('explaination',{ isTeacher : req.session.isTeacher });
 
 });
 
