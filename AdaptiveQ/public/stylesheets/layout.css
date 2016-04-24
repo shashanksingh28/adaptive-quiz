@@ -6,7 +6,7 @@
 	width:100%;
 }
 
-.content{
+.content,.content-lite{
 	position:relative;
 	top:60px;
 	//end navbar fixed

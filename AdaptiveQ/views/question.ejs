@@ -62,12 +62,6 @@ if(User.hintsLeft<=0 || Question.hint.length<=0)
         <li><a href="#">Ask Question</a></li>
         <li class="active"><a href="#">Attempt Question <span class="sr-only">(current)</span></a></li>
       </ul>
-      <!--<form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>-->
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/logout">Sign Out</a></li>
       </ul>
@@ -102,27 +96,6 @@ if(User.hintsLeft<=0 || Question.hint.length<=0)
 	</div> <!-- ./input-group -->
 <% } %>
 
-<!-- 
-<div class="option input-group">
-	<span class="input-group-addon correct">
-	<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko">
-	</span>
-	<label for="option<%=i%>" class="form-control optiono">Correct option</label>
-</div> <!~~ ./input-group ~~>
-<div class="option input-group">
-	<span class="input-group-addon warning">
-	<input type=<%=inputType%> name="options" id="option<%=i+1%>" class="checko">
-	</span>
-	<label for="option<%=i+1%>" class="form-control optiono">Warning option</label>
-</div> <!~~ ./input-group ~~>
-<div class="option input-group">
-	<span class="input-group-addon incorrect">
-	<input type=<%=inputType%> name="options" id="option<%=i+2%>" class="checko">
-	</span>
-	<label for="option<%=i+2%>" class="form-control optiono">Incorrect option</label>
-</div> <!~~ ./input-group ~~>
- -->
-
 </div>
 <br>
 <div class="form-group">
@@ -152,6 +125,5 @@ if(Question.hint.length>0)
 </div> <!-- /.container-fluid -->
 
 
-</form>
 </body>
 </html>
