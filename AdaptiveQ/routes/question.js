@@ -198,7 +198,7 @@ router.get('/', requireLogin, function(req, res){
 			console.log(upvotedExp);
 
 
-			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp});
+			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp, Userid:userId});
 
 			})
 			.catch(function (error){
