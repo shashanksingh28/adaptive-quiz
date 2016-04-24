@@ -123,30 +123,50 @@ function updateExpDec(givenBy){
            dataType: 'JSON'
            }).done(function( response ) {
                    if (response.msg === '') {
-                   console.log("Updated successful");         
+                   console.log("Updated successful");
                    }
                    });
     
 }
 
 function appendTable(data){
-  
-  console.log(data);
-
+    
+    console.log(data);
+    divContent = '<div class="explainList" id = ' + data.givenById + '>';
+    divContent += '<h5 style="display:inline-block">' + data.givenByName/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
+    data.text=data.text.replace(/\n/g, "<br />");
+    console.log("ArrayGivenBy "+arrayGivenBy+" and givenById "+data.givenById);
+    upvoted=(arrayGivenBy.indexOf(data.givenById)<0?'likeButton':'unlikeButton');
+    votetext=(arrayGivenBy.indexOf(data.givenById)<0?'Vote':'Unvote');
+    
+    
+    divContent += '' + data.text + '<br/>';
+    divContent += '<div style="margin-top:8px">';
+    divContent += '' + '<button type="button" class = "'+upvoted+'" id = "'+upvoted+'" rel=' + data.givenById +'>'+votetext+'</button> '+'<div id ="noUpVotes" style="display:inline-block;margin-left:8px;">' + data.noUpVotes +'</div>';
+    
+    
+    divContent += '<hr></div></div></div>';
+    
+    
+    // Inject the whole content string into our existing HTML table
+    $('#voteList').append(divContent);
+    $('.likeButton').on('click',voteExp);
+    $('.unlikeButton').on('click',voteExpDec);
+    $('#explanatory').hide();
 }
 
 function sub(){
-
-  var text = $('#explainationGiven').val();
-
-  console.log("explain given" + text);
-  //console.log(text.val());
-
-  var explain = {
-    qid : qid,
-    ExplainText : text
-  };
-      $.ajax({
+    
+    var text = $('#explainationGiven').val();
+    
+    console.log("explain given" + text);
+    //console.log(text.val());
+    
+    var explain = {
+        qid : qid,
+        ExplainText : text
+    };
+    $.ajax({
            type: 'POST',
            data: explain,
            url: '/question/addUpdateDec',
@@ -154,11 +174,11 @@ function sub(){
            }).done(function( response ) {
                    if (response.msg == 'done') {
                    console.log("added successful" );
-                        appendTable(response.explaination);    
+                   appendTable(response.explaination);
                    }
-          });
-
-//populateTable(qid,arrayGivenBy); 
+                   });
+    
+    //populateTable(qid,arrayGivenBy);
 }
 
 
@@ -170,9 +190,9 @@ $(document).ready(function() {
                   populateTable(qid,arrayGivenBy);
                   //var getQuestion = <%= Question %>
                   
-                  console.log("inside js");    
+                  console.log("inside js");
                   //     $('#upvote').on('click',showMsg);
                   
                   
-});
+                  });
 
