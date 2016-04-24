@@ -67,3 +67,11 @@ label.form-control.optiono.disabled{
 .input-group-addon.incorrect{
     background-color: rgb(217,135,135);
 }
+
+a.visited{
+	color:green;
+}
+
+a.unvisited{
+	color:#777;
+}
