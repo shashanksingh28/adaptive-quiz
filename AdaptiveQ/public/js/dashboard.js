@@ -111,7 +111,6 @@ console.log(data);
     focus.select("text").text(formatCurrency(d.close));
   }
 
-
 }
 
 function loadViz(data){
