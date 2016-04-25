@@ -10,9 +10,13 @@
 	top:60px;
 	border-radius:5px;
 	margin-bottom:20px;
+	padding-left:16px;
+	padding-right:16px;
 }
 
 .concept-tree{
+	padding-left:32px;
+	padding-right:32px;
 	float:left;
 	margin-left:20px !important;
 	width:60%;
@@ -20,7 +24,6 @@
 }
 
 .right-pane{
-	padding:16px;
 	float:right;
 	margin-right:20px !important;
 	width:34%;
@@ -41,6 +44,9 @@
 }
 
 .bottom-pane{
+	padding-left:16px;
+	padding-right:16px;
+	padding-top:8px;
 	width:60%;
 	margin:20px;
 	clear:left;
@@ -81,6 +87,13 @@ h3.rightpane{
 
 h5.svellang{
 	margin-top:8px;
+}
+
+#treeWait{
+  margin: 0px auto;
+  position: relative;
+  left: 35%;
+  top: 50%;
 }
 
 #tree1{

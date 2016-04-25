@@ -357,10 +357,10 @@ function loadViz(treeData, analyticsData){
 
 $(document).ready(function(){
 	$.ajax({url: "/analytics/getConceptTree", success: function(result){
-		 $('#treeWait').hide();
      console.log(result);
      $.ajax({url: "/analytics/getScoreAnalytics", success: function(a_result){
           console.log(a_result);
+          $('#treeWait').hide();
           loadViz(result,a_result);
           getRecommendations(a_result.weakestConcepts);
         }
