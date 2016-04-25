@@ -24,8 +24,22 @@ function getQuestionsOn(concept){
 }
 
 function populateRecos(recommendations){
-  console.log(recommendations);
-  // TODO: show in UI
+//Done: Populate UI
+  var divContent = "";
+	for(i=0;i<recommendations.length;i++){
+		divContent+="<h3>"+recommendations[i].concept+"</h3>";
+		divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"'>"+recommendations[i].link+"</a></p>";
+		divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
+	}
+	//Reload accordion
+	$("#recommendations").html(divContent);
+	$(function() {
+		$( ".accordion" ).accordion({
+			collapsible: true,
+			active:false,
+			heightStyle: "content"
+		});
+	});
 }
 
 function getRecommendations(concepts){
@@ -33,7 +47,12 @@ function getRecommendations(concepts){
   var recommendations = [];
   for (var i = 0; i < concepts.length; ++i){
       search(concepts[i].key,"",3-i,function(recos){
-        recommendations.push.apply(recommendations,recos);
+        if(recos.response.docs.length > 0){
+          for(var i = 0; i < recos.response.docs.length; ++i)
+          {
+            recommendations.push(recos.response.docs[i]);
+          }
+        }
         count += 1;
         if (count == 3){
           populateRecos(recommendations);
@@ -343,10 +362,10 @@ function loadViz(treeData, analyticsData){
 
 $(document).ready(function(){
 	$.ajax({url: "/analytics/getConceptTree", success: function(result){
-		 $('#treeWait').hide();
      console.log(result);
      $.ajax({url: "/analytics/getScoreAnalytics", success: function(a_result){
           console.log(a_result);
+          $('#treeWait').hide();
           loadViz(result,a_result);
           getRecommendations(a_result.weakestConcepts);
         }

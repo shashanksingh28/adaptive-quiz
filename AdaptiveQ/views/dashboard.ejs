@@ -7,6 +7,14 @@
 <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
 <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
 <script src="js/creco.js"></script>
+
+
+<link rel="stylesheet" href="/stylesheets/jquery-ui.css">
+<script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+
+
+
 <!-- Layout formatting -->
 <link rel="stylesheet" href="/stylesheets/layout_dashboard.css">
 <!-- Theme formatting -->
@@ -33,12 +41,6 @@
       <ul class="nav navbar-nav">
         <li><a href="/question/ask">Ask Question</a></li>
       </ul>
-      <!--<form class="navbar-form navbar-left" role="search">
-        <div class="form-group">
-          <input type="text" class="form-control" placeholder="Search">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>-->
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/logout">Sign Out</a></li>
       </ul>
@@ -48,6 +50,7 @@
 <div class="wrapper">
   <div class="concept-tree">
     <div class="row">
+    <h3 class='rightpane'>Concept Tree</h3>
       <div class="col-md-9" id="TreeContainer">
 
       </div>
@@ -59,13 +62,18 @@
   </div>
 
   <div class="right-pane top">
-
+  <h3 class='rightpane'>Recommendations</h3>
+	<div class="accordion" id="recommendations">
+	
+	</div> <!-- /.accordion -->
   </div>  <br/>
   <div class="right-pane bottom" id="questionsContainer">
 
   </div>
 </div>
-  <div id = "linechart" class="bottom-pane">
+  <div class="bottom-pane">
+  <h3 class='rightpane'>What's the title?</h3>
+  <div id = "linechart"></div>
   </div>
 
   <script type="text/javascript" src="js/dashboard.js"></script>

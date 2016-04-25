@@ -224,7 +224,10 @@ router.get('/', requireLogin, function(req, res){
             }
           }
           var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+<<<<<<< HEAD
           //console.log(url);
+=======
+>>>>>>> aee1037fbdaba5b60560cf0e8df317bd07a5cf48
           response.push(url);
         }
         res.send(response);
@@ -246,7 +249,10 @@ router.get('/', requireLogin, function(req, res){
             }
           }
           var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+<<<<<<< HEAD
           //console.log(url);
+=======
+>>>>>>> aee1037fbdaba5b60560cf0e8df317bd07a5cf48
           response.push(url);
         }
         res.send(response);

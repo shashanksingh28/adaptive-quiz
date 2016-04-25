@@ -1,6 +1,6 @@
 <html>
     <head>
-        
+
         <script src="/js/explain.js"></script>
         <title>Question</title>
         <% test = Question._id; %>
@@ -12,75 +12,107 @@
             console.log(qid);  // successfully prints 101 on browser
             var numExplains=5;
             </script>
-        
+
         <!--Common-->
         <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
-            <script src="/js/tether.min.js"></script>
-            <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
-            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-            
-            <!-- Layout formatting -->
-            <link rel="stylesheet" href="/stylesheets/layout.css">
-            <!-- Theme formatting -->
-            <link rel="stylesheet" href="/stylesheets/theme.css">
-            
-            <!--Tree structure-->
-            <script src="/js/tree.jquery.js"></script>
-            <link rel="stylesheet" href="/stylesheets/jqtree.css">
-            <script src="/js/creco.js"></script>
-            
-            <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
-            <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-            <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-            <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
-            <script>
+        <script src="/js/tether.min.js"></script>
+        <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+
+        <!-- Layout formatting -->
+        <link rel="stylesheet" href="/stylesheets/layout.css">
+        <!-- Theme formatting -->
+        <link rel="stylesheet" href="/stylesheets/theme.css">
+
+        <!--Tree structure-->
+        <script src="/js/tree.jquery.js"></script>
+        <link rel="stylesheet" href="/stylesheets/jqtree.css">
+        <script src="/js/creco.js"></script>
+
+        <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
+        <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+        <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+        <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+
+        <script>
+
+
             $(function() {
-            $( "#accordion" ).accordion({
-            collapsible: true,
-            active:false
-            });
-            $("#voteContainer").hide();
-            });
-            function toggleExplanation(btn){
-            if($("#voteContainer").is(":visible")){
-            $("#voteContainer").hide();
-            $(btn).val("View explanations");
-            }
-            else{
-            $("#voteContainer").show();
-            $(btn).val("Hide explanations");
-            }
-            }
-            function showMore(){
-            numExplains+=5;
-            if(numExplains>=$(".explainList").length)
-            $("#btnShowMore").attr("disabled",true);
-            $( ".explainList" ).each(function( index ) {
-            if(index>=numExplains)
-            $(this).hide();
-            else
-            $(this).show();
-            });
-            }
-            
-            //Begin Creco
-            var crecoConcept = "<%= Question.concept %>";
-            var crecoDesc = '<%= JSON.stringify(Question.text) %> ';
-            <% for(var i=0; i < Question.options.length; i++) {
-                %>
-            crecoDesc+= " " + "<%= JSON.stringify(Question.options[i]) %>";
-            <%
+      				$( ".accordion" ).accordion({
+      					collapsible: true,
+      					active:false
+      				});
+    				$("#voteContainer").hide();
+                });
+                function toggleExplanation(btn){
+                if($("#voteContainer").is(":visible")){
+                $("#voteContainer").hide();
+                $(btn).val("View explanations");
                 }
-            %>
-            search(crecoConcept, crecoDesc, 5, function(result) {
-  				console.log("Creco"+result);
-			});
-            //End Creco
-            
-            
-            </script>
-            
-            
+                else{
+                $("#voteContainer").show();
+                $(btn).val("Hide explanations");
+                }
+                }
+                function showMore(){
+                numExplains+=5;
+                if(numExplains>=$(".explainList").length)
+                $("#btnShowMore").attr("disabled",true);
+                $( ".explainList" ).each(function( index ) {
+                if(index>=numExplains)
+                $(this).hide();
+                else
+                $(this).show();
+                });
+                }
+
+
+      function populateRecos(recommendations){
+			//TODO: Populate UI
+			  var divContent = "";
+				for(i=0;i<recommendations.length;i++){
+					divContent+="<h3>"+recommendations[i].concept+"</h3>";
+					divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"'>"+recommendations[i].link+"</a></p>";
+					divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
+				}
+				//Reload accordion
+				$("#recommendations").html(divContent);
+				$(function() {
+					$( ".accordion" ).accordion({
+						collapsible: true,
+						active:false,
+						heightStyle: "content"
+					});
+				});
+			}
+
+      var crecoConcept = "<%= Question.concept %>";
+      var crecoDesc = '<%=JSON.stringify(Question.text)%>';
+      crecoDesc = crecoDesc.replace("&#34;","").replace("&#34;","");
+      console.log("Concept:"+crecoConcept);
+      console.log("Desc:"+crecoDesc);
+      /*<% for(var i=0; i < Question.options.length; i++) {
+          %>
+      crecoDesc+= " " + "<%= JSON.stringify(Question.options[i]) %>";
+      <%
+          }
+      %>*/
+      var recommendations = [];
+      function getRecommendations(recos){
+        if(recos.response.docs.length > 0){
+          for(var i = 0; i < recos.response.docs.length; ++i)
+          {
+            recommendations.push(recos.response.docs[i]);
+          }
+        }
+        populateRecos(recommendations);
+      }
+
+      search(crecoConcept, crecoDesc, 5, getRecommendations);
+
+      </script>
+
+
     </head>
     <body>
         <%
@@ -101,7 +133,7 @@
                     </button>
                     <a class="navbar-brand" href="/">AdaptQ</a>
                 </div>
-                
+
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                     <ul class="nav navbar-nav">
@@ -118,22 +150,22 @@
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-        
-        
-        
+
+
+
         <div class="container-fluid content">
             <form method="post" action="/Question" id="attempt" name="attempt">
                 <input type="hidden" name="id" value = <%=Question._id%> >
-                    
+
                     <div class="form-group">
                         <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
                         <h1><%=Question.text%></h1>
                         <!-- <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea> -->
                     </div>
-                    
+
                     <br/>
                     <div id="options">
-                        
+
                         <% for(var i=0; i < Question.options.length; i++) {
                             var color="";
                             var tooltip="";
@@ -162,22 +194,22 @@
                             <label for="option<%=i%>" class="form-control optiono disabled"><%=Question.options[i]%></label>
                         </div> <!-- ./input-group -->
                         <% } %>
-                        
-                        
-                        
+
+
+
                     </div>
                     <br>
                     <div class="buttons">
                         <input type="button" class="btn btn-primary" value="View explanations"  onclick="toggleExplanation(this)" >
                     </div> <!-- /.buttons -->
-                    
+
                     <div id="voteContainer">
                         <div id="voteList">
                         </div> <!-- /.voteList -->
-                        
+
                         <input type="button" class="btn btn-primary-outline" id="btnShowMore" value="Show more" onclick="showMore()">
-                            
-                            
+
+
                             <div id="explanatory">
                                 <div class="form-group"><br/>
                                     <label for="explainationGiven" class="svellang">Add explanation</label>
@@ -188,18 +220,18 @@
                                         <input type="reset" class="btn btn-primary-outline" value="Clear Form" onclick="clearForm()">
                                 </div> <!-- /.buttons -->
                             </div> <!-- /.explanatory -->
-                            
+
                     </div><!-- /.voteContainer -->
-                    
-                    
+
+
             </form>
         </div> <!-- /.container-fluid -->
-        
-        
-        
+
+
+
         <div class="container-fluid content-lite">
             <label class="svellang">Recommendations</label>
-            <div id="accordion">
+            <div id="recommendations" class="accordion">
                 <h3>Adaptive Web</h3>
                 <div>
                     <p>Information systems suffer from an inability to satisfy the heterogeneous needs of many users. For example, Web courses present the same static learning material to students with widely differing knowledge of the subject. Most online stores still offer the same selection of "featured items" to customers with different needs and preferences.</p>
@@ -221,7 +253,7 @@
                 <div>
                     <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
                 </div>
-            </div>
+            </div> <!-- /.accordion -->
         </div> <!-- /.container-fluid -->
     </body>
     <script src="/js/explain.js"></script>

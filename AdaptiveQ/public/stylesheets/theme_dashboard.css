@@ -68,6 +68,10 @@ label.form-control.optiono.disabled{
     background-color: rgb(217,135,135);
 }
 
+.ui-widget-content a.svellang {
+    color: #428bca !important;
+}
+
 a.visited{
 	color:#777;
 }
