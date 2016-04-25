@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Struts#Struts_XML_Tags_and_Attributes_Reference
-Java Programming/Struts - Struts XML Tags and Attributes Reference
-(The following list is in the same order as the example above (of a simple configuration) and the example in link below of Struts tutorial on JBoss.)

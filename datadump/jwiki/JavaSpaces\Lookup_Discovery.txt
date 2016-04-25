@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/JavaSpaces#Lookup_Discovery
-JavaSpaces - Lookup Discovery
-Jini Discovery and Join Specification describes how does the client find the jini lookup service. There is a protocol to do that, jini comes with a set of API's that implement that protocol. The Jini Discovery Utility Specification defines a set of utility classes that are used to work with the protocol.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/ArrayList#Initializing
-ArrayList - Initializing
-The ArrayList class supports three constructors. The first constructor builds an empty array list.:The following constructor builds an array list that is initialized with the elements of the collection c.The following constructor builds an array list that has the specified initial capacity. The capacity is the size of the underlying array that is used to store the elements.The capacity grows automatically as elements are added to an array list.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Compilation#Filename_Case
-Compilation - Filename Case
-The Java source file name must be the same as the public class name that the file contains. There can be only one public class defined per file. The Java class name is case sensitive, as is the source file name.The naming convention for the class name is for it to start with a capital letter.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Regular_Expressions#Researches
-Regular Expressions - Researches
-The Pattern class offers the function matches which returns true if an expression is found into a string.For example, this script returns the unknown word preceding a known word:The Matcher class allows to get all matches for a given expression, with different methods:For example, this script displays the HTML b tags contents:

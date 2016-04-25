@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Remote_Method_Invocation#STUB_and_SKELETON
-Remote Method Invocation - STUB and SKELETON
-The remote method invocation goes through a STUB on the client side and a so called SKELETON on the server side.Prior to Java 1.2 the skeleton had to be explicitly generated with the rmic tool. Since 1.2 a dynamic skeleton is used, which employs the features of Java Reflection to do its work.

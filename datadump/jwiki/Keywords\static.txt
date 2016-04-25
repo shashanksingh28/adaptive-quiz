@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#static
-Keywords - static
-static is a Java keyword. It can be applied to a field, a method or an inner class. A static field, method or class has a single instance for the whole class that defines it, even if there is no instance of this class in the program. For instance, a Java entry point (main()) has to be static. A static method cannot be abstract. It must be placed before the variable type or the method return type. It is recommended to place it after the access modifier and before the final keyword:The static items can be called on an instantiated object or directly on the class:Static methods cannot call non static methods. The this current object reference is also not available in static methods.

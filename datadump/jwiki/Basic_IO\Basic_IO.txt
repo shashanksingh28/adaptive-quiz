@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Annotations/Basic_IO
-Basic IO
-This section covers the Java platform classes used for basic input and output. But before we begin we need to have a concrete understanding of what input and output means in programming. To grasp this concept, think of the Java platform as a system.

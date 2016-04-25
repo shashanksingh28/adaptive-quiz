@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Java_Overview#Forbidden_bad_practices
-Overview - Forbidden bad practices
-Over the years, some features in C/C++ programming became abused by the programmers. Although the language allows it, it was known as bad practices. So the creators of Java have disabled them:

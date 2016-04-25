@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Struts#Prerequisites
-Java Programming/Struts - Prerequisites
-Apart from basic understanding of building a web application. The reader is required to have some sort of working knowledge in the following technologies.

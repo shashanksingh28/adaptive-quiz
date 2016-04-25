@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords/final#For_a_class
-Java Programming/Keywords/final - For a class
-The final keyword forbids the creation of a subclass. It is the case of the Integer or String class.A final class cannot be abstract. The final keyword is similar to sealed keyword in C#.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords/final
-Java Programming/Keywords/final
-final is a keyword. Beware! It has distinct meanings depending whether it is used for a class, a method, or for a variable. It must be placed before the variable type or the method return type. It is recommended to place it after the access modifier and after the static keyword.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Graphics/Drawing_shapes#Introduction_to_Graphics
-Drawing shapes - Introduction to Graphics
-Throughout this chapter, we will refer to the process of creating Graphical content with code as either drawing or painting. However, Java officially recognizes the latter as the proper word for the process, but we will differentiate between the two later on.Now, the main class that you would be needing would, without doubt, be the Graphics class. If you take a closer look at the method that we used in theIdentifying the acquisition of the Graphics class in our codeTo view the contents of the Graphics class, please check the external links at the bottom of the page for links to the online API.

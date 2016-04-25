@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Remote_Method_Invocation#RMI_clients
-RMI clients
-Here is an example of RMI client:

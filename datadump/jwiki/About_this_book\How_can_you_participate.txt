@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/About_This_Book#How_can_you_participate
-How can you participate
-Content is constantly being updated and enhanced in this book as is the nature of wiki-based content. This book is therefore in a constant state of evolution. Any Wikibooks users can participate in helping this book to a better standard as both a reader, or a contributor.If you are interested in reading the content present in this book, we encourage you to:If you are intent on writing content for this book, you need to do the following:

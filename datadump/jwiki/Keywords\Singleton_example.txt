@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#Singleton_example
-Keywords - Singleton example
-As an example, we can show a thread-safe version of a singleton:

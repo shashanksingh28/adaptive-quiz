@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Applets/Event_Listeners#ActionListener
-Event Listeners - ActionListener
-ActionListener is an interface that could be implemented in order to determine how certain event should be handled. When implementing an interface, all methods in that interface should be implemented, ActionListener interface has one method to implement named actionPerformed().The code listing 9.6 shows how to implement ActionListener:When you compile and run the above code, the message "Hi!!!" will appear when you click on the button.

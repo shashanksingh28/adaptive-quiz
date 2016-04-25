@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Variables#Creating_variables
-Variables - Creating variables
-Variables and all the information they store are kept in the computer's memory for access. Think of a computer's memory as a table of data — where each cell corresponds to a variable.Upon creating a variable, we basically create a new address space and give it a unique name. Java goes one step further and lets you define what you can place within the variable — in Java parlance you call this a data type. So, you essentially have to do two things in order to create a variable:The following code demonstrates how a simple variable can be created. This process is known as variable declaration.

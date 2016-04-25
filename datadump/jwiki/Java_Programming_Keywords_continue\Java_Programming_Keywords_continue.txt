@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords/continue
-Java Programming/Keywords/continue
-continue is a Java keyword. It skips the remainder of the loop and continues with the next iteration.For example:results in

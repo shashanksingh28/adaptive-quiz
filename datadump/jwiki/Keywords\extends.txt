@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#extends
-Keywords - extends
-extends is a Java keyword.Used in class and interface definition to declare the class or interface that is to be extended.Syntax:In Java 1.5 and later, the "extends" keyword is also used to specify an upper bound on a type parameter in Generics.See also:

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#super
-Keywords - super
-super is a keyword.Syntax:For example:Running the above program:In Java 1.5 and later, the "super" keyword is also used to specify a lower bound on a wildcard type parameter in Generics.See also:

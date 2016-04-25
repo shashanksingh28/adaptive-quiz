@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Arrays
-Arrays
-An array is similar to a table of objects or primitive types, keyed by index. You may have noticed the strange parameter of the default main() method (String[] args) since the beginning of the book. It is an array. Let's handle this parameter:In the code listing 3.15, the array is args. It is an array of String objects (here those objects are the words that have been typed by the user at the program launching). At line 4, One contained object is accessed using its index in the array. You can see that its value is printed on the standard output. Note that the strings have been put in the array with the right order.

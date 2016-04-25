@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#strictfp
-Keywords - strictfp
-strictfp is a java keyword, since Java 1.2 .It makes sure that floating point calculations result precisely the same regardless of the underlying operating system and hardware platform, even if more precision could be obtained. This is compatible with the earlier version of Java 1.1 . If you need that use it.Syntax for classes:Syntax for methods:See also:

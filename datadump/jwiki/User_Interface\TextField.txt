@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Applets/User_Interface#TextField
-User Interface - TextField
-TextFields are areas in applets that allow users to insert text. The two parameters, which are optional, for TextFields can set predefined text in the field or set the number of columns allowed in the TextField. Here are a few examples:

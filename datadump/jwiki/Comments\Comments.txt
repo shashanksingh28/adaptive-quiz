@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Comments
-Comments
-A comment allows to insert text that will not be compiled nor interpreted. It can appear anywhere in the source code where whitespaces are allowed.It is useful for explaining what the source code does by:It can also be used to make the compiler ignore a portion of code: temporary code for debugging, code under development...

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Applets/Overview#First_applet
-Overview - First applet
-The two things you must at least create is an HTML page and a Java class. It can be done on a local folder, no need to run a server but it will be harder to understand what is local, what is remote. The HTML page has to call the Java class using the <applet/> markup:Save this file on a folder. As the <applet/> markup is calling a Java class called HelloWorld, our class should be called HelloWorld.java:Save this file and compile the class on the same folder. Now let's open the web page on a browser:We clearly see that "Hello, world!" is not rendered the same way as the rest of the page.

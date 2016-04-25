@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Arrays#Multidimensional_Array
-Multidimensional Array
-Going further any number of dimensional array can be defined.or

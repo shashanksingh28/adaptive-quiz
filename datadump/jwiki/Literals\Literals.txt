@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Literals/String_Literals
-Literals
-Java Literals are syntactic representations of boolean, character, numeric, or string data. Literals provide a means of expressing specific values in your program. For example, in the following statement, an integer variable named count is declared and assigned an integer value. The literal 0 represents, naturally enough, the value zero.The code section 3.62 contains two number literals followed by two boolean literals at line 1, one string literal followed by one number literal at line 2, and one string literal followed by one real number literal at line 3:

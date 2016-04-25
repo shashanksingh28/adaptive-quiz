@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Database_Programming#Connecting_to_Microsoft_Access_databases
-Java Programming/Database Programming - Connecting to Microsoft Access databases
-The following is used to open an ODBC connection to an Access database. Note that the username (and password, if applicable) are given in the DSN rather than the getConnection call. This is a MS Windows-only example, due to the requirement for the Microsoft Access Driver.

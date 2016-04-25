@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Exceptions#Flow_of_code_execution
-Flow of code execution
-In Java, there are two main flows of code executions.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/API/java.lang.Object#equals()_Method
-Java Programming/API/java.lang.Object - equals() Method
-Keep in mind that when you override equals(), you always need to also override hashCode() so the two methods are consistent. If two objects are equal, they must have the same hashcode.For more information also see Java Programming/Comparing Objects

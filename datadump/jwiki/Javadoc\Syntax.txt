@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Javadoc#Syntax
-Javadoc - Syntax
-A documentation comment is framed by slash-star-star and star-slash (i.e. /** ... */). The documentation is in the HTML format.A documentation comment is placed just above the commented entity (class, constructor, method, field).In a documentation comment, the first part is a description text in the HTML format. The second part is a list of special attributes whose name starts with an at sign (@):Here is a non exhaustive list of special attributes:See also annotations since Java 5.

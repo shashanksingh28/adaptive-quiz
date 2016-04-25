@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Byte_Code#Other_Languages
-Java Programming/Byte Code - Other Languages
-There are a number of exciting new languages being created that also compile to Java byte code, such as Groovy.

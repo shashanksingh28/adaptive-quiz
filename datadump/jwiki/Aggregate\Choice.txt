@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Collections#Choice
-Choice
-A collection is better when you have to access all the items at once. A map is better when you have to randomly access an item regularly.Before selecting a particular collection implementation, ask the following question:Once you know your needs, you can select an existing implementation. But first decide if you need a Collection, or a Map.Note that the above associations are explicit. The objects them-self do not have any knowledge/information about that they are part in an association. But creating explicit associations between simple java objects is the main idea about using the aggregate/collection classes.

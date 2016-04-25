@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Introduction#Are_you_new_to_programming?
-Preface - Are you new to programming?
-If you have chosen Java as your first programming language, be assured that Java is also the first choice for computer science programs in many universities. Its simple and intuitive syntax, or grammar, helps beginners feel at ease with complex programming constructs quickly.However, Java is not a basic programming language. In fact, NASA used Java as the driving force (quite literally) behind its Mars Rover missions. Robots, air traffic control systems and the self-checkout barcode scanners in your favorite supermarkets can all be programmed in Java.

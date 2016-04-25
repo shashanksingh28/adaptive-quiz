@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Java_Overview#Applet
-Overview - Applet
-The Java creators created the concept of the applet. A Java program can be run in a client browser program. Java was released in 1995; the time when the Internet was becoming more available and familiar to the general public. The promise of Java was in the client browser-side in that code would be downloaded and executed as a Java applet in the client browser program.

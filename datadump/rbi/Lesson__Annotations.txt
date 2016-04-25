@@ -1,3 +1,0 @@
-https://docs.oracle.com/javase/tutorial/java/annotations/index.html
-Lesson: Annotations
-Annotations, a form of metadata, provide data about a program that is not part of the program itself. Annotations have no direct effect on the operation of the code they annotate.Annotations have a number of uses, among them:This lesson explains where annotations can be used, how to apply annotations, what predefined annotation types are available in the Java Platform, Standard Edition (Java SE API), how type annnotations can be used in conjunction with pluggable type systems to write code with stronger type checking, and how to implement repeating annotations.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#private
-Keywords - private
-private is a Java keyword which declares a member's access as private. That is, the member is only visible within the class, not from any other class (including subclasses). The visibility of private members extends to nested classes.Please note: Because access modifiers are not handled at instance level but at class level, private members of an object are visible from other instances of the same class!Syntax:See also:

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Execution#Jini
-Jini
-After J2EE Sun had a vision about the next step of network computing. That is Jini. The main idea is that in a network environment, there would be many independent services and consumers. Jini would allow these services/consumers to interact dynamically with each other in a robust way. The basic features of Jini are:A minimal Jini network environment consists of:Jini is not widely used at the current writing (2006). There are two possible reasons for it. One is Jini a bit complicated to understand and to set it up. The other reason is that Microsoft pulled out from Java, which caused the industry to turn to the use of proprietary solutions.

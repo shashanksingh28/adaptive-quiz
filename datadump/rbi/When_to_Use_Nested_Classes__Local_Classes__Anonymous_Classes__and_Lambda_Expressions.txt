@@ -1,3 +1,0 @@
-https://docs.oracle.com/javase/tutorial/java/javaOO/whentouse.html
-When to Use Nested Classes, Local Classes, Anonymous Classes, and Lambda Expressions
-As mentioned in the section Nested Classes, nested classes enable you to logically group classes that are only used in one place, increase the use of encapsulation, and create more readable and maintainable code. Local classes, anonymous classes, and lambda expressions also impart these advantages; however, they are intended to be used for more specific situations:

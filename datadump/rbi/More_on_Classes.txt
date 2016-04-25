@@ -1,3 +1,0 @@
-https://docs.oracle.com/javase/tutorial/java/javaOO/more.html
-More on Classes
-This section covers more aspects of classes that depend on using object references and the dot operator that you learned about in the preceding sections on objects:

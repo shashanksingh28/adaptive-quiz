@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Packages#Package_declaration
-Packages - Package declaration
-In a class, a package is declared at the top of the source code using the keyword package:If your class is declared in a package, say business, your class must be placed in a subfolder called business from the root of your application folder. This is how the compiler and the class loader find the Java files on the file system. You can declare your class in a subpackage, say engine. So the full package is business.engine and the class must be placed in a subsubfolder called engine in the subfolder business (not in a folder called business.engine).

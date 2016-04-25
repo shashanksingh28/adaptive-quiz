@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#For_a_method
-Keywords - For a method
-The final keyword forbids to overwrite the method in a subclass. It is useless if the class is already final and a private method is implicitly final. A final method cannot be abstract.
