@@ -73,7 +73,7 @@ function loadData(rawdata){
       formatValue = d3.format(",.2f"),
       formatCurrency = function(d) { return " "+ formatValue(d); };
 
-  var x = d3.time.scale()
+  var x = d3.scale.linear()
       .range([0, width]);
 
   var y = d3.scale.linear()
@@ -81,7 +81,8 @@ function loadData(rawdata){
 
   var xAxis = d3.svg.axis()
       .scale(x)
-      .orient("bottom");
+      .orient("bottom")
+      .tickValues(d3.range(0, 365, 1));
 
   var yAxis = d3.svg.axis()
       .scale(y)
