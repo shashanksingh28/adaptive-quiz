@@ -27,6 +27,7 @@
             <!--Tree structure-->
             <script src="/js/tree.jquery.js"></script>
             <link rel="stylesheet" href="/stylesheets/jqtree.css">
+            <script src="/js/creco.js"></script>
             
             <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
             <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -71,6 +72,9 @@
             <%
                 }
             %>
+            search(crecoConcept, crecoDesc, 5, function(result) {
+  				console.log("Creco"+result);
+			});
             //End Creco
             
             
