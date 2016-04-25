@@ -11,7 +11,7 @@ function populateTable(id,arrayGivenBy) {
     var divContent = '';
     
     // jQuery AJAX call for JSON
-    $.getJSON( '/question/explainlist?id='+ id, function( data ) {
+    $.getJSON('/question/explainlist?id='+ id, function( data ) {
               
               // Stick our user data array into a userlist variable in the global object
               userListData = data;

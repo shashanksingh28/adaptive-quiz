@@ -197,12 +197,8 @@ function getLowest(user, usersScores){
   var conceptArr = [];
   for (var key in usersScores[sessionUserId]){
     if (usersScores[sessionUserId][key] != -1){
-<<<<<<< HEAD
       var value = usersScores[sessionUserId][key]       
-=======
-      var value = usersScores[sessionUserId][key]
-      console.log(value);
->>>>>>> aee1037fbdaba5b60560cf0e8df317bd07a5cf48
+
       conceptArr.push({'key':key, 'value':value});
 
     }
@@ -301,12 +297,6 @@ function getNearestNeighbor(user, usersScores){
       }
     }
   };
-<<<<<<< HEAD
-  //console.log("recommendation");
-  //console.log(recommendation);
-  console.log(recommendationBy);
-=======
->>>>>>> aee1037fbdaba5b60560cf0e8df317bd07a5cf48
 
   for (var key in recommendation) {
   if (recommendation.hasOwnProperty(key)) {
