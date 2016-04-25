@@ -7,7 +7,6 @@ function lerp(a, b, t) {
 
 function loadQuestions(questions){
   var ctr = document.getElementById('questionsContainer');
-  console.log(ctr);
   ctr.innerHTML="";
   var content = "<h3 class='rightpane'>Questions</h3><ul>";
   for(var i =  0; i < questions.length; ++i){
@@ -23,6 +22,28 @@ function getQuestionsOn(concept){
       loadQuestions(allQuestions);
      }
   });
+}
+
+function populateRecos(recommendations){
+  console.log(recommendations);
+  // TODO: show in UI
+}
+
+function getRecommendations(concepts){
+  console.log("Concepts:"+concepts);
+  var count = 0;
+  var recommendations = [];
+  for (var i = 0; i < concepts.length; ++i){
+      console.log(concepts[i].key);
+      search(concepts[i].key,"",3-i,function(recos){
+        console.log("Got:" + recos);
+        recommendations.push.apply(recommendations,recos);
+        count += 1;
+        if (count == 2){
+          populateRecos(recommendations);
+        }
+      });
+    }
 }
 
 function loadData(rawdata){
@@ -331,6 +352,7 @@ $(document).ready(function(){
      $.ajax({url: "/analytics/getScoreAnalytics", success: function(a_result){
           console.log(a_result);
           loadViz(result,a_result);
+          getRecommendations(a_result.weakestConcepts);
         }
      });
 	}});
