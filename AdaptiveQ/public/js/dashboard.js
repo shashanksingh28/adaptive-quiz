@@ -9,7 +9,7 @@ function loadQuestions(questions){
   var ctr = document.getElementById('questionsContainer');
   console.log(ctr);
   ctr.innerHTML="";
-  var content = "<h3>Questions</h3><hr><ul>";
+  var content = "<h3 class='rightpane'>Questions</h3><ul>";
   for(var i =  0; i < questions.length; ++i){
     content += "<li>" + questions[i] + "</li>";
   }
