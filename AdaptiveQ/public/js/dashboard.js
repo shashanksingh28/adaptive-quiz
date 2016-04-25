@@ -47,7 +47,12 @@ function getRecommendations(concepts){
   var recommendations = [];
   for (var i = 0; i < concepts.length; ++i){
       search(concepts[i].key,"",3-i,function(recos){
-        recommendations.push.apply(recommendations,recos);
+        if(recos.response.docs.length > 0){
+          for(var i = 0; i < recos.response.docs.length; ++i)
+          {
+            recommendations.push(recos.response.docs[i]);
+          }
+        }
         count += 1;
         if (count == 3){
           populateRecos(recommendations);

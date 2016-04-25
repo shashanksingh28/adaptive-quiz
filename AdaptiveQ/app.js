@@ -72,7 +72,4 @@ app.use(function(err, req, res, next) {
   });
 });
 
-
 module.exports = app;
-var creco = require("./creco");
-creco.fetch();

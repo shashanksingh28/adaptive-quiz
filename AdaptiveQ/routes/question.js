@@ -224,7 +224,6 @@ router.get('/', requireLogin, function(req, res){
             }
           }
           var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
-          console.log(url);
           response.push(url);
         }
         res.send(response);
@@ -246,7 +245,6 @@ router.get('/', requireLogin, function(req, res){
             }
           }
           var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
-          console.log(url);
           response.push(url);
         }
         res.send(response);

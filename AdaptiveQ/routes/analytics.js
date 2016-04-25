@@ -198,7 +198,7 @@ function getLowest(user, usersScores){
   var conceptArr = [];
   for (var key in usersScores[sessionUserId]){
     if (usersScores[sessionUserId][key] != -1){
-      var value = usersScores[sessionUserId][key] 
+      var value = usersScores[sessionUserId][key]
       console.log(value);
       conceptArr.push({'key':key, 'value':value});
 
@@ -212,14 +212,12 @@ function getLowest(user, usersScores){
   {'key': 'Conditional blocks', 'value' : 0.0  }]
   if(conceptArr.length < 3){
     for (var i = conceptArr.length; i < coldstar.length; i++) {
-      conceptArr.push(coldstar[i]); 
+      conceptArr.push(coldstar[i]);
     };
 
   }
   return conceptArr.slice(0,3);
 }
-
-
 
 function getNearestNeighbor(user, usersScores){
   var minAbs = 0;
@@ -227,8 +225,8 @@ function getNearestNeighbor(user, usersScores){
   var userData = {};
   var simScore = [];
   var sessionUserMean = 0.0;
-  for (var userId in usersScores) {    
-    if (usersScores.hasOwnProperty(userId)) {     
+  for (var userId in usersScores) {
+    if (usersScores.hasOwnProperty(userId)) {
         if(userId != user._id)
         {
           var currentUserData = []
@@ -239,7 +237,7 @@ function getNearestNeighbor(user, usersScores){
           var currentUserm = 0.0;
           var currentNo = 0;
           for(var key in usersScores[userId])
-          {            
+          {
             if(usersScores[userId].hasOwnProperty(key))
             {
               var userScore = usersScores[user._id][key];
@@ -254,7 +252,7 @@ function getNearestNeighbor(user, usersScores){
                 sessionUserm += userScore;
                 sessionNo += 1;
               }
-              if (score != -1 && userScore != -1){               
+              if (score != -1 && userScore != -1){
                 currentUserData.push(score);
                 sessionUserData.push(userScore);
                 //totalScore += score;
@@ -280,9 +278,6 @@ function getNearestNeighbor(user, usersScores){
   simScore.sort(function(a, b){
     return b.value - a.value;
   });
-  //console.log("sorted are " + simScore);
-  //console.log(simScore);
-  //console.log(userData);
   recommendation = {};
   recommendationBy = {};
   for (var i = 0 ; i < 2 ; i++) {
@@ -301,17 +296,8 @@ function getNearestNeighbor(user, usersScores){
         recommendation[userCurr.hasScoreFor[j].key] = sc;
         recommendationBy[userCurr.hasScoreFor[j].key] = [userCurr.score];
       }
-
-      //console.log(sc);
-
     }
-    //console.log("each iteration later");
-    //console.log(recommendation);
-
   };
-  //console.log("recommendation");
-  //console.log(recommendation);
-  //console.log(recommendationBy);
 
   for (var key in recommendation) {
   if (recommendation.hasOwnProperty(key)) {
@@ -325,7 +311,6 @@ function getNearestNeighbor(user, usersScores){
 
 console.log(recommendation);
 
-//return userData;
 return recommendation;
 }
 
@@ -388,7 +373,7 @@ function getMean(data){
       meandate[date] = {
       mean : data[i].score,
       num  : 1       } ;
-      
+
     }
   };
   console.log("meandate is")
@@ -402,8 +387,8 @@ function getMean(data){
         meandate[key].num += meandate[keyin].num;
 
       }
-    
-    
+
+
   }
   //console.log("done inner for");
   //console.log( meandate);
