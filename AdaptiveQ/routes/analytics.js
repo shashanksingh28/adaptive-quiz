@@ -191,6 +191,36 @@ console.log("in getSimilarity" + s);
 return s;
 }
 
+
+function getLowest(user, usersScores){
+  console.log("usersScores[sessionUserId][key]" + user._id);
+  var sessionUserId = user._id;
+  var conceptArr = [];
+  for (var key in usersScores[sessionUserId]){
+    if (usersScores[sessionUserId][key] != -1){
+      var value = usersScores[sessionUserId][key] 
+      console.log(value);
+      conceptArr.push({'key':key, 'value':value});
+
+    }
+    conceptArr.sort(function(a, b){
+    return a.value - b.value;
+  });
+  }
+  var coldstar = [{'key': 'Language fundamentals', 'value' : 0.0  },
+  {'key': 'Statements', 'value' : 0.0  },
+  {'key': 'Conditional blocks', 'value' : 0.0  }]
+  if(conceptArr.length < 3){
+    for (var i = conceptArr.length; i < coldstar.length; i++) {
+      conceptArr.push(coldstar[i]); 
+    };
+
+  }
+  return conceptArr.slice(0,3);
+}
+
+
+
 function getNearestNeighbor(user, usersScores){
   var minAbs = 0;
   var closestUser = null;
@@ -246,7 +276,7 @@ function getNearestNeighbor(user, usersScores){
     }
   }
   //console.log("total for" + user._id + "is mean" + sessionUserMean);
-  //console.log(simScore);
+  console.log(simScore);
   simScore.sort(function(a, b){
     return b.value - a.value;
   });
@@ -321,10 +351,12 @@ router.get('/getScoreAnalytics', requireLogin, function(req,res, next){
         }
         usersScores[allUsers[i]._id] = obj;
       }
+      lowestConcept = getLowest(req.session.user,usersScores);
       response={};
       response['allScores'] = usersScores;
       response['userPercentile'] = getUserPercentile(currentUser, usersScores);
       response['predictedScores'] = getNearestNeighbor(req.session.user,usersScores);
+      response['weakestConcepts'] = lowestConcept;
       res.send(response);
     });
   });
