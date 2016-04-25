@@ -16,9 +16,11 @@
 	float:left;
 	margin-left:20px !important;
 	width:60%;
+	min-height:50%;
 }
 
 .right-pane{
+	padding-left:16px;
 	float:right;
 	margin-right:20px !important;
 	width:34%;
@@ -61,6 +63,12 @@ h4{
 	display:inline-block;
 	margin-left:8px;
 	margin-right:8px;
+}
+
+h3.rightpane{
+	padding-bottom:2px;
+	border-width:0.5px;
+    border-bottom:  ridge #eee;
 }
 
 h5.svellang{

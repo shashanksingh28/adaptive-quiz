@@ -1,213 +1,224 @@
 <html>
-<head>
-
-<script src="/js/explain.js"></script>
-<title>Question</title>
-<% test = Question._id; %>
-<script>
-var arrayGivenBy = <%=JSON.stringify(Upvote.givenById)%>;
-var uid = <%=Userid%>
-var qid = <%= test  %>;  //var test is now assigned to getTest which will only work on browsers
-console.log("user" + uid );
-console.log(qid);  // successfully prints 101 on browser
-var numExplains=5;
-</script>
-
-<!--Common-->
-<link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
-<script src="/js/tether.min.js"></script>
-<link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
-<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-
-<!-- Layout formatting -->
-<link rel="stylesheet" href="/stylesheets/layout.css">
-<!-- Theme formatting -->
-<link rel="stylesheet" href="/stylesheets/theme.css">
-
-<!--Tree structure-->
-<script src="/js/tree.jquery.js"></script>
-<link rel="stylesheet" href="/stylesheets/jqtree.css">
-
-<link rel="stylesheet" href="/stylesheets/jquery-ui.css">
-<script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-<!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
-<script>
-$(function() {
-$( "#accordion" ).accordion({
-collapsible: true,
-active:false
-});
-$("#voteContainer").hide();
-});
-function toggleExplanation(btn){
-if($("#voteContainer").is(":visible")){
-$("#voteContainer").hide();
-$(btn).val("View explanations");
-}
-else{
-$("#voteContainer").show();
-$(btn).val("Hide explanations");
-}
-}
-function showMore(){
-numExplains+=5;
-if(numExplains>=$(".explainList").length)
-$("#btnShowMore").attr("disabled",true);
-$( ".explainList" ).each(function( index ) {
-if(index>=numExplains)
-$(this).hide();
-else
-$(this).show();
-});
-}
-
-
-</script>
-
-
-</head>
-<body>
-<%
-inputType=Question.answers.length>1?"checkbox":"radio";
-hintDisabled="disabled";
-studentAnswered=[1,2];
-mode=0;//0: attempt, 1: view_result
-%>
-<nav class="navbar navbar-default">
-<div class="container-fluid">
-<!-- Brand and toggle get grouped for better mobile display -->
-<div class="navbar-header">
-<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-<span class="sr-only">Toggle navigation</span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-<span class="icon-bar"></span>
-</button>
-<a class="navbar-brand" href="/">AdaptQ</a>
-</div>
-
-<!-- Collect the nav links, forms, and other content for toggling -->
-<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-<ul class="nav navbar-nav">
-</ul>
-<!--<form class="navbar-form navbar-left" role="search">
-<div class="form-group">
-<input type="text" class="form-control" placeholder="Search">
-</div>
-<button type="submit" class="btn btn-default">Submit</button>
-</form>-->
-<ul class="nav navbar-nav navbar-right">
-<li><a href="/logout">Sign Out</a></li>
-</ul>
-</div><!-- /.navbar-collapse -->
-</div><!-- /.container-fluid -->
-</nav>
-
-
-
-<div class="container-fluid content">
-<form method="post" action="/Question" id="attempt" name="attempt">
-<input type="hidden" name="id" value = <%=Question._id%> >
-
-<div class="form-group">
-<!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
-<h1><%=Question.text%></h1>
-<!-- <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea> -->
-</div>
-
-<br/>
-<div id="options">
-
-<% for(var i=0; i < Question.options.length; i++) {
-var color="";
-var tooltip="";
-var arrActualOptions = Question.answers;
-var givenAns = JSON.stringify(Attempt.givenAns);
-var checked="";
-if(arrActualOptions.indexOf(i)>-1 && givenAns.indexOf(i)>-1){
-color="correct";
-tooltip="data-toggle=tooltip data-placement=auto title=Correct";
-checked="checked";
-}
-if(arrActualOptions.indexOf(i)>-1 && givenAns.indexOf(i)<0){
-color="warning";
-tooltip="data-toggle=tooltip data-placement=auto title=Missed";
-}
-if(arrActualOptions.indexOf(i)<0 && givenAns.indexOf(i)>-1){
-color="incorrect";
-tooltip="data-toggle=tooltip data-placement=auto title=Incorrect";
-checked="checked";
-}
-%>
-<div class="option input-group" <%=tooltip%>>
-<span class="input-group-addon <%=color%>">
-<input type=<%=inputType%> name="options" id="option<%=i%>" class="checko" disabled <%=checked%>>
-</span>
-<label for="option<%=i%>" class="form-control optiono disabled"><%=Question.options[i]%></label>
-</div> <!-- ./input-group -->
-<% } %>
-
-
-
-</div>
-<br>
-<div class="buttons">
-<input type="button" class="btn btn-primary" value="View explanations"  onclick="toggleExplanation(this)" >
-</div> <!-- /.buttons -->
-
-<div id="voteContainer">
-<div id="voteList">
-</div> <!-- /.voteList -->
-
-<input type="button" class="btn btn-primary-outline" id="btnShowMore" value="Show more" onclick="showMore()">
-
-
-<div id="explanatory">
-<div class="form-group"><br/>
-<label for="explainationGiven" class="svellang">Add explanation</label>
-<textarea class="form-control" rows="3" id="explainationGiven" placeholder="Provide your explanation here" name="explainationGiven"></textarea>
-</div>
-<div class="buttons">
-<input type="button" class="btn btn-primary" value="Submit" onclick="sub()">
-<input type="reset" class="btn btn-primary-outline" value="Clear Form" onclick="clearForm()">
-</div> <!-- /.buttons -->
-</div> <!-- /.explanatory -->
-
-</div><!-- /.voteContainer -->
-
-
-</form>
-</div> <!-- /.container-fluid -->
-
-
-
-<div class="container-fluid content-lite">
-<label class="svellang">Recommendations</label>
-<div id="accordion">
-<h3>Adaptive Web</h3>
-<div>
-<p>Information systems suffer from an inability to satisfy the heterogeneous needs of many users. For example, Web courses present the same static learning material to students with widely differing knowledge of the subject. Most online stores still offer the same selection of "featured items" to customers with different needs and preferences.</p>
-</div>
-<h3>Mobile Computing</h3>
-<div>
-<p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
-</div>
-<h3>Intro to theoretical computer sci</h3>
-<div>
-<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
-<ul>
-<li>List item one</li>
-<li>List item two</li>
-<li>List item three</li>
-</ul>
-</div>
-<h3>Section 4</h3>
-<div>
-<p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
-</div>
-</div>
-</div> <!-- /.container-fluid -->
-</body>
-<script src="/js/explain.js"></script>
+    <head>
+        
+        <script src="/js/explain.js"></script>
+        <title>Question</title>
+        <% test = Question._id; %>
+        <script>
+            var arrayGivenBy = <%=JSON.stringify(Upvote.givenById)%>;
+            var uid = <%=Userid%>
+            var qid = <%= test  %>;  //var test is now assigned to getTest which will only work on browsers
+            console.log("user" + uid );
+            console.log(qid);  // successfully prints 101 on browser
+            var numExplains=5;
+            </script>
+        
+        <!--Common-->
+        <link href='http://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700' rel='stylesheet' type='text/css'>
+            <script src="/js/tether.min.js"></script>
+            <link rel="stylesheet" href="/stylesheets/bootstrap.min.css">
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+            
+            <!-- Layout formatting -->
+            <link rel="stylesheet" href="/stylesheets/layout.css">
+            <!-- Theme formatting -->
+            <link rel="stylesheet" href="/stylesheets/theme.css">
+            
+            <!--Tree structure-->
+            <script src="/js/tree.jquery.js"></script>
+            <link rel="stylesheet" href="/stylesheets/jqtree.css">
+            
+            <link rel="stylesheet" href="/stylesheets/jquery-ui.css">
+            <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+            <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+            <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
+            <script>
+            $(function() {
+            $( "#accordion" ).accordion({
+            collapsible: true,
+            active:false
+            });
+            $("#voteContainer").hide();
+            });
+            function toggleExplanation(btn){
+            if($("#voteContainer").is(":visible")){
+            $("#voteContainer").hide();
+            $(btn).val("View explanations");
+            }
+            else{
+            $("#voteContainer").show();
+            $(btn).val("Hide explanations");
+            }
+            }
+            function showMore(){
+            numExplains+=5;
+            if(numExplains>=$(".explainList").length)
+            $("#btnShowMore").attr("disabled",true);
+            $( ".explainList" ).each(function( index ) {
+            if(index>=numExplains)
+            $(this).hide();
+            else
+            $(this).show();
+            });
+            }
+            
+            //Begin Creco
+            var crecoConcept = "<%= Question.concept %>";
+            var crecoDesc = '<%= JSON.stringify(Question.text) %> ';
+            <% for(var i=0; i < Question.options.length; i++) {
+                %>
+            crecoDesc+= " " + "<%= JSON.stringify(Question.options[i]) %>";
+            <%
+                }
+            %>
+            //End Creco
+            
+            
+            </script>
+            
+            
+    </head>
+    <body>
+        <%
+            inputType=Question.answers.length>1?"checkbox":"radio";
+            hintDisabled="disabled";
+            studentAnswered=[1,2];
+            mode=0;//0: attempt, 1: view_result
+            %>
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <!-- Brand and toggle get grouped for better mobile display -->
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/">AdaptQ</a>
+                </div>
+                
+                <!-- Collect the nav links, forms, and other content for toggling -->
+                <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                    <ul class="nav navbar-nav">
+                    </ul>
+                    <!--<form class="navbar-form navbar-left" role="search">
+                     <div class="form-group">
+                     <input type="text" class="form-control" placeholder="Search">
+                     </div>
+                     <button type="submit" class="btn btn-default">Submit</button>
+                     </form>-->
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="/logout">Sign Out</a></li>
+                    </ul>
+                </div><!-- /.navbar-collapse -->
+            </div><!-- /.container-fluid -->
+        </nav>
+        
+        
+        
+        <div class="container-fluid content">
+            <form method="post" action="/Question" id="attempt" name="attempt">
+                <input type="hidden" name="id" value = <%=Question._id%> >
+                    
+                    <div class="form-group">
+                        <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
+                        <h1><%=Question.text%></h1>
+                        <!-- <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea> -->
+                    </div>
+                    
+                    <br/>
+                    <div id="options">
+                        
+                        <% for(var i=0; i < Question.options.length; i++) {
+                            var color="";
+                            var tooltip="";
+                            var arrActualOptions = Question.answers;
+                            var givenAns = JSON.stringify(Attempt.givenAns);
+                            var checked="";
+                            if(arrActualOptions.indexOf(i)>-1 && givenAns.indexOf(i)>-1){
+                                color="correct";
+                                tooltip="data-toggle=tooltip data-placement=auto title=Correct";
+                                checked="checked";
+                            }
+                            if(arrActualOptions.indexOf(i)>-1 && givenAns.indexOf(i)<0){
+                                color="warning";
+                                tooltip="data-toggle=tooltip data-placement=auto title=Missed";
+                            }
+                            if(arrActualOptions.indexOf(i)<0 && givenAns.indexOf(i)>-1){
+                                color="incorrect";
+                                tooltip="data-toggle=tooltip data-placement=auto title=Incorrect";
+                                checked="checked";
+                            }
+                        %>
+                        <div class="option input-group" <%=tooltip%>>
+                            <span class="input-group-addon <%=color%>">
+                                <input type=<%=inputType%> name="options" id="option<%=i%>" class="checko" disabled <%=checked%>>
+                            </span>
+                            <label for="option<%=i%>" class="form-control optiono disabled"><%=Question.options[i]%></label>
+                        </div> <!-- ./input-group -->
+                        <% } %>
+                        
+                        
+                        
+                    </div>
+                    <br>
+                    <div class="buttons">
+                        <input type="button" class="btn btn-primary" value="View explanations"  onclick="toggleExplanation(this)" >
+                    </div> <!-- /.buttons -->
+                    
+                    <div id="voteContainer">
+                        <div id="voteList">
+                        </div> <!-- /.voteList -->
+                        
+                        <input type="button" class="btn btn-primary-outline" id="btnShowMore" value="Show more" onclick="showMore()">
+                            
+                            
+                            <div id="explanatory">
+                                <div class="form-group"><br/>
+                                    <label for="explainationGiven" class="svellang">Add explanation</label>
+                                    <textarea class="form-control" rows="3" id="explainationGiven" placeholder="Provide your explanation here" name="explainationGiven"></textarea>
+                                </div>
+                                <div class="buttons">
+                                    <input type="button" class="btn btn-primary" value="Submit" onclick="sub()">
+                                        <input type="reset" class="btn btn-primary-outline" value="Clear Form" onclick="clearForm()">
+                                </div> <!-- /.buttons -->
+                            </div> <!-- /.explanatory -->
+                            
+                    </div><!-- /.voteContainer -->
+                    
+                    
+            </form>
+        </div> <!-- /.container-fluid -->
+        
+        
+        
+        <div class="container-fluid content-lite">
+            <label class="svellang">Recommendations</label>
+            <div id="accordion">
+                <h3>Adaptive Web</h3>
+                <div>
+                    <p>Information systems suffer from an inability to satisfy the heterogeneous needs of many users. For example, Web courses present the same static learning material to students with widely differing knowledge of the subject. Most online stores still offer the same selection of "featured items" to customers with different needs and preferences.</p>
+                </div>
+                <h3>Mobile Computing</h3>
+                <div>
+                    <p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
+                </div>
+                <h3>Intro to theoretical computer sci</h3>
+                <div>
+                    <p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
+                    <ul>
+                        <li>List item one</li>
+                        <li>List item two</li>
+                        <li>List item three</li>
+                    </ul>
+                </div>
+                <h3>Section 4</h3>
+                <div>
+                    <p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+                </div>
+            </div>
+        </div> <!-- /.container-fluid -->
+    </body>
+    <script src="/js/explain.js"></script>
 </html>
