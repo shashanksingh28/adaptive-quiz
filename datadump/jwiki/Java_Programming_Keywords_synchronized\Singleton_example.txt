@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords/synchronized#Singleton_example
-Singleton example
-As an example, we can show a thread-safe version of a singleton:

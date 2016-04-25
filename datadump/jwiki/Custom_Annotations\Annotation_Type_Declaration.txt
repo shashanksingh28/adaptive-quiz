@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Annotations/Custom_Annotations#Annotation_Type_Declaration
-Custom Annotations - Annotation Type Declaration
-Before you can use an annotation with classes, theirs members and statements or expressions, you need to define an annotation type. Following is the syntax on how to define a type for the mentioned annotation.That's it! Our first ever annotation has been defined. Now, we can use it with any of our classes. An annotation definition if you look closely resembles the definition of a normal interface, except that the interface keyword is preceded by the @ character. Some refer to this syntactical declaration as the annotation type declaration due to the fact that @ is 'AT' or 'Annotation Type' for that very instance.

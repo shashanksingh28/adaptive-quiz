@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Applets/Overview#HTML_code
-Overview - HTML code
-To embed an applet in a HTML page, you have to insert a <applet/> markup. This markup can have several attributes:The attributes with * are mandatory.There have been some discussions about the usage of applet tag but it still can be used for beginning and also would work in the real world as well.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Math
-Mathematical functions
-The java.lang.Math class allows the use of many common mathematical functions that can be used while creating programs.Since it is in the java.lang package, the Math class does not need to be imported. However, in programs extensively utilizing these functions, a static import can be used.

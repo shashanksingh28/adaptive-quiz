@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Comments#Comments_and_unicode
-Comments - Comments and unicode
-Be aware that Java still interprets Unicode sequences within comments. For example, the Unicode sequence \u002a\u002f (whose codepoints correspond to */) is processed early in the Java compiler's lexical scanning of the source file, even before comments are processed, so this is a valid star-slash comment in Java:and is lexically equivalent to(The '*' character is Unicode 002A and the '/' character is Unicode 002F.)Similar caveats apply to newline characters in slash-slash comments.For example:That is because \u000a is Unicode for a new line, making the compiler think that you have added a new line when you haven't.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#long
-Keywords - long
-long is a keyword which designates the 64 bit signed integer primitive type.The java.lang.Long class is the nominal wrapper class when you need to store a long value but an object reference is required.Syntax:For example:See also:

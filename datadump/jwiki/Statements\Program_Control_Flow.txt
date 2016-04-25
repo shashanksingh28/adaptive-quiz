@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Statements#Program_Control_Flow
-Statements - Program Control Flow
-Statements are evaluated in the order as they occur. The execution of flow begins at the top most statement and proceed downwards till the last statement is encountered. A statement can be substituted by a statement block. There are special statements that can redirect the execution flow based on a condition, those statements are called branching statements, described in detail in a later section.

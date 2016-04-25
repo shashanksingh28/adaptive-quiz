@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Annotations/Meta-Annotations#Retention
-Meta-Annotations - Retention
-Different annotation types have different purposes. Some are intended for use with the compiler; others are meant to be reflected dynamically at runtime. There's no reason for a compiler annotation to be available at runtime, so the @Retention meta-annotation specifies how long an annotation type should be retained. The value attribute is one of the java.lang.annotation.RetentionPolicy enum constants. The possible values, in order from shortest to longest retention, are as follows:If no @Retention policy is specified, it defaults to RetentionPolicy.CLASS.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/API/java.lang.Object#java.lang.Object
-Java Programming/API/java.lang.Object - java.lang.Object
-Object class is the superclass of all Java classes. All Java classes inherited from this class. This makes it possible that we can have methods that are available in all Java classes. This simplifies things compared to C++ where this is not the case.

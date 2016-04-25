@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#Interest
-Keywords - Interest
-The counter variable is incremented each time an object is created.Public static variable should not be used, as these become global variables that can be accessed from everywhere in the program. Global constants can be used, however. See below:

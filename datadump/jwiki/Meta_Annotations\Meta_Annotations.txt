@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Annotations/Meta-Annotations
-Meta-Annotations
-There are five annotation types in the java.lang.annotation package called meta-annotations. These annotation types are used to annotate other annotation types.

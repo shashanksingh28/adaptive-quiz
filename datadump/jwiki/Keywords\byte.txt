@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#byte
-Keywords - byte
-byte is a keyword which designates the 8 bit signed integer primitive type.The java.lang.Byte class is the nominal wrapper class when you need to store a byte value but an object reference is required.Syntax:For example:orThe number 65 is the code for 'A' in ASCII.See also:

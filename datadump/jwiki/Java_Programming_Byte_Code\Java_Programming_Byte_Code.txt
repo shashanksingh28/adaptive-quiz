@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Byte_Code
-Java Programming/Byte Code
-Java Byte Code is the language to which Java source is compiled and the Java Virtual Machine understands. Unlike compiled languages that have to be specifically compiled for each different type of computers, a Java program only needs to be converted to byte code once, after which it can run on any platform for which a Java Virtual Machine exists.Bytecode is the compiled format for Java programs. Once a Java program has been converted to bytecode, it can be transferred across a network and executed by Java Virtual Machine (JVM). Bytecode files generally have a .class extension. It is not normally necessary for a Java programmer to know byte code, but it can be useful.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Literals/String_Literals#Mixed_Mode_Operations
-Mixed Mode Operations
-In concatenation operations, the values in brackets are concatenated first. Then the values are concatenated from the left to the right. Be careful when mixing character literals and integers in String concatenation operations:The unexpected results arise because '1' and '0' are converted twice. The expression is concatenated as such:The code section 66 yields the desired result:

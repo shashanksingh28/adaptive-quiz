@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Large_numbers
-Large numbers
-The integer primitive type with the largest range of value is the long, from -263 to 263-1. If you need greater or lesser values, you have to use the BigInteger class in the package java.math. A BigInteger object can represent any integer (as large as the RAM on the computer can hold) as it is not mapped on a primitive type. Respectively, you need to use the BigDecimal class for great decimal numbers.However, as these perform much slower than primitive types, it is recommended to use primitive types when it is possible.

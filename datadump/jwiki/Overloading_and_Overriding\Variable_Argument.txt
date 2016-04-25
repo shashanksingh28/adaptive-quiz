@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Overloading_Methods_and_Constructors#Variable_Argument
-Overloading and Overriding - Variable Argument
-Instead of overloading, you can use a dynamic number of arguments. After the last parameter, you can pass optional unlimited parameters of the same type. These parameters are defined by adding a last parameter and adding ... after its type. The dynamic arguments will be received as an array:The above method can be called with a dynamic number of arguments, for example:This feature was not available before Java 1.5 .

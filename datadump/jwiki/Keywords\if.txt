@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Keywords#if
-Keywords - if
-if is a Java keyword. It starts a branching statement.The general syntax of a if, using Extended Backus-Naur Form, isFor example:See also:

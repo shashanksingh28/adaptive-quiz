@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Struts
-Java Programming/Struts
-This reference is under development. All Struts developers are requested to contribute and help in expanding this referenceStruts is the most popular framework for developing Java based web applications. Struts is being developed as an open source project started by Apache Software Foundation . Struts framework is based on Model View Controller (MVC) architecture.

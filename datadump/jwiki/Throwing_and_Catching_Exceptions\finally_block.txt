@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Throwing_and_Catching_Exceptions#finally_block
-Throwing and Catching Exceptions - finally block
-A finally block can be added after the catch blocks. A finally block is always executed, even when no exception is thrown, an exception is thrown and caught, or an exception is thrown and not caught. It's a place to put code that should always be executed after an unsafe operation like a file close or a database disconnection. You can define a try block without catch block, however, in this case, it must be followed by a finally block.

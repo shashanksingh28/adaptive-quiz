@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Applets/Event_Listeners#MouseListener
-MouseListener
-Applet mouse listener does not differ from the AWT mouse listener in general. When the mouse is in the applet area, the listener receives notifications about the mouse clicks and drags (if MouseListener is registered) and mouse movements (if MouseMotionListener is registered). As applets are often small, it is a common practice to let applet itself to implement the mouse listeners.

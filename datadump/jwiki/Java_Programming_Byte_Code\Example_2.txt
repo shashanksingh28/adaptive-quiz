@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Byte_Code#Example_2
-Java Programming/Byte Code - Example 2
-As an example we can write a simple Foo.java source:Compile it and then move Foo.java to another directory or delete it if you wish. What can we do with javap and Foo.class ?produces this result:As you can see the javac compiler doesn't strip any (public) variable name from the .class file. As a result the names of the functions, their parameters and types of return are exposed. (This is necessary in order for other classes to access them.)Let's do a bit more, try:

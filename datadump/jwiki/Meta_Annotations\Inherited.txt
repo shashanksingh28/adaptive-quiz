@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Annotations/Meta-Annotations#Inherited
-Meta-Annotations - Inherited
-Exactly as the name sounds, an @Inherited annotation type is inherited by subclasses of an annotated type.In this example, Superclass has been explicitly annotated with both @ForEveryone and @JustForMe. Subclass hasn't been explicitly marked with either one; however, it inherits @ForEveryone because the latter is annotated with @Inherited. @JustForMe isn't annotated, so it isn't inherited by Subclass.

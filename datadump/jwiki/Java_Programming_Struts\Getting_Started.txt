@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Struts#Getting_Started
-Java Programming/Struts - Getting Started
-Struts framework provides the following benefits over conventional methods of Web Application Development.These benefits are gained because Struts provides a system based on the "Model 2" paradigm of Java web application design, while also providing a framework for the application that is cleaner than a series of J2EE servlets.

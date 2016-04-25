@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Primitive_Types#Data_conversion_(casting)
-Primitive Types - Data conversion (casting)
-Data conversion (casting) can happen between two primitive types. There are two kinds of casting:The following table shows the conversions between primitive types, it shows the casting operation for explicit conversions:Unlike C, C++ and similar languages, Java can't represent false as 0 or null and can't represent true as non-zero. Java can't cast from boolean to a non-boolean primitive data type, or vice versa.For non primitive types:

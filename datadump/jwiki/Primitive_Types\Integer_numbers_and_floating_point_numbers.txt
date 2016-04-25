@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Primitive_Types#Integer_numbers_and_floating_point_numbers
-Primitive Types - Integer numbers and floating point numbers
-The data types that one can use for integer numbers are byte, short, int and long but when it comes to floating point numbers, we use float or double. Now that we know that, we can modify the code in the code section 3.53 as:Why not float, you say? If we'd used a float, we would have to append the number with a f as a suffix, so 10.5 should be 10.5f as in:Floating-point math never throws exceptions. Dividing a non-zero value by 0 equals infinity. Dividing a non-infinite value by infinity equals 0.

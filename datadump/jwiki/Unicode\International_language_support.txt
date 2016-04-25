@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Syntax/Unicode_Source#International_language_support
-Unicode - International language support
-The language distinguishes between bytes and characters. Characters are stored internally using UCS-2, although as of J2SE 5.0, the language also supports using UTF-16 and its surrogates. Java program source may therefore contain any Unicode character.The following is thus perfectly valid Java code; it contains Chinese characters in the class and variable names as well as in a string literal:

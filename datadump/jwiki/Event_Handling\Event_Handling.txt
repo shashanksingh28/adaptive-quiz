@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Event_Handling
-Event Handling
-The Java platform Event Model is the basis for event-driven programming on the Java platform.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/ArrayList
-ArrayList
-The ArrayList class extends AbstractList and implements the List interface. ArrayList supports dynamic arrays that can grow as needed.Standard Java arrays are of a fixed length. After arrays are created, they cannot grow or shrink, which means that you must know in advance how many elements an array will hold.Array lists are created with an initial size. When this size is exceeded, the collection is automatically enlarged. When objects are removed, the array may be shrunk.

@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Loop_blocks#Try..._catch_blocks
-Loop blocks - Try... catch blocks
-The try-catch blocks are used to catch any exceptions or other throwable objects within the code.Here's what try-catch blocks looks like:The code listing 3.6 tries to print all the arguments that have been passed to the program. However, if there not enough arguments, it will throw an exception.In addition to the try and catch blocks, a finally block may be present. The finally block is always executed, even if an exception is thrown. It may appear with or without a catch block, but always with a try block.Here is what a finally block looks like:

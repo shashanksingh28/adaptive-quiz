@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Database_Programming#Know_errors
-Java Programming/Database Programming - Know errors
-If you have Oracle Database on your PC, just add to the classpath its following files[3]:Otherwise, ojdbc7.jar can be downloaded from http://www.oracle.com/technetwork/database/features/jdbc/jdbc-drivers-12c-download-1958347.html, and add it to the compilation. Eg:Just add " as sysdba" after your Oracle account name, eg:

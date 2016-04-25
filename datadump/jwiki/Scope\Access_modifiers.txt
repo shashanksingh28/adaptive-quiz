@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Access_Modifiers#Access_modifiers
-Scope - Access modifiers
-You surely would have noticed by now, the words public, protected and private at the beginning of class's method declarations used in this book. These keywords are called the access modifiers in the Java language syntax, and they define the scope of a given item.The interface methods and interfaces are always public. You do not need to specify the access modifier. It will default to public. For clarity it is considered a good practice to put the public keyword.The same way all member variables defined in the Interface by default will become static final once inherited in a class.The cases in bold are the default.

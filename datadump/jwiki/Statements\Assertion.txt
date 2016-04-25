@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Statements#Assertion
-Statements - Assertion
-An assertion checks if a condition is true:Each assert statement is ended by a semi-colon (;). However, assertions are disabled by default, so you must run the program with the -ea argument in order for assertions to be enabled (java -ea [name of compiled program]).

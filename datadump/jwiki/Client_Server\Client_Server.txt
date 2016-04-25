@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Client_Server
-Client Server
-In 1990s, the trend was moving away from Mainframe computing to Client/Server, as the price of Unix servers dropped. The database access and some business logic were centralized on the back-end server, collecting data from the user program was installed on the front-end users' "client" computers. In the Java world there are three main ways the front-end and the back-end could simply communicate.

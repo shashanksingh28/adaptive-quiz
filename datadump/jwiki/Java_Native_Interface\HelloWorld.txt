@@ -1,3 +1,0 @@
-https://en.wikibooks.org/wiki/Java_Programming/Java_Native_Interface#HelloWorld
-Java Native Interface - HelloWorld
-HelloWorld.hlibHelloWorld.cmake.sh
