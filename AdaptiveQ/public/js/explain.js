@@ -18,9 +18,12 @@ function populateTable(id,arrayGivenBy) {
               console.log("givenByIds are as " + arrayGivenBy);
               console.log("the data is " + data);
               console.log(data);
+              var arrayinput = [];
+
               console.log(userListData);
               // For each item in our JSON, add a table row and cells to the content string
               $.each(userListData, function(){
+                     arrayinput.push(this.givenById);
                      divContent += '<div class="explainList" id = ' + this.givenById + '>';
                      divContent += '<h5 style="display:inline-block">' + this.givenByName/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
                      this.text=this.text.replace(/\n/g, "<br />");
@@ -49,6 +52,10 @@ function populateTable(id,arrayGivenBy) {
                                        if(index>=numExplains)
                                        $(this).hide();
                                        });
+              console.log("the ids whose expl are");
+              console.log(arrayinput);
+              if(arrayinput.indexOf(uid)>-1)
+              $('#explanatory').hide();
               
               if(numExplains>=$(".explainList").length)
               $("#btnShowMore").attr("disabled",true);
@@ -189,6 +196,8 @@ $(document).ready(function() {
                   $('[data-toggle="tooltip"]').tooltip();
                   populateTable(qid,arrayGivenBy);
                   //var getQuestion = <%= Question %>
+                  console.log("uid is " + uid);
+                  console.log(arrayGivenBy);
                      if(arrayGivenBy.indexOf(uid)>-1)
    						$('#explanatory').hide();
                   console.log("inside js");
