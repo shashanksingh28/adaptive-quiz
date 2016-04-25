@@ -8,6 +8,7 @@ function search(concept, desc, count, get) {
   const SORT = "&sort=";
   const ROWS = "&rows=";
   const RESPONSE_WRITER = "&wt=";
+  const CALLBACK="&json.wrf=callback";
   var descBoost = 3;
 
   var searchConcept = CONCEPT_FLD + "\"" + concept + "\"";
@@ -23,7 +24,8 @@ function search(concept, desc, count, get) {
   if (searchDesc != null) {
     url = url + searchDesc;
   }
-  url = url + SORT + "score+desc" + RESPONSE_WRITER + "json" + ROWS + count+"&json.wrf=callback";
+  url = url + SORT + "score+desc" + RESPONSE_WRITER + "json" + ROWS + count + CALLBACK;
+  console.log(url);
 
   $.ajax({
   url: url,

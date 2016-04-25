@@ -18,7 +18,6 @@ function loadQuestions(questions){
 
 function getQuestionsOn(concept){
   $.ajax({url: "/question?concept="+concept, success: function(allQuestions){
-      console.log("Got Questions: "+allQuestions);
       loadQuestions(allQuestions);
      }
   });
@@ -32,16 +31,13 @@ function populateRecos(recommendations){
 }
 
 function getRecommendations(concepts){
-  console.log("Concepts:"+concepts);
   var count = 0;
   var recommendations = [];
   for (var i = 0; i < concepts.length; ++i){
-      console.log(concepts[i].key);
       search(concepts[i].key,"",3-i,function(recos){
-        console.log("Got:" + recos);
         recommendations.push.apply(recommendations,recos);
         count += 1;
-        if (count == 2){
+        if (count == 3){
           populateRecos(recommendations);
         }
       });
