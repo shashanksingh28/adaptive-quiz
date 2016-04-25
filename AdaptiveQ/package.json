@@ -15,6 +15,7 @@
     "ejs": "^2.4.1",
     "express": "~4.13.1",
     "express-session": "^1.13.0",
+    "java": "^0.6.1",
     "mongodb": "~2.0.33",
     "mongoose": "*",
     "mongoose-auto-increment": "^5.0.1",
