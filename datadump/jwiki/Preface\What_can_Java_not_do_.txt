@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Introduction#What_can_Java_not_do?
+What can Java not do?
+Well, to be honest, there is nothing that Java can't do, at least for application programming. Java is a "complete" language; the only limits are programmer imagination and ability. This book aims to get you acquainted with the basics of the language so you can create the software masterpiece of your dreams. The one area where Java can't be used is for direct interaction with computer hardware. If you want to write an operating system, you will need to look elsewhere!

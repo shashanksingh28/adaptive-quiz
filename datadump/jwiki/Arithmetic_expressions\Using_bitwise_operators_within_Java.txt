@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Operators#Using_bitwise_operators_within_Java
+Using bitwise operators within Java
+Java has besides arithmetic operators a set of bit operators to manipulate the bits in a number, and a set of logical operators. The bitwise logical operators areBesides these logical bitwise functions, there are also operators to assign numbers to variables (x = -5):The shift operators are used to shift the bits to the left or right, which is also a quick way to multiply/divide by two:

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Preventing_NullPointerException#Check_all_references_obtained_from_'untrusted'_methods
+Preventing NullPointerException - Check all references obtained from 'untrusted' methods
+Many methods that can return a reference can return a null reference. Make sure you check these. For example:File.listFiles() can return null if /etc is not a directory.You can decide to trust some methods not to return null, if you like, but that's an assumption you're making. Some methods that don't specify that they might return null, actually do, instead of throwing an exception.

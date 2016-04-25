@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Literals/String_Literals#null
+Literals - null
+null is a special Java literal which represents a null value: a value which does not refer to any object. It is an error to attempt to dereference the null value — Java will throw a NullPointerException. null is often used to represent uninitialized state.

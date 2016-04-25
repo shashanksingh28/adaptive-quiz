@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Math#Functions_dealing_with_floating-point_representation
+Mathematical functions - Functions dealing with floating-point representation
+Java 1.5 and 1.6 introduced several non-mathematical functions specific to the computer floating-point representation of numbers.Math.ulp(double) and Math.ulp(float) return an ulp, the smallest value which, when added to the argument, would be recognized as larger than the argument.Math.copySign returns the value of the first argument with the sign of the second argument. It can be used to determine the sign of a zero value.Math.getExponent returns (as an int) the exponent used to scale the floating-point argument in computer representation.

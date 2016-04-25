@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#do
+Keywords - do
+do is a Java keyword.It starts a do-while looping block. The do-while loop is functionally similar to the while loop, except the condition is evaluated after the statements executeSyntax:For example:See also:

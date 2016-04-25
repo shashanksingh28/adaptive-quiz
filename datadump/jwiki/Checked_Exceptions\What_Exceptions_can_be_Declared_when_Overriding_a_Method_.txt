@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Checked_Exceptions#What_Exceptions_can_be_Declared_when_Overriding_a_Method?
+Checked Exceptions - What Exceptions can be Declared when Overriding a Method?
+The checked exception classes specified after the throws keyword are part of the contract between the implementer and user. An overriding method can declare the same exceptions, subclasses or no exceptions.

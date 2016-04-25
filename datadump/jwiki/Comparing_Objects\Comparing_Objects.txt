@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Comparing_Objects
+Comparing Objects
+In Java, we can distinguish two kinds of equality.If two objects are equal in reference, they are equal in value too.

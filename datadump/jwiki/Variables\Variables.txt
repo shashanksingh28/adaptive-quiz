@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Variables
+Variables
+In the Java programming language, the words field and variable are both one and the same thing. Variables are devices that are used to store data, such as a number, or a string of character data.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Boolean_expressions
+Boolean expressions
+Boolean values are values that evaluate to either true or false, and are represented by the boolean data type. Boolean expressions are very similar to mathematical expressions, but instead of using mathematical operators such as "+" or "-", you use comparative or boolean operators such as "==" or "!".

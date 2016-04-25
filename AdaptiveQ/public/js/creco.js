@@ -4,12 +4,12 @@ var request = require("../../node_modules/request");
 var java = require("../../node_modules/java");
 
 java.classpath.push("../../lib/creco-1.0.jar");
-var conn = "http://localhost:8983/solr/adaptq/";
+var conn = "http://52.35.105.224:8983/solr/adaptq/";
 var creco = java.newInstanceSync("com.adaptq.creco.Creco", conn);
 
 exports.fetch = function() {
   console.log("Crawling and indexing initiated...");
-  creco.crawlAndIndexSync();
+  creco.crawlAndIndex();
   console.log("Crawling and indexing complete. Check datadump.");
 }
 

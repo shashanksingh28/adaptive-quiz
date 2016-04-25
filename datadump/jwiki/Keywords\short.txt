@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#short
+Keywords - short
+short is a keyword. It defines a 16 bit signed integer primitive type.Syntax:For example:See also:

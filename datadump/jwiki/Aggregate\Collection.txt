@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Collections#Collection
+Aggregate - Collection
+The implementations of java.util.Collection interface are used for grouping simple java objects.

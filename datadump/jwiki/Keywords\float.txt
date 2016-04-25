@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#float
+Keywords - float
+float is a keyword which designates the 32 bit float primitive type.The java.lang.Float class is the nominal wrapper class when you need to store a float value but an object reference is required.Syntax:For example:See also:

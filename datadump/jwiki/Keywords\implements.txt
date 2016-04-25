@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#implements
+Keywords - implements
+implements is a Java keyword.Used in class definition to declare the Interfaces that are to be implemented by the class.Syntax:See also:

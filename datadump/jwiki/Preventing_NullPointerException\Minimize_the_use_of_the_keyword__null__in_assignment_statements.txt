@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Preventing_NullPointerException#Minimize_the_use_of_the_keyword_'null'_in_assignment_statements
+Preventing NullPointerException - Minimize the use of the keyword 'null' in assignment statements
+This means not doing things like:You can replace this with:You might also consider replacing null with "" in the first example, but default values bring about bugs caused by default values being left in place. A NullPointerException is actually better, as it allows the runtime to tell you about the bug, rather than just continue with a default value.

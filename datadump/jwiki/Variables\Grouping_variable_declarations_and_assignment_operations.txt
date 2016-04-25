@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Variables#Grouping_variable_declarations_and_assignment_operations
+Variables - Grouping variable declarations and assignment operations
+Consider the following code:There are various ways by which you can streamline the writing of this code. You can group the declarations of similar data types in one statement, for instance:Alternatively, you can further reduce the syntax by doing group declarations and assignments together, as such:

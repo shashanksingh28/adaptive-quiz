@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Reflection/Dynamic_Class_Loading
+Dynamic Class Loading
+Dynamic Class Loading allows the loading of java code that is not known about before a program starts. Many classes rely on other classes and resources such as icons which make loading a single class unfeasible. For this reason the ClassLoader (java.lang.ClassLoader) is used to manage all the inner dependencies of a collection of classes. The Java model loads classes as needed and doesn't need to know the name of all classes in a collection before any one of its classes can be loaded and run.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Applets/Overview#Java_source_code
+Java source code
+Applets are not constructed in the same way as other classes or main programs. The entry point is different and the main class should extend the Applet class. The Applet class has four methods that can be called by the browser and you can redefine:The four first methods define the lifecycle of an applet. At least init() or paint() must be redefined. The HTML applet tag can be embedded in the applet source code to allow the applet to be run directly by a simple applet viewer, without the need for an .html file. Typically, the applet tag immediately follows the import statements. It must be enclosed by /* */ comments:

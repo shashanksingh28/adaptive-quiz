@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Graphics/Drawing_shapes#What_about_a_circle?
+Drawing shapes - What about a circle?
+Drawing a circle is ever so easy? It is the same process as the syntax above only that the word Rect is changed to the word Oval. And don't ask me why oval? You simply don't have the method drawCircle(int, int, int) as you don't have drawSquare(int, int, int). Following is the application of Graphics code to draw a circle just to whet your appetite.

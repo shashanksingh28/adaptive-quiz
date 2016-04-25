@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Variables#Kinds_of_variables
+Variables - Kinds of variables
+In the Java programming language, there are four kinds of variables.In the code listing 3.9, are examples of all four kinds of variables.

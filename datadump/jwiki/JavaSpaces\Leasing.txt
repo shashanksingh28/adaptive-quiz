@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/JavaSpaces#Leasing
+JavaSpaces - Leasing
+When a service registers with the lookup service, it receives a lease from the lookup service, described in the Jini Distributed Leasing Specification.

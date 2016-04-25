@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Large_numbers#BigInteger
+Large numbers - BigInteger
+The BigInteger class represents integers of almost any size. As with other objects, they need to be constructed. Unlike regular numbers, the BigInteger represents an immutable object - methods in use by the BigInteger class will return a new copy of a BigInteger.To instantiate a BigInteger, you can create it from either byte array, or from a string. For example:BigInteger cannot use the normal Java operators. They use the methods provided by the class.It is possible to convert to a long, but the long may not be large enough.

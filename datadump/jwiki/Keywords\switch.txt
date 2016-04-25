@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#switch
+Keywords - switch
+switch is a Java keyword.It is a branching operation, based on a number. The 'number' must be either char, byte, short, or int primitive type.Syntax:When the <integer-var> value match one of the <label>, then: The statements after the matched label will be executed including the following label's statements, until the end of the switch block, or until a break keyword is reached.For example:The output from the above code is:The same code can be written with if-else blocks":See also:

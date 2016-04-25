@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Annotations/Meta-Annotations#Target
+Target
+The @Target meta-annotation determines what may be marked by the annotation. The value attribute is one or more of the java.lang.annotation.ElementType enum constants. Those constants are ElementType.ANNOTATION_TYPE, CONSTRUCTOR, FIELD, LOCAL_VARIABLE, METHOD, PACKAGE, PARAMETER, and TYPE.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords
+Keywords
+Keywords are special tokens in the language which have reserved use in the language. Keywords may not be used as identifiers in Java — you cannot declare a field whose name is a keyword, for instance.Examples of keywords are the primitive types, int and boolean; the control flow statements for and if; access modifiers such as public, and special words which mark the declaration and definition of Java classes, packages, and interfaces: class, package, interface.Below are all the Java language keywords:In addition, the identifiers null, true, and false denote literal values and may not be used to create identifiers.

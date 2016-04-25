@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#interface
+Keywords - interface
+interface is a Java keyword. It starts the declaration of a Java Interface.For example:See also:

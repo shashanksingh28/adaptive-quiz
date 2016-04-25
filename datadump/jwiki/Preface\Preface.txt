@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Introduction
+Preface
+Learning a computer programming language is like a toddler's first steps. You stumble, and fall, but when you start walking, programming becomes second nature. And once you start programming, you never cease evolving or picking up new tricks. Learn one programming language, and you will "know" them all — the logic of the world will begin to unravel around you.

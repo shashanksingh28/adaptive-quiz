@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Literals/String_Literals#Boolean_Literals
+Literals - Boolean Literals
+There are two boolean literalsThere are no other boolean literals, because there are no other boolean values!

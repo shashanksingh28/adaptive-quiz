@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Defining_Classes#Fundamentals
+Defining Classes - Fundamentals
+Every class in Java can be composed of the following elements:The following Java code would produce this output:

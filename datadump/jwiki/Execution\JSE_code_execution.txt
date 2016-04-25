@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Execution#JSE_code_execution
+Execution - JSE code execution
+Java language first edition came out in the client-server era. Thick clients were developed with rich GUI interfaces. Java first edition, JSE (Java Standard Edition) had/has the following in its belt:With JSE the following Java code executions are possible:

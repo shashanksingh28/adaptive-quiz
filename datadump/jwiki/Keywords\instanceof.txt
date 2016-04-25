@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#instanceof
+Keywords - instanceof
+instanceof is a keyword.It checks if an object reference is an instance of a type, and returns a boolean value;The <object-reference> instanceof Object will return true for all non-null object references, since all Java objects are inherited from Object. instanceof will always return false if <object-reference> is null.Syntax:For example:Run the program:The output:Note that the instanceof operator can also be applied to interfaces. For example, if the example above was enhanced with the interfaceand the classes modified such that they implemented this interfacewe could ask if our object were edible.

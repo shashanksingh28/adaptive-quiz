@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/API/java.lang.String#Splitting_a_String
+String - Splitting a String
+Sometimes it is useful to split a string into separate strings, based on a regular expressions. The String class has a split() method, since Java 1.4, that will return a String array:Another useful application could be to split the String text based on the new line character, so you could process the text line by line.

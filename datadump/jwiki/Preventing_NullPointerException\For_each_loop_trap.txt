@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Preventing_NullPointerException#For_each_loop_trap
+Preventing NullPointerException - For each loop trap
+Beware if you loop on an array or a collection in a for each loop.If the object is null, it does not just do zero loops, it throws a null pointer exception. So don't forget this case. Add an if statement or return empty collections:

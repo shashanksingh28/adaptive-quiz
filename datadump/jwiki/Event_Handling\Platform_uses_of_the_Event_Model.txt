@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Event_Handling#Platform_uses_of_the_Event_Model
+Platform uses of the Event Model
+The Event Model, as mentioned earlier, doesn't have a single all-encompassing implementation within the Java platform. Instead, the model serves as a basis for several different purpose-specific implementations, both within the standard Java platform and outside it (in frameworks).Within the platform the main implementations are found in two areas:

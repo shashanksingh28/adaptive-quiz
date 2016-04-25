@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Random_numbers
+Random numbers
+To generate random numbers the Math.random() method can be used, which returns a double, greater than or equal to 0.0 and less than 1.0.The following code returns a random integer between n and m (where n <= randomNumber < m):Alternatively, the java.util.Random class provides methods for generating random booleans, bytes, floats, ints, longs and 'Gaussians' (doubles from a normal distribution with mean 0.0 and standard deviation 1.0). For example, the following code is equivalent to that above:As an example using random numbers, we can make a program that uses a Random object to simulate flipping a coin 20 times:Of course, if you run the program you will probably get different results.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Large_numbers#BigDecimal
+BigDecimal
+The BigInteger class cannot handle decimal numbers. The BigDecimal class represents a floating point value of arbitrary precision. It is composed of both a BigInteger, and a scale value (represented by a 32-bit integer).

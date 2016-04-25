@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Annotations/Custom_Annotations#Using_a_default_value
+Using a default value
+Now, for instance, you want the annotation to know that if no value for the version element is present, then it should use a default value. Declaring a default value would be done the following way.So, now if you use the same code again, you can ignore the version element because you know that the value is to be provided by default.

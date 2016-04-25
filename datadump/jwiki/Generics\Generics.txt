@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Generics
+Generics
+Java is a strongly typed language, so a field in a class may be typed like this:This ensures that, only Integer objects can be put in the field and a ClassCastException can't occur at runtime, only compile-time error can occur. Unfortunately, it can be used only with Integer objects. If you want to use the same class in another context with Strings, you have to generalize the type like this:But you will have ClassCastException at runtime again and you can't easily use your field. The solution is to use Generics.

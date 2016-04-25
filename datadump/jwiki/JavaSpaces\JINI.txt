@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/JavaSpaces#JINI
+JavaSpaces - JINI
+JavaSpaces technology is part of the Java Jini technology. The basic features of JINI are:A minimal JINI network environment consists of:

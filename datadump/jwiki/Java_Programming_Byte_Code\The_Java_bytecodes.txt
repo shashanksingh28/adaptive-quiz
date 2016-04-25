@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Byte_Code#The_Java_bytecodes
+Java Programming/Byte Code - The Java bytecodes
+See Oracle's Java Virtual Machine Specification[1] for more detailed descriptionsThe manipulation of the operand stack is notated as [before]→[after], where [before] is the stack before the instruction is executed and [after] is the stack after the instruction is executed. A stack with the element 'b' on the top and element 'a' just after the top element is denoted 'a,b'.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Swing
+Swing
+Swing is a tool kit in Java which provides a way to build cross platform user interfaces. It is built on top of and designed as a replacement for AWT, the other UI toolkit built into Java. SWT is a third toolkit you may hear about. SWT is an open source toolkit and is a full topic in of itself, see SWT's Homepage for more information.

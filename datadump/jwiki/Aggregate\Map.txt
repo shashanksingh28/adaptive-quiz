@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Collections#Map
+Aggregate - Map
+The implementations of java.util.Map interface are used to represent mapping between "key" and "value" objects. A Map represents a group of "key" objects, where each "key" object is mapped to a "value" object.

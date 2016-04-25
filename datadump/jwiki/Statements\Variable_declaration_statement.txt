@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Statements#Variable_declaration_statement
+Statements - Variable declaration statement
+The simplest statement is a variable declaration:It defines a variable that can be used to store values for later use. The first token is the data type of the variable (which type of values this variable can store). The second token is the name of the variable, by which you will be referring to it. Then each declaration statement is ended by a semicolon (;).

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Database_Programming
+Java Programming/Database Programming
+Java uses JDBC, an API that defines how a client may access a database. Its drivers may be installed first. [1][2]

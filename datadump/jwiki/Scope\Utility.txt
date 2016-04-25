@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Access_Modifiers#Utility
+Scope - Utility
+A general guideline for visibilities is to only make a member as visible as it needs to be. Don't make a member public if it only needs to be private.Doing so, you can rewrite a class and change all the private members without making compilation errors, even you don't know all the classes that will use your class as long as you do not change the signature of the public members.

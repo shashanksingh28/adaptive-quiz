@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Threads_and_Runnables#References
+References
+Daemon thread tutorial

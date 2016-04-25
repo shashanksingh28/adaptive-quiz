@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Access_Modifiers#Scope
+Scope - Scope
+The scope of a class, a variable or a method is its visibility and its accessibility. The visibility or accessibility means that you can use the item from a given place.A method parameter is visible inside of the entire method but not visible outside the method.In code listing 3.14, i is visible within the entire method1 method but not in the method2 and the main methods.A local variable is visible after its declaration until the end of the block in which the local variable has been created.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#char
+Keywords - char
+char is a keyword. It defines a character primitive type. char can be created from character literals and numeric representation. Character literals consist of a single quote character (') (ASCII 39, hex 0x27), a single character, and a close quote ('), such as 'w'. Instead of a character, you can also use unicode escape sequences, but there must be exactly one.Syntax:65 is the numeric representation of character 'A' , or its ASCII code.The nominal wrapper class is the java.lang.Character class when you need to store a char value but an object reference is required.See also:

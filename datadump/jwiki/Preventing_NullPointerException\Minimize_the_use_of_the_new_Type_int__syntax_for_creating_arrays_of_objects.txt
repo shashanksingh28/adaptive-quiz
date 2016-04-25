@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Preventing_NullPointerException#Minimize_the_use_of_the_new_Type[int]_syntax_for_creating_arrays_of_objects
+Preventing NullPointerException - Minimize the use of the new Type[int] syntax for creating arrays of objects
+An array created using new Object[10] has 10 null pointers. That's 10 more than we want, so use collections instead, or explicitly fill the array at initialization with:or:

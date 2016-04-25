@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Canvas#Overriding_the_paint(Graphics)_method
+Canvas - Overriding the paint(Graphics) method
+Below is an example on how you need to override the above method. For this very example, the component class that we would be using would be the Canvas class. For more information about the Canvas class, see the section on Understanding the Canvas class

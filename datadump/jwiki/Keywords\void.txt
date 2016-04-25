@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#void
+Keywords - void
+void is a Java keyword.Used at method declaration and definition to specify that the method does not return any type, the method returns void. It is not a type and there is no void references/pointers as in C/C++.For example:See also:

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Syntax#Indentation
+Indentation
+Java ignores all whitespace in front of a statement. As this, these two code snippets are identical for the compiler:However, the first one's style (with whitespace) is preferred, as the readability is higher. The method body is easier to distinguish from the head, even at a higher reading speed.

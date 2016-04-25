@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#import
+Keywords - import
+import is a Java keyword.It declares a Java class to use in the code below the import statement. Once a Java class is declared, then the class name can be used in the code without specifying the package the class belongs to.Use the '*' character to declare all the classes belonging to the package.Syntax:The static import construct allows unqualified access to static members without inheriting from the type containing the static members:Once the static members have been imported, they may be used without qualification:Caveat: use static import very sparingly to avoid polluting the program's namespace!See also:

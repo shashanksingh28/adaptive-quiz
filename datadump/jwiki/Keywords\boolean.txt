@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#boolean
+Keywords - boolean
+boolean is a keyword which designates the boolean primitive type. There are only two possible boolean values: true and false. The default value for boolean fields is false.The following is a declaration of a private boolean field named initialized, and its use in a method named synchronizeConnection.The previous code only creates a connection once (at the first method call). Note that there is no automatic conversion between integer types (such as int) to boolean as is possible in some languages like C. Instead, one must use an equivalent expression such as (i != 0) which evaluates to true if i is not zero.

@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Comparing_Objects#Comparing_for_reference_equality
+Comparing Objects - Comparing for reference equality
+The == operator can be used to check if two object references point to the same object.

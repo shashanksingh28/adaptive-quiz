@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#new
+Keywords - new
+new is a Java keyword. It creates a Java object and allocates memory for it on the heap. new is also used for array creation, as arrays are also objects.Syntax:For example:See also:

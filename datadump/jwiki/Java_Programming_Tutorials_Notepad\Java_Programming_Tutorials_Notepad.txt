@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Tutorials/Notepad
+Java Programming/Tutorials/Notepad
+You wouldn't be able to learn Java wholly if you don't practice working on sample programs. Throughout these tutorials we will help you grasp the true workability with Java projects. The first tutorial in the series is that of creating a simple Windows based application that resembles a notepad.

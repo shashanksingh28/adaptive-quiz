@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/API/java.lang.String#Immutability
+String - Immutability
+Strings are immutable; that is, they cannot be modified once created. Whenever it looks as if a String object was modified actually a new String object was created. For instance, the String.trim() method returns the string with leading and trailing whitespace removed. Actually, it creates a new trimmed string and then returns it. Pay attention on what happens in Code section 3.82:The trim() method call does not modify the object so nothing happens. It creates a new trimmed string and then throws it away.The returned string is assigned to the variable. It does the job as the trim() method has created a new String instance.

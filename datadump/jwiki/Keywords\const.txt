@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Keywords#const
+Keywords - const
+const is a reserved keyword, presently not being used.In other programming languages, such as C, const is often used to declare a constant. However, in Java, final is used instead.

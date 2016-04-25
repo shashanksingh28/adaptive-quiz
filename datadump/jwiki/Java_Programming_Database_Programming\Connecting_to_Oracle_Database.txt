@@ -1,0 +1,3 @@
+https://en.wikibooks.org/wiki/Java_Programming/Database_Programming#Connecting_to_Oracle_Database
+Java Programming/Database Programming - Connecting to Oracle Database
+This script returns the database size:
