@@ -24,10 +24,22 @@ function getQuestionsOn(concept){
 }
 
 function populateRecos(recommendations){
-	console.log("Recomm");
-  console.log(recommendations);
-
-  // TODO: show in UI
+//Done: Populate UI
+  var divContent = "";
+	for(i=0;i<recommendations.length;i++){
+		divContent+="<h3>"+recommendations[i].concept+"</h3>";
+		divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"'>"+recommendations[i].link+"</a></p>";
+		divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
+	}
+	//Reload accordion
+	$("#recommendations").html(divContent);
+	$(function() {
+		$( ".accordion" ).accordion({
+			collapsible: true,
+			active:false,
+			heightStyle: "content"
+		});
+	});
 }
 
 function getRecommendations(concepts){

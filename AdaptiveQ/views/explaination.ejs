@@ -34,12 +34,14 @@
             <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
             <!-- <link rel="stylesheet" href="/resources/demos/style.css"> -->
             <script>
+            
+            
             $(function() {
-            $( "#accordion" ).accordion({
-            collapsible: true,
-            active:false
-            });
-            $("#voteContainer").hide();
+				$( ".accordion" ).accordion({
+					collapsible: true,
+					active:false
+				});
+				$("#voteContainer").hide();
             });
             function toggleExplanation(btn){
             if($("#voteContainer").is(":visible")){
@@ -63,7 +65,7 @@
             });
             }
             
-            //Begin Creco
+//             Begin Creco
             var crecoConcept = "<%= Question.concept %>";
             var crecoDesc = '<%= JSON.stringify(Question.text) %> ';
             <% for(var i=0; i < Question.options.length; i++) {
@@ -75,7 +77,26 @@
             search(crecoConcept, crecoDesc, 5, function(result) {
   				console.log("Creco"+result);
 			});
-            //End Creco
+//             End Creco
+            
+            function populateRecos(recommendations){
+			//TODO: Populate UI
+			  var divContent = "";
+				for(i=0;i<recommendations.length;i++){
+					divContent+="<h3>"+recommendations[i].concept+"</h3>";
+					divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"'>"+recommendations[i].link+"</a></p>";
+					divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
+				}
+				//Reload accordion
+				$("#recommendations").html(divContent);
+				$(function() {
+					$( ".accordion" ).accordion({
+						collapsible: true,
+						active:false,
+						heightStyle: "content"
+					});
+				});
+			}
             
             
             </script>
@@ -199,7 +220,7 @@
         
         <div class="container-fluid content-lite">
             <label class="svellang">Recommendations</label>
-            <div id="accordion">
+            <div id="recommendations" class="accordion">
                 <h3>Adaptive Web</h3>
                 <div>
                     <p>Information systems suffer from an inability to satisfy the heterogeneous needs of many users. For example, Web courses present the same static learning material to students with widely differing knowledge of the subject. Most online stores still offer the same selection of "featured items" to customers with different needs and preferences.</p>

@@ -26,11 +26,15 @@
 	width:34%;
 	height:50%;
 	display:inline-block;
+	overflow-y:scroll;
+	word-wrap:break-word;
 }
 
-.accordion{
-	overflow:scroll;
+.right-pane::-webkit-scrollbar {
+  border-radius: 5px;
 }
+
+
 
 .right-pane.bottom{
 	clear:right
@@ -103,8 +107,4 @@ textarea{
 hr{
 	margin-top:8px;
 	margin-bottom:8px;
-}
-
-label.svellang{
-	
 }
