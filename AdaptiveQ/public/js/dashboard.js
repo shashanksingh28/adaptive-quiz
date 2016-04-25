@@ -25,7 +25,9 @@ function getQuestionsOn(concept){
 }
 
 function populateRecos(recommendations){
+	console.log("Recomm");
   console.log(recommendations);
+
   // TODO: show in UI
 }
 
