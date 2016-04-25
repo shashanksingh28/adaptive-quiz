@@ -5,6 +5,26 @@ function lerp(a, b, t) {
     return x;
 }
 
+function loadQuestions(questions){
+  var ctr = document.getElementById('questionsContainer');
+  console.log(ctr);
+  ctr.innerHTML="";
+  var content = "<h3>Questions</h3><hr><ul>";
+  for(var i =  0; i < questions.length; ++i){
+    content += "<li>" + questions[i] + "</li>";
+  }
+  content += "</ul>";
+  ctr.innerHTML = content;
+}
+
+function getQuestionsOn(concept){
+  $.ajax({url: "/question?concept="+concept, success: function(allQuestions){
+      console.log("Got Questions: "+allQuestions);
+      loadQuestions(allQuestions);
+     }
+  });
+}
+
 function loadData(rawdata){
 
   var margin = {top: 20, right: 50, bottom: 30, left: 50},
@@ -300,6 +320,7 @@ function loadViz(treeData, analyticsData){
             d._children = null;
         }
         update(d);
+        getQuestionsOn(d.name);
     }
 }
 
@@ -316,6 +337,10 @@ $(document).ready(function(){
   $.ajax({url: "/analytics/mean", success: function(result){
       console.log(result);
       loadData(result);
+     }
+  });
+  $.ajax({url: "/question?all=1", success: function(allQuestions){
+      loadQuestions(allQuestions);
      }
   });
 });
