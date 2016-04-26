@@ -25,7 +25,7 @@ function populateTable(id,arrayGivenBy) {
               $.each(userListData, function(){
                      arrayinput.push(this.givenById);
                      divContent += '<div class="explainList" id = ' + this.givenById + '>';
-                     divContent += '<h5 style="display:inline-block">' + this.givenByName/*TODO: Change to Username of student who gave this explanation*/ + '</h5> said:<br/>';
+                     divContent += '<h5 style="display:inline-block">' + "<b>" + this.givenByName + "</b> "/*TODO: Change to Username of student who gave this explanation*/ + '</h5><br/>';
                      this.text=this.text.replace(/\n/g, "<br />");
                      console.log("ArrayGivenBy "+arrayGivenBy+" and givenById "+this.givenById);
                      upvoted=(arrayGivenBy.indexOf(this.givenById)<0?'likeButton':'unlikeButton');
