@@ -31,6 +31,7 @@
 	display:inline-block;
 	overflow-y:scroll;
 	word-wrap:break-word;
+	padding-bottom:8px;
 }
 
 .right-pane::-webkit-scrollbar {
