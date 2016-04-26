@@ -1,11 +1,10 @@
 body {
-  /*background: url(../images/.jpg) no-repeat top center;;
-  */
-  color: #55d6f7;
-  font-family: 'RobotoDraft', 'Roboto', sans-serif;
+  background-image:url("plasma.jpg");
+  color: #3276b1;
   font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  margin:0px;
 }
 
 /* Pen Title */
@@ -13,6 +12,11 @@ body {
   padding: 50px 0;
   text-align: center;
   letter-spacing: 2px;
+  background-color:rgb(30,100,150);
+  border-bottom:#428bca;
+  color:#eee;
+  margin-bottom:50px;
+  box-shadow: 0px 1px 2px #428bca;
 }
 .pen-title h1 {
   margin: 0 0 20px;
@@ -23,10 +27,10 @@ body {
   font-size: 12px;
 }
 .pen-title span .fa {
-  color: #33b5e5;
+  color: #3276b1;
 }
 .pen-title span a {
-  color: #33b5e5;
+  color: #3276b1;
   font-weight: 600;
   text-decoration: none;
 }
@@ -34,11 +38,12 @@ body {
 /* Form Module */
 .form-module {
   position: relative;
-  background: #ffffff;
+  background-color: rgba(250, 250, 250, 0.9);
   max-width: 320px;
   width: 100%;
-  border-top: 5px solid #33b5e5;
-  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  border-top: 5px solid #3276b1;
+  box-shadow: 0px 10px 39px rgba(0,0,0,0.5);
+  border-radius: 5px;
   margin: 0 auto;
 }
 .form-module .toggle {
@@ -46,7 +51,7 @@ body {
   position: absolute;
   top: -0;
   right: -0;
-  background: #33b5e5;
+  background: #3276b1;
   width: 30px;
   height: 30px;
   margin: -5px 0 0;
@@ -86,7 +91,7 @@ body {
 }
 .form-module h2 {
   margin: 0 0 20px;
-  color: #33b5e5;
+  color: #3276b1;
   font-size: 18px;
   font-weight: 400;
   line-height: 1;
@@ -108,12 +113,12 @@ body {
   font-weight: 400;
 }
 .form-module input:focus {
-  border: 1px solid #33b5e5;
+  border: 1px solid #3276b1;
   color: #333333;
 }
 .form-module button {
   cursor: pointer;
-  background: #33b5e5;
+  background: #3276b1;
   width: 100%;
   border: 0;
   padding: 10px 15px;
