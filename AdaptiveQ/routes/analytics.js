@@ -182,24 +182,23 @@ function getUserPercentile(user, usersScores){
 
 function getSimilarity(usersScores)
 {
-  console.log("in getSimilarity");
+  //console.log("in getSimilarity");
   var x = [ 5, 23, 2, 5, 9 ],
   y = [ 3, 21, 2, 5, 14 ];
 
 var s = cossimilarity( x, y );
-console.log("in getSimilarity" + s);
+//console.log("in getSimilarity" + s);
 return s;
 }
 
 
-function getLowest(user, usersScores){
-  console.log("usersScores[sessionUserId][key]" + user._id);
+function getLowest(user, usersScores){  
   var sessionUserId = user._id;
   var conceptArr = [];
   for (var key in usersScores[sessionUserId]){
     if (usersScores[sessionUserId][key] != -1){
-      var value = usersScores[sessionUserId][key]
-      console.log(value);
+      var value = usersScores[sessionUserId][key]       
+
       conceptArr.push({'key':key, 'value':value});
 
     }
@@ -274,7 +273,7 @@ function getNearestNeighbor(user, usersScores){
     }
   }
   //console.log("total for" + user._id + "is mean" + sessionUserMean);
-  console.log(simScore);
+  //console.log(simScore);
   simScore.sort(function(a, b){
     return b.value - a.value;
   });
@@ -351,33 +350,24 @@ function getMean(data){
   var meandate = {  };
   for (var i = 0; i < data.length; i++) {
     var d = data[i].attemptAt;
-    var da = new Date(d);
-    console.log(da);
+    var da = new Date(d);   
     var dat = da.getDate();
     var mon = da.getMonth() + 1;
     var yr = da.getFullYear();
-    date = ""+ mon+ dat + yr;
-    console.log(date);
-    if (meandate.hasOwnProperty(date)){
-      console.log("in if")
-      console.log(meandate);
-      console.log(meandate[date].mean);
-      console.log(meandate[date].num);
-      console.log(data[i].score);
+    date = ""+ mon+ dat + yr;    
+    if (meandate.hasOwnProperty(date)){      
       meandate[date].mean += data[i].score;
-      meandate[date].num += 1;
-      console.log("in if")
+      meandate[date].num += 1;     
     }
-    else{
-      console.log("in else")
+    else{     
       meandate[date] = {
       mean : data[i].score,
       num  : 1       } ;
 
     }
   };
-  console.log("meandate is")
-  console.log(meandate);
+  /*console.log("meandate is")
+  console.log(meandate);*/
   finalmean = {};
   for (var key in meandate) {
     for (var keyin in meandate) {
@@ -406,7 +396,7 @@ router.get('/mean', function(req, res, next) {
     User.getUserById(req.session.user._id)
     .then(function(users){
       MeanData = users.records;
-      console.log(MeanData);
+      //console.log(MeanData);
       DayMeanData = getMean(MeanData);
       res.send(DayMeanData);
 

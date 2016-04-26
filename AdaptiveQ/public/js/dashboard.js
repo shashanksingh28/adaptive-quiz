@@ -63,6 +63,7 @@ function getRecommendations(concepts){
 
 function loadData(rawdata){
 
+
   var margin = {top: 20, right: 50, bottom: 30, left: 50},
       width = 700 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
@@ -72,7 +73,7 @@ function loadData(rawdata){
       formatValue = d3.format(",.2f"),
       formatCurrency = function(d) { return " "+ formatValue(d); };
 
-  var x = d3.time.scale()
+  var x = d3.scale.linear()
       .range([0, width]);
 
   var y = d3.scale.linear()
@@ -80,7 +81,8 @@ function loadData(rawdata){
 
   var xAxis = d3.svg.axis()
       .scale(x)
-      .orient("bottom");
+      .orient("bottom")
+      .tickValues(d3.range(0, 365, 1));
 
   var yAxis = d3.svg.axis()
       .scale(y)

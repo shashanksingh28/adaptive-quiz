@@ -33,16 +33,16 @@ function updateHint(){
 
 function attemptQuestion(question,givenAns,req,res){
 	userId = req.session.user._id;
-	console.log("start time" + req.session.startTime);
+	//console.log("start time" + req.session.startTime);
 	timeStart = req.session.startTime;
 	console.log("inside attempt" + timeStart);
-	console.log("given ans is " + givenAns);
+	//console.log("given ans is " + givenAns);
 	console.log("Question is" + question);
-	console.log("inside attempt in getQuestion" + timeStart + " " + Date.now());
+	//console.log("inside attempt in getQuestion" + timeStart + " " + Date.now());
 	timeTaken = (Date.now() - timeStart)/1000;
-	console.log("time taken to answer" + timeTaken);
+	//console.log("time taken to answer" + timeTaken);
 	hint = req.body.hintTaken;
-	console.log("hint tken" + hint);
+	//console.log("hint tken" + hint);
 	record = {
 		qid : question._id,
 		concept : question.concept,
@@ -54,9 +54,9 @@ function attemptQuestion(question,givenAns,req,res){
 		//in secs
 	}
 	if(hint == true){
-		console.log("decreasing hint count in user");
+		//console.log("decreasing hint count in user");
 		User.updateHint(req.session.user._id).then(function (question){
-			console.log("decreasing hint count in user success");
+			//console.log("decreasing hint count in user success");
 		})
 		.catch(function (error){
 			// TODO: error page
@@ -64,8 +64,8 @@ function attemptQuestion(question,givenAns,req,res){
 
 	}
 
-	//console.log("explaination is" + req.body.explainationGiven)
-	console.log("user is" + req.session.user.name)
+	////console.log("explaination is" + req.body.explainationGiven)
+	//console.log("user is" + req.session.user.name)
 	//console.log("the question id is" + questionId);
 	//var correctAns = question.options[question.answers];
 	//console.log(correctAns);
@@ -78,19 +78,19 @@ function attemptQuestion(question,givenAns,req,res){
 		};
 	};
 	//(percentage correct answer between 0-1) + 10*diff/(10*diff + ln(timeInSec))
-	console.log("no of givenAns" + givenAns);
-	console.log("no of givenAns length" + givenAns.length);
-	console.log("No of correctAns " + noOfCorrect);
+	//console.log("no of givenAns" + givenAns);
+	//console.log("no of givenAns length" + givenAns.length);
+	//console.log("No of correctAns " + noOfCorrect);
 	noOfWrong = givenAns.length - noOfCorrect;
-	console.log("No of noOfWrong " + noOfWrong);
+	//console.log("No of noOfWrong " + noOfWrong);
 	noOfWrongW = noOfWrong/question.options.length;
-	console.log("No of noOfWrongW " + noOfWrongW);
+	//console.log("No of noOfWrongW " + noOfWrongW);
 	score = (noOfCorrect - noOfWrongW)/question.answers.length;
-	console.log("No of score " + score);
+	//console.log("No of score " + score);
 	dividend = (question.difficulty + 1) * 10;
 	divisor = dividend + Math.log(timeTaken);
 	timediff = dividend/divisor;
-	console.log("divisor " + divisor);
+	//console.log("divisor " + divisor);
 	score = score + timediff;
 	console.log("No of score " + score);
 	if(score < 0.0){
@@ -100,7 +100,7 @@ function attemptQuestion(question,givenAns,req,res){
 	record.score=score;
 	User.addRecordToUserId(req.session.user._id,record)
 	.then(function (updatedUser){
-		console.log("Attempt Recorded:"+updatedUser);
+		//console.log("Attempt Recorded:"+updatedUser);
 		upvotedExp = {
   			upvoted : false,
   			givenById : []
@@ -118,7 +118,7 @@ function attemptQuestion(question,givenAns,req,res){
 
 // attempy a question
 router.post('/', function(req, res){
-	console.log("the id is" + req.body.id + req.originalUrl);
+	//console.log("the id is" + req.body.id + req.originalUrl);
 
 	//get the answer
 	givenAns = req.body.options.toString();
@@ -161,12 +161,12 @@ router.get('/', requireLogin, function(req, res){
   			Question.getQuestionById(qid)
   			.then(function (question){
 
-  			console.log("old starttime" + req.session.startTime);
+  			//console.log("old starttime" + req.session.startTime);
   			timeStart = Date.now();
-  			console.log("setting starttime" + timeStart);
+  			//console.log("setting starttime" + timeStart);
 
   			req.session.startTime = timeStart;
-  			console.log("set starttime as " + req.session.startTime);
+  			//console.log("set starttime as " + req.session.startTime);
   			res.render('question', {Question : question, User : req.session.user, isTeacher : req.session.isTeacher});
   			})
   			.catch(function (error){
@@ -184,7 +184,7 @@ router.get('/', requireLogin, function(req, res){
   			}
   			console.log("Already attempted" + attemptRecord.score + "User" + userId);
   			for (var i = question.explainations.length - 1; i >= 0; i--) {
-  				console.log("givenBy by" + question.explainations[i].givenByName);
+  				//console.log("givenBy by" + question.explainations[i].givenByName);
   				for (var j = question.explainations[i].upVotedBy.length - 1; j >= 0; j--) {
   					if(question.explainations[i].upVotedBy[j] == userId){
   						upvotedExp.upvoted = true;
@@ -193,8 +193,8 @@ router.get('/', requireLogin, function(req, res){
   				};
   			};
 
-  			console.log("upvotedExp is");
-  			console.log(upvotedExp);
+  			//console.log("upvotedExp is");
+  			//console.log(upvotedExp);
 
   			res.render('explaination', {Question : question, Attempt : attemptRecord, Upvote : upvotedExp, Userid:userId, isTeacher : req.session.isTeacher});
   			})
@@ -224,6 +224,7 @@ router.get('/', requireLogin, function(req, res){
             }
           }
           var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+
           response.push(url);
         }
         res.send(response);
@@ -245,6 +246,7 @@ router.get('/', requireLogin, function(req, res){
             }
           }
           var url = '<a href="http://localhost:3000/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+
           response.push(url);
         }
         res.send(response);
@@ -268,7 +270,7 @@ router.post('/ask', function(req, res){
 	// TODO: add multiple options to questions
 	answerss = JSON.parse(req.body.answers);
 	options = JSON.parse(req.body.options);
-	console.log(req.body.conceptId);
+	//console.log(req.body.conceptId);
 
   // TODO change req.body.conceptId to req.body.concept
   	//debugger;
@@ -276,7 +278,7 @@ router.post('/ask', function(req, res){
 	Question.addQuestion(req.body.question,options,answerss,req.body.conceptId,req.body.difficulty,req.body.hint)
 	.then(function (promise){
 		var id = promise._id;
-		console.log(promise);
+		//console.log(promise);
 		console.log("question added");
 		User.getAllUsers()
     .then(function(promise){
@@ -287,7 +289,7 @@ router.post('/ask', function(req, res){
 				//console.log("user is email is" + promise[i].email + promise[i])
   				userEmails.push(promise[i].email);
 			}
-			console.log("all users emails are" + userEmails);
+			//console.log("all users emails are" + userEmails);
 
 			var mailOptions={
 				from : "adapt.q@gmail.com",
@@ -298,7 +300,7 @@ router.post('/ask', function(req, res){
 			  			"Please click the link below to attempt the question" + " <br> " + "http://localhost:3000/question?id=" + id + " <br> " +
 			  			" <a href = http://localhost:3000/question?id=" + id +"></a> "
 			}
-			console.log(mailOptions);
+			//console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){
 			if(error){
 				console.log(error);
@@ -332,10 +334,10 @@ var sortByProperty = function (property) {
 
 function updateQuestionExp(id,givenBy,uid){
 
-	console.log("User is " + id);
-	console.log("Given by " + givenBy);
+	//console.log("User is " + id);
+	//console.log("Given by " + givenBy);
 	t = id + givenBy;
-	console.log("Total" + t);
+	//console.log("Total" + t);
 	var promise = Question.update({'_id':id,
 		"explainations.givenById":givenBy},
 		{$push:{"explainations.$.upVotedBy":uid},
@@ -346,10 +348,10 @@ function updateQuestionExp(id,givenBy,uid){
 
 function updateQuestionExpDec(id,givenBy,uid){
 
-	console.log("User is " + id);
-	console.log("Given by " + givenBy);
+	//console.log("User is " + id);
+	//console.log("Given by " + givenBy);
 	t = id + givenBy;
-	console.log("Total" + t);
+	//console.log("Total" + t);
 	var promise = Question.update({'_id':id,
 		"explainations.givenById":givenBy},
 		{$pull:{"explainations.$.upVotedBy":uid},
@@ -364,25 +366,25 @@ router.get('/explain', function(req, res){
 });
 
 router.get('/explainlist', function(req, res) {
-    	console.log("populate explainlist" + req.query.id);
+    	//console.log("populate explainlist" + req.query.id);
     	Question.getQuestionById(req.query.id)
 	.then(function (question){
 		explainations = question.explainations;
 		explainations.sort(sortByProperty('noUpVotes'));
-		console.log("sorted explainations are" + explainations);
+		//console.log("sorted explainations are" + explainations);
 		res.json(explainations);
 	})
 });
 
 router.post('/explainUpdate', function(req, res) {
-	console.log("From ajax got this " + req.body.Qid);
+	//console.log("From ajax got this " + req.body.Qid);
 
 	Explain = req.body;
-	console.log(Explain.givenBy);
-	console.log("User in session is " + req.session.user._id);
+	//console.log(Explain.givenBy);
+	//console.log("User in session is " + req.session.user._id);
 	updateQuestionExp(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.user._id)
 		.then(function (updatedUser){
-			console.log("Explain updated");
+			//console.log("Explain updated");
 			  res.send({ msg: '' });
 		},function (err){
 				console.log("error in update explaination");
@@ -390,11 +392,11 @@ router.post('/explainUpdate', function(req, res) {
 });
 
 router.post('/explainUpdateDec', function(req, res) {
-	console.log("From ajax got this " + req.body.Qid);
+	//console.log("From ajax got this " + req.body.Qid);
 
 	Explain = req.body;
-	console.log("given by" + Explain.givenBy);
-	console.log("User in session is " + req.session.user._id);
+	//console.log("given by" + Explain.givenBy);
+	//console.log("User in session is " + req.session.user._id);
 	updateQuestionExpDec(parseInt(Explain.Qid),parseInt(Explain.givenBy),req.session.user._id)
 		.then(function (updatedUser){
 			console.log("Explain updated");
@@ -405,7 +407,7 @@ router.post('/explainUpdateDec', function(req, res) {
 });
 
 router.post('/addUpdateDec', function(req, res) {
-	console.log("From ajax got this " + req.body.ExplainText);
+	//console.log("From ajax got this " + req.body.ExplainText);
 	Explain = req.body.ExplainText;
 	explaination = {
 		givenById : req.session.user._id,
@@ -416,14 +418,14 @@ router.post('/addUpdateDec', function(req, res) {
 
 	};
 	console.log(explaination);
-	console.log(req.body.qid);
+	//console.log(req.body.qid);
 
 	Question.addExplanation(req.body.qid, explaination)
 	.then(function (updatedQuestion,questionId){
-		console.log("updatedQuestion succesfull"+updatedQuestion);
+		//console.log("updatedQuestion succesfull"+updatedQuestion);
 		 res.send({ msg: 'done', explaination : explaination});
 	},function (err){
-		console.log("error in add ");
+		//console.log("error in add ");
 	});
 
 });
