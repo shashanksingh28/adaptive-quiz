@@ -45,7 +45,8 @@ div.tooltip {
 
 .line {
   fill: none;
-  stroke: maroon;
+  stroke: steelblue;
+  
   stroke-width: 1.5px;
 }
 
@@ -56,5 +57,5 @@ div.tooltip {
 
 .focus circle {
   fill: none;
-  stroke: steelblue;
+  stroke: maroon;
 }

@@ -87,6 +87,7 @@ function loadData(rawdata){
   var yAxis = d3.svg.axis()
       .scale(y)
       .orient("left");
+      
 
   var line = d3.svg.line()
       .x(function(d) { return x(d.date); })
@@ -99,6 +100,7 @@ function loadData(rawdata){
       .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
 
   data = [];
+  data.push({'date':0,'close':0})
   var i = 1;
   for (var key in rawdata) {
         data.push({'date':i,'close':rawdata[key]})
@@ -108,7 +110,8 @@ function loadData(rawdata){
   console.log(data);
 
   x.domain([data[0].date, data[data.length - 1].date]);
-  y.domain(d3.extent(data, function(d) { return d.close; }));
+  y.domain([data[0].close, data[data.length - 1].close]);
+  //y.domain(d3.extent(data, function(d) { return d.close; }));
 
   svg.append("g")
       .attr("class", "x axis")
