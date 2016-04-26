@@ -1,10 +1,10 @@
 body {
   background-image:url("plasma.jpg");
   color: #3276b1;
-  font-size: 14px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   margin:0px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 
 /* Pen Title */
@@ -16,12 +16,13 @@ body {
   border-bottom:#428bca;
   color:#eee;
   margin-bottom:50px;
-  box-shadow: 0px 1px 2px #428bca;
+  box-shadow: 0px 3px 5px rgba(66,139,202,.3);
 }
 .pen-title h1 {
   margin: 0 0 20px;
-  font-size: 48px;
-  font-weight: 300;
+  font-size: 44px;
+  letter-spacing:0.5px;
+  font-weight: lighter;
 }
 .pen-title span {
   font-size: 12px;
