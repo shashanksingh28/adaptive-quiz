@@ -77,6 +77,7 @@ if(User.hintsLeft<=0 || Question.hint.length<=0)
   <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
   <% 
   text=Question.text.replace(/\n/g, "<br/>");
+  text=text.replace(/ /g, '\u00a0')
   %>
   <h1><%-text%></h1>
   <!-- <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea> -->
