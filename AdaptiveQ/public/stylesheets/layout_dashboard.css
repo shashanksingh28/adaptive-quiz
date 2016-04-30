@@ -89,6 +89,11 @@ h3.rightpane{
     border-bottom:  ridge #eee;
 }
 
+h3.rightpane *{
+	font-weight:600;
+	font-size:22px;
+}
+
 h5.svellang{
 	margin-top:8px;
 }

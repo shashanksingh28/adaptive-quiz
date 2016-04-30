@@ -166,8 +166,14 @@ function loadData(rawdata){
 }
 
 function loadViz(treeData, analyticsData){
-
     // ************** Generate the tree diagram	 *****************
+    if(analyticsData.userPercentile>=80)
+    	color="#87D987";
+    else if(analyticsData.userPercentile>=60 && analyticsData.userPercentile<80)
+    	color="#F5D987";
+    else
+    	color="#D98787";
+	$("#percentile").html("Your percentile is <font color=\""+color+"\">"+parseFloat(Math.round(analyticsData.userPercentile * 100) / 100).toFixed(2));
     var margin = {top: 20, right: 120, bottom: 20, left: 80},
     width = 1024 - margin.right - margin.left,
     height = 900 - margin.top - margin.bottom;
