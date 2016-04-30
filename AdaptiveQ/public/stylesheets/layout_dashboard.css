@@ -27,7 +27,6 @@
 	float:right;
 	margin-right:20px !important;
 	width:34%;
-	height:50%;
 	display:inline-block;
 	overflow-y:scroll;
 	word-wrap:break-word;
@@ -39,9 +38,13 @@
 }
 
 
+.right-pane.top{
+	height:50%;
+}
 
 .right-pane.bottom{
 	clear:right
+	height:100%;
 }
 
 .bottom-pane{
