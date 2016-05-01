@@ -173,8 +173,12 @@ function loadViz(treeData, analyticsData){
     	color="#F5D987";
     else
     	color="#D98787";
-	$("#percentile").html("Your percentile is <font color=\""+color+"\">"+parseFloat(Math.round(analyticsData.userPercentile * 100) / 100).toFixed(2));
-    var margin = {top: 20, right: 120, bottom: 20, left: 80},
+
+   if(!myVar){
+      $("#percentile").html("Your percentile is <font color=\""+color+"\">"+parseFloat(Math.round(analyticsData.userPercentile * 100) / 100).toFixed(2));
+  
+   } 
+	  var margin = {top: 20, right: 120, bottom: 20, left: 80},
     width = 1024 - margin.right - margin.left,
     height = 900 - margin.top - margin.bottom;
 
@@ -373,6 +377,8 @@ function loadViz(treeData, analyticsData){
 }
 
 $(document).ready(function(){
+  
+  console.log(myVar);
 	$.ajax({url: "/analytics/getConceptTree", success: function(result){
      console.log(result);
      $.ajax({url: "/analytics/getScoreAnalytics", success: function(a_result){
