@@ -88,10 +88,10 @@
 
       var crecoConcept = "<%= Question.concept %>";
       var crecoDesc = '<%=JSON.stringify(Question.text)%>';
-      crecoDesc = crecoDesc.replace("&#34;","").replace("&#34;","");
+      crecoDesc = crecoDesc.replace(/&#34;/g,"");
       console.log("Concept:"+crecoConcept);
       console.log("Desc:"+crecoDesc);
-      
+
       var recommendations = [];
       function getRecommendations(recos){
         if(recos.response.docs.length > 0){
@@ -145,7 +145,7 @@
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-          <% 
+          <%
             text=Question.text.replace(/\n/g, "<br/>");
             text=text.replace(/ /g, '\u00a0')
             %>
