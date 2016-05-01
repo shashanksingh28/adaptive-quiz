@@ -105,7 +105,8 @@ function attemptQuestion(question,givenAns,req,res){
   			upvoted : false,
   			givenById : []
   		}
-		return res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp, Userid:userId});
+  		//res.redirect('/?valid=' + string);
+		res.render('explaination', {Question : question, Attempt : record, Upvote : upvotedExp, Userid:userId});
 
 		// TODO: Show user the right answer, his answer and explaination
 		//res.send("Attempt Recorded!");
@@ -297,7 +298,7 @@ router.post('/ask', function(req, res){
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
 			  	html : "<b>" + "Hello click here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
-			  			"Please click the link below to attempt the question" + " <br> " + "http://localhost:3000/question?id=" + id + " <br> " +
+			  			"Please click the link below to attempt the question" + " <br> " + "http://52.35.105.224:3000/question?id=" + id + " <br> " +
 			  			" <a href = http://localhost:3000/question?id=" + id +"></a> "
 			}
 			//console.log(mailOptions);
