@@ -88,7 +88,11 @@
 
       var crecoConcept = "<%= Question.concept %>";
       var crecoDesc = '<%=JSON.stringify(Question.text)%>';
+      // Remove & from desc because that is URL special character
       crecoDesc = crecoDesc.replace(/&#34;/g,"");
+      crecoDesc = crecoDesc.replace(/&amp;/g,"");
+      crecoDesc = crecoDesc.replace(/&/g,"");
+      crecoDesc = crecoDesc.replace(/+/g,"");
       console.log("Concept:"+crecoConcept);
       console.log("Desc:"+crecoDesc);
 
