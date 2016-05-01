@@ -299,8 +299,7 @@ router.post('/ask', function(req, res){
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
 			  	html : "<b>" + "Hello here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
-			  			"Please click the link below to attempt the question" + " <br> " + localhost +"/question?id=" + id + " <br> " +
-			  			localhost +"/question?id=" + id +"></a> "
+			  			"Please click the link below to attempt the question" + " <br> " + localhost +"/question?id=" + id + " <br> " 
 			}
 			//console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){

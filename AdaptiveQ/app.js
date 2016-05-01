@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var mongo = require('mongoose');
 
-mongo.connect("localhost/adaptq_dev");
+mongo.connect("52.35.105.224/adaptq_dev");
 //mongo.connect("mongodb://localhost:27017/adaptq")
 var path = require('path');
 var favicon = require('serve-favicon');
