@@ -92,7 +92,7 @@
       crecoDesc = crecoDesc.replace(/&#34;/g,"");
       crecoDesc = crecoDesc.replace(/&amp;/g,"");
       crecoDesc = crecoDesc.replace(/&/g,"");
-      crecoDesc = crecoDesc.replace(/+/g,"");
+      crecoDesc = crecoDesc.replace(/[+]/g,"");
       console.log("Concept:"+crecoConcept);
       console.log("Desc:"+crecoDesc);
 
