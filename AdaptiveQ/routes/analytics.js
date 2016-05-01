@@ -251,12 +251,12 @@ function getNearestNeighbor(user, usersScores){
                 sessionUserm += userScore;
                 sessionNo += 1;
               }
-              if (score != -1 && userScore != -1){
+              
                 currentUserData.push(score);
                 sessionUserData.push(userScore);
                 //totalScore += score;
-              }
-              else if(score != -1 && userScore == -1){
+              
+              if(score != -1 && userScore == -1){
                 hasScoreFor.push({"key" : key, "score" : score});
 
               }
@@ -273,7 +273,8 @@ function getNearestNeighbor(user, usersScores){
     }
   }
   //console.log("total for" + user._id + "is mean" + sessionUserMean);
-  //console.log(simScore);
+  console.log("nearest Neighbors");
+  console.log(simScore);
   simScore.sort(function(a, b){
     return b.value - a.value;
   });
