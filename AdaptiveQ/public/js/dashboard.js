@@ -28,7 +28,7 @@ function populateRecos(recommendations){
   var divContent = "";
 	for(i=0;i<recommendations.length;i++){
 		divContent+="<h3>"+recommendations[i].concept+"</h3>";
-		divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"'>"+recommendations[i].link+"</a></p>";
+		divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"' target='_blank'>"+recommendations[i].link+"</a></p>";
 		divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
 	}
 	//Reload accordion
