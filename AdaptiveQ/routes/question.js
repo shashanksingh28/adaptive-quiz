@@ -225,7 +225,7 @@ router.get('/', requireLogin, function(req, res){
               break;
             }
           }
-          var url = '<a href="http://' + localhost + '/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+          var url = '<a href="' + localhost + '/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
 
           response.push(url);
         }
@@ -247,7 +247,7 @@ router.get('/', requireLogin, function(req, res){
               break;
             }
           }
-          var url = '<a href="http://' + localhost + '/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
+          var url = '<a href="' + localhost + '/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
 
           response.push(url);
         }
