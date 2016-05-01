@@ -18,7 +18,7 @@ app.use(session({
   activeDuration: 5 * 60 * 1000,
 }));
 
-console.log("App started at http://localhost:3000");
+console.log("App started");
 
 var bodyParser = require('body-parser');
 var nodemailer = require("nodemailer");

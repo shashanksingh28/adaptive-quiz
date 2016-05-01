@@ -46,7 +46,7 @@ function getRecommendations(concepts){
   var count = 0;
   var recommendations = [];
   for (var i = 0; i < concepts.length; ++i){
-      search(concepts[i].key,,3-i,function(recos){
+      search(concepts[i].key,null,3-i,function(recos){
         if(recos.response.docs.length > 0){
           for(var i = 0; i < recos.response.docs.length; ++i)
           {
