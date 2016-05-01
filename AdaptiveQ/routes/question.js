@@ -1,6 +1,7 @@
 var express = require('express');
 var nodemailer = require("nodemailer");
 var router = express.Router();
+var localhost = "http://52.35.105.224"
 // mongoose data models
 var Question = require('../models/questionModel');
 var User = require('../models/userModel');
@@ -297,9 +298,9 @@ router.post('/ask', function(req, res){
 			   	to : userEmails,
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b>" + "Hello click here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
-			  			"Please click the link below to attempt the question" + " <br> " + "http://52.35.105.224:3000/question?id=" + id + " <br> " +
-			  			" <a href = http://localhost:3000/question?id=" + id +"></a> "
+			  	html : "<b>" + "Hello here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
+			  			"Please click the link below to attempt the question" + " <br> " + localhost +"/question?id=" + id + " <br> " +
+			  			localhost +"/question?id=" + id +"></a> "
 			}
 			//console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){
