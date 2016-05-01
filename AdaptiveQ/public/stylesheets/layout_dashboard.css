@@ -27,7 +27,6 @@
 	float:right;
 	margin-right:20px !important;
 	width:34%;
-	height:50%;
 	display:inline-block;
 	overflow-y:scroll;
 	word-wrap:break-word;
@@ -39,9 +38,13 @@
 }
 
 
+.right-pane.top{
+	height:50%;
+}
 
 .right-pane.bottom{
 	clear:right
+	height:100%;
 }
 
 .bottom-pane{
@@ -84,6 +87,11 @@ h3.rightpane{
 	padding-bottom:2px;
 	border-width:0.5px;
     border-bottom:  ridge #eee;
+}
+
+h3.rightpane *{
+	font-weight:600;
+	font-size:22px;
 }
 
 h5.svellang{

@@ -63,7 +63,6 @@ function getRecommendations(concepts){
 
 function loadData(rawdata){
 
-
   var margin = {top: 20, right: 50, bottom: 30, left: 50},
       width = 700 - margin.left - margin.right,
       height = 500 - margin.top - margin.bottom;
@@ -87,7 +86,7 @@ function loadData(rawdata){
   var yAxis = d3.svg.axis()
       .scale(y)
       .orient("left");
-      
+
 
   var line = d3.svg.line()
       .x(function(d) { return x(d.date); })
@@ -167,8 +166,14 @@ function loadData(rawdata){
 }
 
 function loadViz(treeData, analyticsData){
-
     // ************** Generate the tree diagram	 *****************
+    if(analyticsData.userPercentile>=80)
+    	color="#87D987";
+    else if(analyticsData.userPercentile>=60 && analyticsData.userPercentile<80)
+    	color="#F5D987";
+    else
+    	color="#D98787";
+	$("#percentile").html("Your percentile is <font color=\""+color+"\">"+parseFloat(Math.round(analyticsData.userPercentile * 100) / 100).toFixed(2));
     var margin = {top: 20, right: 120, bottom: 20, left: 80},
     width = 1024 - margin.right - margin.left,
     height = 900 - margin.top - margin.bottom;
@@ -257,7 +262,7 @@ function loadViz(treeData, analyticsData){
                if (d.mScore == -1){
                  for(var key in analyticsData.predictedScores){
                    if (analyticsData.predictedScores.hasOwnProperty(key) && key == d.name){
-                     return "#D3D3D3";
+                     return "#837E7C";
                    }
                  }
                  return "#fff";
@@ -293,7 +298,7 @@ function loadViz(treeData, analyticsData){
                if (d.mScore == -1){
                  for(var key in analyticsData.predictedScores){
                    if (analyticsData.predictedScores.hasOwnProperty(key) && key == d.name){
-                     return "#D3D3D3";
+                     return "#837E7C";
                    }
                  }
                  return "#fff";

@@ -307,7 +307,7 @@ function getNearestNeighbor(user, usersScores){
     recommendation[key] = sessionUserMean + (recommendation[key]/deno)
   }
 }
-
+console.log("recommendation");
 console.log(recommendation);
 
 return recommendation;

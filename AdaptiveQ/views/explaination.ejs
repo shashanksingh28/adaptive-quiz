@@ -145,7 +145,10 @@
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
-
+          <% 
+            text=Question.text.replace(/\n/g, "<br/>");
+            text=text.replace(/ /g, '\u00a0')
+            %>
 
 
         <div class="container-fluid content">
@@ -154,7 +157,7 @@
 
                     <div class="form-group">
                         <!-- <label for="question"> --><!-- <h1>Question</h1> --><!-- </label> -->
-                        <h1><%=Question.text%></h1>
+                        <h1><%-text%></h1>
                         <!-- <textarea class="form-control" rows="5" id="question" placeholder="Enter your question" name="question"></textarea> -->
                     </div>
 
