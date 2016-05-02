@@ -26,7 +26,16 @@ function getQuestionsOn(concept){
 function populateRecos(recommendations){
 //Done: Populate UI
   var divContent = "";
+  var repeat = false;
 	for(i=0;i<recommendations.length;i++){
+    repeat = false;
+    for (j = i - 1 ; j >= 0; --j ){
+      if (recommendations[j].link == recommendations[i].link){
+        repeat = true;
+        continue;
+      }
+    }
+    if (repeat == true) continue;
 		divContent+="<h3>"+recommendations[i].concept+"</h3>";
 		divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"' target='_blank'>"+recommendations[i].link+"</a></p>";
 		divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
@@ -176,8 +185,8 @@ function loadViz(treeData, analyticsData){
 
    if(!myVar){
       $("#percentile").html("Your percentile is <font color=\""+color+"\">"+parseFloat(Math.round(analyticsData.userPercentile * 100) / 100).toFixed(2));
-  
-   } 
+
+   }
 	  var margin = {top: 20, right: 120, bottom: 20, left: 80},
     width = 1024 - margin.right - margin.left,
     height = 900 - margin.top - margin.bottom;
@@ -377,7 +386,7 @@ function loadViz(treeData, analyticsData){
 }
 
 $(document).ready(function(){
-  
+
   console.log(myVar);
 	$.ajax({url: "/analytics/getConceptTree", success: function(result){
      console.log(result);

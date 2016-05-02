@@ -16,11 +16,11 @@ function search(concept, desc, count, callback) {
   var url = conn + "select?" + QUERY;
   if (searchConcept != null) {
     url = url + searchConcept;
-    if (searchDesc != null) {
+    if (desc != null) {
       url = url + " ";
     }
   }
-  if (searchDesc != null) {
+  if (desc != null) {
     url = url + searchDesc;
   }
   url = url + SORT + "score+desc" + RESPONSE_WRITER + "json" + ROWS + count;
