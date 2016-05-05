@@ -192,12 +192,12 @@ return s;
 }
 
 
-function getLowest(user, usersScores){  
+function getLowest(user, usersScores){
   var sessionUserId = user._id;
   var conceptArr = [];
   for (var key in usersScores[sessionUserId]){
     if (usersScores[sessionUserId][key] != -1){
-      var value = usersScores[sessionUserId][key]       
+      var value = usersScores[sessionUserId][key]
 
       conceptArr.push({'key':key, 'value':value});
 
@@ -251,11 +251,11 @@ function getNearestNeighbor(user, usersScores){
                 sessionUserm += userScore;
                 sessionNo += 1;
               }
-              
+
                 currentUserData.push(score);
                 sessionUserData.push(userScore);
                 //totalScore += score;
-              
+
               if(score != -1 && userScore == -1){
                 hasScoreFor.push({"key" : key, "score" : score});
 
@@ -314,8 +314,6 @@ console.log(recommendation);
 return recommendation;
 }
 
-
-
 router.get('/getScoreAnalytics', requireLogin, function(req,res, next){
   Concepts.getAllConcepts()
   .then(function (allConcepts){
@@ -351,16 +349,16 @@ function getMean(data){
   var meandate = {  };
   for (var i = 0; i < data.length; i++) {
     var d = data[i].attemptAt;
-    var da = new Date(d);   
+    var da = new Date(d);
     var dat = da.getDate();
     var mon = da.getMonth() + 1;
     var yr = da.getFullYear();
-    date = ""+ mon+ dat + yr;    
-    if (meandate.hasOwnProperty(date)){      
+    date = ""+ mon+ dat + yr;
+    if (meandate.hasOwnProperty(date)){
       meandate[date].mean += data[i].score;
-      meandate[date].num += 1;     
+      meandate[date].num += 1;
     }
-    else{     
+    else{
       meandate[date] = {
       mean : data[i].score,
       num  : 1       } ;
@@ -394,22 +392,36 @@ router.get('/mean', function(req, res, next) {
     if(req.session && req.session.user){
       // show dashboard here
       console.log(req.session.user._id);
-    User.getUserById(req.session.user._id)
-    .then(function(users){
-      MeanData = users.records;
-      //console.log(MeanData);
-      DayMeanData = getMean(MeanData);
-      res.send(DayMeanData);
-
-      },function (err){
-          console.log("error in update explaination" + err);
+    if(req.session.isTeacher){
+      console.log("Teacher Mean called");
+      User.getAllUsers()
+        .then(function (users){
+          var data = [];
+          for(var i = 0; i < users.length; ++i){
+            //console.log(users[i].records);
+            for(var j = 0; j < users[i].records.length; ++j)
+            {
+              data.push(users[i].records[j]);
+            }
+          }
+          daysMeanData = getMean(data);
+          res.send(daysMeanData);
+        }, function(err){
+          console.log("Error in getting data : "+ err);
         });
-
-
     }
-    else
-    {
-      res.render('login');
+    else{
+      User.getUserById(req.session.user._id)
+      .then(function(users){
+        MeanData = users.records;
+        //console.log(MeanData);
+        DayMeanData = getMean(MeanData);
+        res.send(DayMeanData);
+        },function (err){
+            console.log("error in update explaination" + err);
+          });
+
+      }
     }
 });
 

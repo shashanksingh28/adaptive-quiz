@@ -51,7 +51,7 @@
         <%
         }
         %>
-        
+
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="/logout">Sign Out</a></li>
@@ -86,13 +86,20 @@
           <div class="right-pane top">
   <h3 class='rightpane'>Recommendations</h3>
   <div class="accordion" id="recommendations">
-  
+
   </div> <!-- /.accordion -->
   </div>  <br/>
         <%
-        }
+      }else{
         %>
+        <div class="right-pane top">
+  <h3 class='rightpane'>Recommended for Class</h3>
+  <div class="accordion" id="recommendations">
 
+  </div> <!-- /.accordion -->
+  </div>  <br/>
+
+        <% } %>
   <div class="right-pane bottom" id="questionsContainer">
 
   </div>
@@ -107,9 +114,13 @@
   <div id = "linechart"></div>
   </div>
         <%
-        }
+      }else{
         %>
-
+        <div class="bottom-pane">
+        <h3 class='rightpane'>Historical Class Mean Score</h3>
+        <div id = "linechart"></div>
+        </div>
+        <% } %>
 
 
   <script type="text/javascript" src="js/dashboard.js"></script>
