@@ -1,5 +1,4 @@
-
-var conn = "http://52.11.111.234:8983/solr/adaptq/";
+var conn = "http://52.40.100.41:8983/solr/adaptq/";
 
 function search(concept, desc, count, callback) {
   const CONCEPT_FLD = "concept=";

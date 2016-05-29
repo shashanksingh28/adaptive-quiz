@@ -54,7 +54,8 @@
     <div class="tooltip"><div id="tooltip">Register</div></div>
   </div>
   <div class="form">
-    <h2>Login to your account</h2>
+	  <font color="red"><%= (Message) ? Message : ''  %></font>
+	  <h2>Login to your account</h2>
     <form class="form-signin" action="/login" method="post" onsubmit="return hash()">
       <input type="email" placeholder="Username" name="email" required/>
       <input type="password" placeholder="Password" id="password" name="password" required/>

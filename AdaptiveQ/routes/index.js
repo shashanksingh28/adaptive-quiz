@@ -27,7 +27,7 @@ router.get('/', function(req, res, next) {
     }
     else
     {
-      res.render('login');
+      res.render('login',{Message: ''});
     }
 });
 
@@ -42,9 +42,13 @@ router.post('/login', function(req, res, next){
     var pass = req.body.password;
     User.getUserByEmail(email)
     .then(function (user){
+      if(!user){
+        console.log("Email not found");
+        res.render('login', {Message:'Email not found!'});    	
+      }
       if(user.email){
         if(user.password == pass){
-
+		  console.log("User "+user+ "is authenticated!");
           req.session.user = user;
           delete req.session.user.records;
           req.session.startTime = Date.now();
@@ -70,13 +74,8 @@ router.post('/login', function(req, res, next){
         else {
           // TODO password error
           console.log("Password mismatch");
-          res.redirect('/');
+          res.render('login',{Message:'Incorrect Password!'});
         }
-      }
-      else {
-        // TODO email error code
-        console.log("Email not found");
-        res.redirect('/');
       }
     });
   });
