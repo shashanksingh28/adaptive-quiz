@@ -132,7 +132,6 @@ function assembleQuestionsForUser(user, questions){
       var question = { QuestionId : questions[i]._id , Tag: questions[i].concept, Visited: hasVisited } ;
       response.push(question);
     }
-    console.log(response);
     return response;
 }
 
