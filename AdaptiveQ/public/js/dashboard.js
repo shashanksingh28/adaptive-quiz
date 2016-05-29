@@ -1,16 +1,23 @@
-// treedata should have name and parent
-
 function lerp(a, b, t) {
     var x = a + t * (b - a);
     return x;
 }
 
+function loadAllQuestions(){
+  	$.ajax({url: "/question?all=1", success: function(allQuestions){
+      loadQuestions(allQuestions);
+     }
+  	});
+}
+
 function loadQuestions(questions){
   var ctr = document.getElementById('questionsContainer');
   ctr.innerHTML="";
-  var content = "<h3 class='rightpane'>Questions</h3><ul>";
+  var content = "<h3 class='rightpane' width='200px'>Questions</h3> <a href='#' id='showall' onclick='loadAllQuestions()'>show all</a>";
   for(var i =  0; i < questions.length; ++i){
-    content += "<li>" + questions[i] + "</li>";
+  	var css_class = questions[i].visited ? 'visited' : 'unvisited';
+    content += "<li><a href='/question?id=" + questions[i].QuestionId+"' class='" + css_class + "'> "+questions[i].QuestionId
+    	+" : "+ questions[i].Tag +"</a></li>";
   }
   content += "</ul>";
   ctr.innerHTML = content;
@@ -24,7 +31,6 @@ function getQuestionsOn(concept){
 }
 
 function populateRecos(recommendations){
-//Done: Populate UI
   var divContent = "";
   var repeat = false;
 	for(i=0;i<recommendations.length;i++){

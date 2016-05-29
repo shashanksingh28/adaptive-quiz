@@ -1,7 +1,7 @@
 var express = require('express');
 var nodemailer = require("nodemailer");
 var router = express.Router();
-var localhost = "http://52.11.111.234"
+var localhost = "http://52.40.100.41"
 // mongoose data models
 var Question = require('../models/questionModel');
 var User = require('../models/userModel');
@@ -28,22 +28,13 @@ function requireLogin (req, res, next) {
 Question Display related functions
 -----------------------------------------------------------------------------*/
 
-function updateHint(){
-
-}
 
 function attemptQuestion(question,givenAns,req,res){
 	userId = req.session.user._id;
 	//console.log("start time" + req.session.startTime);
 	timeStart = req.session.startTime;
-	console.log("inside attempt" + timeStart);
-	//console.log("given ans is " + givenAns);
-	console.log("Question is" + question);
-	//console.log("inside attempt in getQuestion" + timeStart + " " + Date.now());
 	timeTaken = (Date.now() - timeStart)/1000;
-	//console.log("time taken to answer" + timeTaken);
 	hint = req.body.hintTaken;
-	//console.log("hint tken" + hint);
 	record = {
 		qid : question._id,
 		concept : question.concept,
@@ -65,11 +56,6 @@ function attemptQuestion(question,givenAns,req,res){
 
 	}
 
-	////console.log("explaination is" + req.body.explainationGiven)
-	//console.log("user is" + req.session.user.name)
-	//console.log("the question id is" + questionId);
-	//var correctAns = question.options[question.answers];
-	//console.log(correctAns);
 	var noOfCorrect = 0 ;
 	for (var i = 0; i < givenAns.length; i++) {
 		for (var j = 0; j < question.answers.length; j++) {
@@ -78,10 +64,6 @@ function attemptQuestion(question,givenAns,req,res){
 			}
 		};
 	};
-	//(percentage correct answer between 0-1) + 10*diff/(10*diff + ln(timeInSec))
-	//console.log("no of givenAns" + givenAns);
-	//console.log("no of givenAns length" + givenAns.length);
-	//console.log("No of correctAns " + noOfCorrect);
 	noOfWrong = givenAns.length - noOfCorrect;
 	//console.log("No of noOfWrong " + noOfWrong);
 	noOfWrongW = noOfWrong/question.options.length;
@@ -135,6 +117,25 @@ router.post('/', function(req, res){
 		});
 
 });
+
+function assembleQuestionsForUser(user, questions){
+	var response = [];
+    // for user to see different links of attempted and not attempted
+    for(var i = 0; i < questions.length; ++i){
+      var hasVisited = false;
+      for(var j = 0; j < user.records.length; ++j){
+        if (user.records[j].qid == questions[i]._id){
+          hasVisited = true;
+          break;
+        }
+      }
+      var question = { QuestionId : questions[i]._id , Tag: questions[i].concept, Visited: hasVisited } ;
+      response.push(question);
+    }
+    console.log(response);
+    return response;
+}
+
 
 // Show a question with given id
 router.get('/', requireLogin, function(req, res){
@@ -215,20 +216,8 @@ router.get('/', requireLogin, function(req, res){
     .then(function (questions){
       User.getUserById(userId)
       .then(function (user){
-        var response = [];
-        // for user to see different links of attempted and not attempted
-        for(var i = 0; i < questions.length; ++i){
-          var css_class = 'unvisited';
-          for(var j = 0; j < user.records.length; ++j){
-            if (user.records[j].qid == questions[i]._id){
-              css_class = 'visited';
-              break;
-            }
-          }
-          var url = '<a href="' + localhost + '/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
-
-          response.push(url);
-        }
+        var response = assembleQuestionsForUser(user,questions);
+        console.log(response);
         res.send(response);
       });
     });
@@ -237,20 +226,7 @@ router.get('/', requireLogin, function(req, res){
     .then(function (questions){
       User.getUserById(userId)
       .then(function (user){
-        var response = [];
-        // for user to see different links of attempted and not attempted
-        for(var i = 0; i < questions.length; ++i){
-          var css_class = 'unvisited';
-          for(var j = 0; j < user.records.length; ++j){
-            if (user.records[j].qid == questions[i]._id){
-              css_class = 'visited';
-              break;
-            }
-          }
-          var url = '<a href="' + localhost + '/question?id=' + questions[i]._id + '" class="' + css_class + '"> Question : '+ questions[i]._id+'</a>';
-
-          response.push(url);
-        }
+        var response = assembleQuestionsForUser(user,questions);
         res.send(response);
       });
     });

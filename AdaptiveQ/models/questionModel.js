@@ -45,11 +45,11 @@ Question.addExplanation = function(qId, explanation){
 };
 
 Question.getQuestionIdsOfConcept = function(conceptName){
-  return Question.find({concept:conceptName},{ _id : 1 }).exec();
+  return Question.find({concept:conceptName},{ _id : 1 , concept : 1}).exec();
 }
 
 Question.getAllQuestionIds = function(){
-  return Question.find({},{ _id : 1 }).exec();
+  return Question.find({},{ _id : 1 , concept : 1}).exec();
 }
 
 module.exports = Question;

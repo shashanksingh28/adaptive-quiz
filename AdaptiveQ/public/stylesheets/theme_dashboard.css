@@ -79,3 +79,7 @@ a.visited{
 a.unvisited{
 	color:rgb(165,80,80);
 }
+
+#showall{
+	float: right;
+}
