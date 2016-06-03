@@ -44,7 +44,7 @@ router.post('/login', function(req, res, next){
     .then(function (user){
       if(!user){
         console.log("Email not found");
-        res.render('login', {Message:'Email not found!'});    	
+        res.render('login', {Message:'Email not found!'});
       }
       if(user.email){
         if(user.password == pass){
@@ -92,6 +92,13 @@ router.post('/register', function(req, res){
         .then(function(savedUser){
             console.log("Saved: " + savedUser);
             req.session.user = savedUser;
+            if(savedUser.email != "adaptq@gmail.com"){
+              req.session.isTeacher = false;
+            }
+            else{
+              req.session.isTeacher = true;
+            }
+            req.session.startTime = Date.now();
             res.redirect('/');
         }, function (err){
             console.log("Error in saving" + newUser +"\n"+err);

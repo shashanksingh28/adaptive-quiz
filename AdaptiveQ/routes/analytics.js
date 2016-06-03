@@ -280,7 +280,7 @@ function getNearestNeighbor(user, usersScores){
   });
   recommendation = {};
   recommendationBy = {};
-  for (var i = 0 ; i < 2 ; i++) {
+  for (var i = 0 ; i < 2 && simScore.length > 1; i++) {
     uid = simScore[i].key;
     userCurr = userData[uid];
     //console.log(userCurr);
