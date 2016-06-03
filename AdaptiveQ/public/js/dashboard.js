@@ -393,7 +393,6 @@ function loadViz(treeData, analyticsData){
 
 $(document).ready(function(){
 
-  console.log(myVar);
 	$.ajax({url: "/analytics/getConceptTree", success: function(result){
      console.log(result);
      $.ajax({url: "/analytics/getScoreAnalytics", success: function(a_result){

@@ -298,7 +298,7 @@ function getNearestNeighbor(user, usersScores){
       }
     }
   };
-
+  console.log("Calculating recommendations");
   for (var key in recommendation) {
   if (recommendation.hasOwnProperty(key)) {
     var deno = 0.0;
