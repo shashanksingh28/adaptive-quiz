@@ -432,20 +432,28 @@ router.put('/logRecoVisited', requireLogin, function(req, res, next){
   myLogger.logAction(req.session.user._id,"recommendation","visit",req.query.link)
   .then(function(savedLog){
     res.send("logged");
-  });;
+  });
 });
 
 router.put('/logTreeNodeClick', requireLogin, function(req, res, next){
   myLogger.logAction(req.session.user._id,"treeNode","click",req.query.concept)
   .then(function(savedLog){
     res.send("logged");
-  });;
+  });
 });
 
 router.put('/logTreeNodeHover', requireLogin, function(req, res, next){
   myLogger.logAction(req.session.user._id,"treeNode","hover",req.query.concept)
   .then(function(savedLog){
     res.send("logged");
-  });;
+  });
 });
+
+router.put('/logViewExplanation', requireLogin, function(req,res,next){
+  myLogger.logAction(req.session.user._id,"explanation","view",req.query.qid)
+  .then(function(savedLog){
+    res.send("logged");
+  });
+});
+
 module.exports = router;

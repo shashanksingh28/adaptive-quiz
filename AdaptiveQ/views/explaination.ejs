@@ -40,31 +40,33 @@
 		</style>
         <script>
 
+        $(function() {$("#voteContainer").hide();});
 
-            $(function() {
-    				$("#voteContainer").hide();
-                });
-                function toggleExplanation(btn){
-                if($("#voteContainer").is(":visible")){
+        function toggleExplanation(btn){
+              if($("#voteContainer").is(":visible")){
                 $("#voteContainer").hide();
                 $(btn).val("View explanations");
-                }
-                else{
+              }
+              else{
+                var qid = <%= Question._id %>;
+                console.log("QuestionID:"+qid);
                 $("#voteContainer").show();
                 $(btn).val("Hide explanations");
-                }
-                }
-                function showMore(){
-                numExplains+=5;
-                if(numExplains>=$(".explainList").length)
-                $("#btnShowMore").attr("disabled",true);
-                $( ".explainList" ).each(function( index ) {
-                if(index>=numExplains)
-                $(this).hide();
-                else
-                $(this).show();
-                });
-                }
+                $.ajax({url: "/analytics/logViewExplanation?qid="+qid, type:'PUT'});
+              }
+            }
+
+            function showMore(){
+            numExplains+=5;
+            if(numExplains>=$(".explainList").length)
+            $("#btnShowMore").attr("disabled",true);
+            $( ".explainList" ).each(function( index ) {
+            if(index>=numExplains)
+            $(this).hide();
+            else
+            $(this).show();
+            });
+            }
 
       function logRecoClicked(link){
         console.log("Clicked : " + link);
