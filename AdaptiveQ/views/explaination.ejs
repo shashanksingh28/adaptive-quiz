@@ -66,13 +66,22 @@
                 });
                 }
 
+      function logRecoClicked(link){
+        console.log("Clicked : " + link);
+        $.ajax({url: "/analytics/logRecoClicked?link="+link, type:'PUT'});
+      }
+
+      function logRecoVisited(link){
+        console.log("Visited : " + link);
+        $.ajax({url: "/analytics/logRecoVisited?link="+link, type: 'PUT'});
+      }
 
       function populateRecos(recommendations){
 			//TODO: Populate UI
 			  var divContent = "";
 				for(i=0;i<recommendations.length;i++){
-					divContent+="<h3>"+recommendations[i].concept+"</h3>";
-					divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"' target='_blank' >"+recommendations[i].link+"</a></p>";
+					divContent+="<h3 onclick=logRecoClicked('"+recommendations[i].link+"')>"+recommendations[i].concept+"</h3>";
+					divContent+="<div><p><a onclick=logRecoVisited('"+recommendations[i].link+"') class='svellang' href='"+recommendations[i].link+"' target='_blank' >"+recommendations[i].link+"</a></p>";
 					divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
 				}
 				//Reload accordion
