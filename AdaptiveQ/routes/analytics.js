@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Concepts = require('../models/conceptModel');
 var User = require('../models/userModel');
+var myLogger = require('../models/logModel');
 var cossimilarity = require( 'compute-cosine-similarity' );
 
 function requireLogin (req, res, next) {
@@ -179,139 +180,137 @@ function getUserPercentile(user, usersScores){
   return 100 - abovePercent;
 }
 
-
 function getSimilarity(usersScores)
 {
   //console.log("in getSimilarity");
   var x = [ 5, 23, 2, 5, 9 ],
   y = [ 3, 21, 2, 5, 14 ];
 
-var s = cossimilarity( x, y );
-//console.log("in getSimilarity" + s);
-return s;
-}
+  var s = cossimilarity( x, y );
+  //console.log("in getSimilarity" + s);
+  return s;
+  }
 
+  function getLowest(user, usersScores){
+    var sessionUserId = user._id;
+    var conceptArr = [];
+    for (var key in usersScores[sessionUserId]){
+      if (usersScores[sessionUserId][key] != -1){
+        var value = usersScores[sessionUserId][key]
 
-function getLowest(user, usersScores){
-  var sessionUserId = user._id;
-  var conceptArr = [];
-  for (var key in usersScores[sessionUserId]){
-    if (usersScores[sessionUserId][key] != -1){
-      var value = usersScores[sessionUserId][key]
+        conceptArr.push({'key':key, 'value':value});
 
-      conceptArr.push({'key':key, 'value':value});
+      }
+      conceptArr.sort(function(a, b){
+      return a.value - b.value;
+    });
+    }
+    var coldstar = [{'key': 'Language fundamentals', 'value' : 0.0  },
+    {'key': 'Statements', 'value' : 0.0  },
+    {'key': 'Conditional blocks', 'value' : 0.0  }]
+    if(conceptArr.length < 3){
+      for (var i = conceptArr.length; i < coldstar.length; i++) {
+        conceptArr.push(coldstar[i]);
+      };
 
     }
-    conceptArr.sort(function(a, b){
-    return a.value - b.value;
-  });
+    return conceptArr.slice(0,3);
   }
-  var coldstar = [{'key': 'Language fundamentals', 'value' : 0.0  },
-  {'key': 'Statements', 'value' : 0.0  },
-  {'key': 'Conditional blocks', 'value' : 0.0  }]
-  if(conceptArr.length < 3){
-    for (var i = conceptArr.length; i < coldstar.length; i++) {
-      conceptArr.push(coldstar[i]);
-    };
 
-  }
-  return conceptArr.slice(0,3);
-}
-
-function getNearestNeighbor(user, usersScores){
-  var minAbs = 0;
-  var closestUser = null;
-  var userData = {};
-  var simScore = [];
-  var sessionUserMean = 0.0;
-  for (var userId in usersScores) {
-    if (usersScores.hasOwnProperty(userId)) {
-        if(userId != user._id)
-        {
-          var currentUserData = []
-          var sessionUserData = []
-          var hasScoreFor = []
-          var sessionUserm = 0.0;
-          var sessionNo = 0;
-          var currentUserm = 0.0;
-          var currentNo = 0;
-          for(var key in usersScores[userId])
+  function getNearestNeighbor(user, usersScores){
+    var minAbs = 0;
+    var closestUser = null;
+    var userData = {};
+    var simScore = [];
+    var sessionUserMean = 0.0;
+    for (var userId in usersScores) {
+      if (usersScores.hasOwnProperty(userId)) {
+          if(userId != user._id)
           {
-            if(usersScores[userId].hasOwnProperty(key))
+            var currentUserData = []
+            var sessionUserData = []
+            var hasScoreFor = []
+            var sessionUserm = 0.0;
+            var sessionNo = 0;
+            var currentUserm = 0.0;
+            var currentNo = 0;
+            for(var key in usersScores[userId])
             {
-              var userScore = usersScores[user._id][key];
-              var score = usersScores[userId][key];
+              if(usersScores[userId].hasOwnProperty(key))
+              {
+                var userScore = usersScores[user._id][key];
+                var score = usersScores[userId][key];
 
-              if(score != -1){
-                currentUserm += score;
-                currentNo += 1;
+                if(score != -1){
+                  currentUserm += score;
+                  currentNo += 1;
 
-              }
-              if(userScore != -1){
-                sessionUserm += userScore;
-                sessionNo += 1;
-              }
+                }
+                if(userScore != -1){
+                  sessionUserm += userScore;
+                  sessionNo += 1;
+                }
 
-                currentUserData.push(score);
-                sessionUserData.push(userScore);
-                //totalScore += score;
+                  currentUserData.push(score);
+                  sessionUserData.push(userScore);
+                  //totalScore += score;
 
-              if(score != -1 && userScore == -1){
-                hasScoreFor.push({"key" : key, "score" : score});
+                if(score != -1 && userScore == -1){
+                  hasScoreFor.push({"key" : key, "score" : score});
 
+                }
               }
             }
+            //console.log( "the currentUser" + currentUserData + "the sessionUserData" + sessionUserData);
+            var s = cossimilarity( currentUserData, sessionUserData );
+            //console.log("the similarity score is" + s);
+            //console.log("total for" + userId + "is" + currentUserm + "no of" + currentNo );
+            userData[userId] = {"score":s, "hasScoreFor" : hasScoreFor, "mean" : currentUserm/currentNo};
+            sessionUserMean = sessionUserm/sessionNo;
+            simScore.push({"key": userId, "value": s});
           }
-          //console.log( "the currentUser" + currentUserData + "the sessionUserData" + sessionUserData);
-          var s = cossimilarity( currentUserData, sessionUserData );
-          //console.log("the similarity score is" + s);
-          //console.log("total for" + userId + "is" + currentUserm + "no of" + currentNo );
-          userData[userId] = {"score":s, "hasScoreFor" : hasScoreFor, "mean" : currentUserm/currentNo};
-          sessionUserMean = sessionUserm/sessionNo;
-          simScore.push({"key": userId, "value": s});
+      }
+    }
+    //console.log("total for" + user._id + "is mean" + sessionUserMean);
+    console.log("nearest Neighbors");
+    console.log(simScore);
+    simScore.sort(function(a, b){
+      return b.value - a.value;
+    });
+    recommendation = {};
+    recommendationBy = {};
+    for (var i = 0 ; i < 2 && simScore.length > 1; i++) {
+      uid = simScore[i].key;
+      userCurr = userData[uid];
+      //console.log(userCurr);
+      for (var j = 0 ; j < userCurr.hasScoreFor.length; j++){
+
+        sc = userCurr.score * (userCurr.hasScoreFor[j].score - userCurr.mean) ;
+        if (recommendation.hasOwnProperty(userCurr.hasScoreFor[j].key)){
+          recommendation[userCurr.hasScoreFor[j].key] += sc;
+          recommendationBy[userCurr.hasScoreFor[j].key].push(userCurr.score);
         }
-    }
-  }
-  //console.log("total for" + user._id + "is mean" + sessionUserMean);
-  console.log("nearest Neighbors");
-  console.log(simScore);
-  simScore.sort(function(a, b){
-    return b.value - a.value;
-  });
-  recommendation = {};
-  recommendationBy = {};
-  for (var i = 0 ; i < 2 && simScore.length > 1; i++) {
-    uid = simScore[i].key;
-    userCurr = userData[uid];
-    //console.log(userCurr);
-    for (var j = 0 ; j < userCurr.hasScoreFor.length; j++){
-
-      sc = userCurr.score * (userCurr.hasScoreFor[j].score - userCurr.mean) ;
-      if (recommendation.hasOwnProperty(userCurr.hasScoreFor[j].key)){
-        recommendation[userCurr.hasScoreFor[j].key] += sc;
-        recommendationBy[userCurr.hasScoreFor[j].key].push(userCurr.score);
+        else
+        {
+          recommendation[userCurr.hasScoreFor[j].key] = sc;
+          recommendationBy[userCurr.hasScoreFor[j].key] = [userCurr.score];
+        }
       }
-      else
-      {
-        recommendation[userCurr.hasScoreFor[j].key] = sc;
-        recommendationBy[userCurr.hasScoreFor[j].key] = [userCurr.score];
-      }
-    }
-  };
-  console.log("Calculating recommendations");
-  for (var key in recommendation) {
-  if (recommendation.hasOwnProperty(key)) {
-    var deno = 0.0;
-    for (var i = 0; i < recommendationBy[key].length; i++) {
-      deno += recommendationBy[key][i];
     };
-    recommendation[key] = sessionUserMean + (recommendation[key]/deno)
+    console.log("Calculating recommendations");
+    for (var key in recommendation) {
+    if (recommendation.hasOwnProperty(key)) {
+      var deno = 0.0;
+      for (var i = 0; i < recommendationBy[key].length; i++) {
+        deno += recommendationBy[key][i];
+      };
+      recommendation[key] = sessionUserMean + (recommendation[key]/deno)
+    }
   }
-}
-console.log("recommendation");
-console.log(recommendation);
+  console.log("recommendation");
+  console.log(recommendation);
 
-return recommendation;
+  return recommendation;
 }
 
 router.get('/getScoreAnalytics', requireLogin, function(req,res, next){
@@ -376,11 +375,7 @@ function getMean(data){
         meandate[key].num += meandate[keyin].num;
 
       }
-
-
   }
-  //console.log("done inner for");
-  //console.log( meandate);
     finalmean[key] = meandate[key].mean/meandate[key].num;
   }
 
@@ -414,7 +409,6 @@ router.get('/mean', function(req, res, next) {
       User.getUserById(req.session.user._id)
       .then(function(users){
         MeanData = users.records;
-        //console.log(MeanData);
         DayMeanData = getMean(MeanData);
         res.send(DayMeanData);
         },function (err){
@@ -425,4 +419,33 @@ router.get('/mean', function(req, res, next) {
     }
 });
 
+// ########### Logger Related functions #########
+
+router.put('/logRecoClicked', requireLogin, function(req, res, next){
+  myLogger.logAction(req.session.user._id,"recommendation","click",req.query.link)
+  .then(function(savedLog){
+    res.send("logged");
+  });
+});
+
+router.put('/logRecoVisited', requireLogin, function(req, res, next){
+  myLogger.logAction(req.session.user._id,"recommendation","visit",req.query.link)
+  .then(function(savedLog){
+    res.send("logged");
+  });;
+});
+
+router.put('/logTreeNodeClick', requireLogin, function(req, res, next){
+  myLogger.logAction(req.session.user._id,"treeNode","click",req.query.concept)
+  .then(function(savedLog){
+    res.send("logged");
+  });;
+});
+
+router.put('/logTreeNodeHover', requireLogin, function(req, res, next){
+  myLogger.logAction(req.session.user._id,"treeNode","hover",req.query.concept)
+  .then(function(savedLog){
+    res.send("logged");
+  });;
+});
 module.exports = router;

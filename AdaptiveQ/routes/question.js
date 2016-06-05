@@ -135,7 +135,6 @@ function assembleQuestionsForUser(user, questions){
     return response;
 }
 
-
 // Show a question with given id
 router.get('/', requireLogin, function(req, res){
 	userId = req.session.user._id;
@@ -216,7 +215,6 @@ router.get('/', requireLogin, function(req, res){
       User.getUserById(userId)
       .then(function (user){
         var response = assembleQuestionsForUser(user,questions);
-        console.log(response);
         res.send(response);
       });
     });
@@ -274,7 +272,7 @@ router.post('/ask', function(req, res){
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
 			  	html : "<b>" + "Hello here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
-			  			"Please click the link below to attempt the question" + " <br> " + localhost +"/question?id=" + id + " <br> " 
+			  			"Please click the link below to attempt the question" + " <br> " + localhost +"/question?id=" + id + " <br> "
 			}
 			//console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){

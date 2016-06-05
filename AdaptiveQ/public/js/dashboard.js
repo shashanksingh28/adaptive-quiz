@@ -1,7 +1,28 @@
-function lerp(a, b, t) {
-    var x = a + t * (b - a);
-    return x;
+// #######  Logging related functions ##########
+
+function logRecoClicked(link){
+  console.log("Clicked : " + link);
+  $.ajax({url: "/analytics/logRecoClicked?link="+link, type:'PUT'});
 }
+
+function logRecoVisited(link){
+  console.log("Visited : " + link);
+  $.ajax({url: "/analytics/logRecoVisited?link="+link, type: 'PUT'});
+}
+
+function logTreeNodeClick(d){
+  console.log(d.name);
+  $.ajax({url: "/analytics/logTreeNodeClick?concept="+d.name, type: 'PUT'});
+}
+
+function logTreeNodeHover(d){
+  console.log(d);
+  if(d){
+    $.ajax({url: "/analytics/logTreeNodeHover?concept="+d, type: 'PUT'});
+  }  
+}
+
+// ##### Functions to show questions on dashboard #######
 
 function loadAllQuestions(){
   	$.ajax({url: "/question?all=1", success: function(allQuestions){
@@ -30,18 +51,20 @@ function getQuestionsOn(concept){
   });
 }
 
+// ######## Populate Recommendations #########
+
 function populateRecos(recommendations){
   var divContent = "";
   var repeat = false;
 	for(i=0;i<recommendations.length;i++){
     repeat = false;
     for (j = i - 1 ; j >= 0; --j ){
-     // In some versions link is an array and in some a single scalar, so check 
+     // In some versions link is an array and in some a single scalar, so check
      if (recommendations[j].link instanceof Array){
-	if (recommendations[j].link[0] == recommendations[i].link[0]){
-	  repeat = true;
-	  break;
-	}
+    	if (recommendations[j].link[0] == recommendations[i].link[0]){
+    	  repeat = true;
+    	  break;
+    	}
      }
      else if (recommendations[j].link == recommendations[i].link){
         repeat = true;
@@ -49,8 +72,8 @@ function populateRecos(recommendations){
       }
     }
     if (repeat == true) continue;
-		divContent+="<h3>"+recommendations[i].concept+"</h3>";
-		divContent+="<div><p><a class='svellang' href='"+recommendations[i].link+"' target='_blank'>"+recommendations[i].link+"</a></p>";
+		divContent+="<h3 onclick=logRecoClicked('"+recommendations[i].link+"')>"+recommendations[i].concept+"</h3>";
+		divContent+="<div><p><a onclick=logRecoVisited('"+recommendations[i].link+"') class='svellang' href='"+recommendations[i].link+"' target='_blank'>"+recommendations[i].link+"</a></p>";
 		divContent+="<p>"+recommendations[i].conceptDesc+"</p></div>";
 	}
 	//Reload accordion
@@ -81,6 +104,13 @@ function getRecommendations(concepts){
         }
       });
     }
+}
+
+// ####### Visualization functions below ##########
+
+function lerp(a, b, t) {
+    var x = a + t * (b - a);
+    return x;
 }
 
 function loadData(rawdata){
@@ -250,6 +280,7 @@ function loadViz(treeData, analyticsData){
                return d.children ? "pointer" : "default";
                })
          .on("mouseover", function(d) {
+            logTreeNodeHover(d.name);
             if (d.mScore != -1){
              div.transition()
                .duration(200)
@@ -395,6 +426,7 @@ function loadViz(treeData, analyticsData){
         }
         update(d);
         getQuestionsOn(d.name);
+        logTreeNodeClick(d);
     }
 }
 
