@@ -36,9 +36,16 @@ function populateRecos(recommendations){
 	for(i=0;i<recommendations.length;i++){
     repeat = false;
     for (j = i - 1 ; j >= 0; --j ){
-      if (recommendations[j].link == recommendations[i].link){
+     // In some versions link is an array and in some a single scalar, so check 
+     if (recommendations[j].link instanceof Array){
+	if (recommendations[j].link[0] == recommendations[i].link[0]){
+	  repeat = true;
+	  break;
+	}
+     }
+     else if (recommendations[j].link == recommendations[i].link){
         repeat = true;
-        continue;
+        break;
       }
     }
     if (repeat == true) continue;
