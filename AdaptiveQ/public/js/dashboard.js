@@ -19,7 +19,7 @@ function logTreeNodeHover(d){
   console.log(d);
   if(d){
     $.ajax({url: "/analytics/logTreeNodeHover?concept="+d, type: 'PUT'});
-  }  
+  }
 }
 
 // ##### Functions to show questions on dashboard #######
@@ -36,7 +36,7 @@ function loadQuestions(questions){
   ctr.innerHTML="";
   var content = "<h3 class='rightpane' width='200px'>Questions</h3> <a href='#' id='showall' onclick='loadAllQuestions()'>show all</a>";
   for(var i =  0; i < questions.length; ++i){
-  	var css_class = questions[i].visited ? 'visited' : 'unvisited';
+  	var css_class = questions[i].Visited ? 'visited' : 'unvisited';
     content += "<li><a href='/question?id=" + questions[i].QuestionId+"' class='" + css_class + "'> "+questions[i].QuestionId
     	+" : "+ questions[i].Tag +"</a></li>";
   }
