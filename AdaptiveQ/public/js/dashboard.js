@@ -232,7 +232,7 @@ function loadViz(treeData, analyticsData){
    }
 	  var margin = {top: 20, right: 120, bottom: 20, left: 80},
     width = 1024 - margin.right - margin.left,
-    height = 900 - margin.top - margin.bottom;
+    height = 850 - margin.top - margin.bottom;
 
     var i = 0,
     duration = 750,
