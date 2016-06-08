@@ -1,7 +1,13 @@
 var express = require('express');
 var nodemailer = require("nodemailer");
+
+// For simpler date time parsing
+var moment = require('moment');
+
 var router = express.Router();
-var localhost = "http://52.40.100.41"
+var localhost = "http://52.40.100.41";
+
+// var localhost = "http://54.69.239.219:3000"
 // mongoose data models
 var Question = require('../models/questionModel');
 var User = require('../models/userModel');
@@ -241,20 +247,13 @@ router.get('/ask', function(req, res){
   });
 // save new question
 router.post('/ask', function(req, res){
-	//console.log(req.body.question + req.body.options + req.body.answers);
-	// TODO: add multiple options to questions
 	answerss = JSON.parse(req.body.answers);
 	options = JSON.parse(req.body.options);
 	//console.log(req.body.conceptId);
 
-  // TODO change req.body.conceptId to req.body.concept
-  	//debugger;
-  	console.log("adding ques")
 	Question.addQuestion(req.body.question,options,answerss,req.body.conceptId,req.body.difficulty,req.body.hint)
 	.then(function (promise){
 		var id = promise._id;
-		//console.log(promise);
-		console.log("question added");
 		User.getAllUsers()
     .then(function(promise){
 			//console.log("all users are" + promise);
@@ -268,11 +267,14 @@ router.post('/ask', function(req, res){
 
 			var mailOptions={
 				from : "adapt.q@gmail.com",
-			   	to : userEmails,
+			   	//to : userEmails,
+			   	bcc : userEmails,
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b>" + "Hello here is your question of the day! Best Of Luck!" + " </b>" + "<br>" +
-			  			"Please click the link below to attempt the question" + " <br> " + localhost +"/question?id=" + id + " <br> "
+			  	html : "<b>" + "Hello there! </b><br><br> Here is your question of the day! Best Of Luck!" + "<br><br>"
+			  			+ moment().format('MMM d, YYYY') + " <br><br>" 
+						+ "Topic : <b>" + req.body.conceptId + "</b><br><br>"
+			  			+ "<a href=http://"+localhost+"/question?id="+ id +">Click to login and attempt</a>" +" <br> "
 			}
 			//console.log(mailOptions);
 			smtpTransport.sendMail(mailOptions, function(error, response){
