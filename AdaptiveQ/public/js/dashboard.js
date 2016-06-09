@@ -158,8 +158,6 @@ function loadData(rawdata){
         i += 1;
       //finalmean[key] = rawdata[key].mean/meandate[key].num;
     }
-    //data.push({'date':3,'close':1.7})
-    //data.push({'date':4,'close':0.2})
   console.log(data);
 
   x.domain([data[0].date, data[data.length - 1].date]);
