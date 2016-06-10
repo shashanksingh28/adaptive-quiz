@@ -2,12 +2,13 @@ var express = require('express');
 var nodemailer = require("nodemailer");
 
 // For simpler date time parsing
-var moment = require('moment');
+var moment = require('moment-timezone');
 
 var router = express.Router();
-//var localhost = "http://52.40.100.41";
+var localhost = "http://52.40.100.41";
+var timezone = "America/Phoenix"
+//var localhost = "http://54.69.239.219:3000"
 
-var localhost = "http://54.69.239.219:3000"
 // mongoose data models
 var Question = require('../models/questionModel');
 var User = require('../models/userModel');
@@ -29,11 +30,9 @@ function requireLogin (req, res, next) {
   }
 };
 
-
 /*---------------------------------------------------------------------------
 Question Display related functions
 -----------------------------------------------------------------------------*/
-
 
 function attemptQuestion(question,givenAns,req,res){
 	userId = req.session.user._id;
@@ -256,14 +255,10 @@ router.post('/ask', function(req, res){
 		var id = promise._id;
 		User.getAllUsers()
     .then(function(promise){
-			//console.log("all users are" + promise);
-			//to get all users to whom mail will be send
 			var userEmails = [];
 			for (i in promise) {
-				//console.log("user is email is" + promise[i].email + promise[i])
   				userEmails.push(promise[i].email);
 			}
-			//console.log("all users emails are" + userEmails);
 
 			var mailOptions={
 				from : "adapt.q@gmail.com",
@@ -272,22 +267,22 @@ router.post('/ask', function(req, res){
 			   	subject : "Question of the day",
 			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
 			  	html : "<b>" + "Hello there! </b><br><br> Here is your question of the day! Best Of Luck!" + "<br><br>"
-			  			+ moment().format('MMM d, YYYY') + " <br><br>" 
+			  		+ moment().tz(timezone).format('MMM D, YYYY') + " <br><br>"
 						+ "Topic : <b>" + req.body.conceptId + "</b><br><br>"
-			  			+ "<a href='"+localhost+"/question?id="+ id +"'>Click to login and attempt</a>" +" <br> "
-			}
-			//console.log(mailOptions);
-			smtpTransport.sendMail(mailOptions, function(error, response){
-			if(error){
-				console.log(error);
-				res.end("error");
-			}
-			else{
-				console.log("Message sent: " + response.message);
+            + "<a href='" + localhost + "/question?id="+id+"'>Attempt Question<a>"
 			}
 
+      smtpTransport.sendMail(mailOptions, function(error, response){
+  			if(error){
+  				console.log(error);
+  				res.end("error");
+  			}
+  			else{
+  				console.log("Message sent: " + response.message);
+  			}
 			});
 
+      // TODO : give acknowledgement that question has been asked
 			res.redirect('/question/ask');
 
 			},function (err){
