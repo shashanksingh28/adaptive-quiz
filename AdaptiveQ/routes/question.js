@@ -1,25 +1,16 @@
 var express = require('express');
-var nodemailer = require("nodemailer");
-
-// For simpler date time parsing
-var moment = require('moment-timezone');
+var emailer = require('../helpers/emailer');
 
 var router = express.Router();
 var localhost = "http://52.40.100.41";
-var timezone = "America/Phoenix"
-//var localhost = "http://54.69.239.219:3000"
+var timezone = "America/Phoenix";
+//var localhost = "http://54.69.239.219:3000";
+
+var sysAccount = 'adaptq@gmail.com';
 
 // mongoose data models
 var Question = require('../models/questionModel');
 var User = require('../models/userModel');
-//setup smtp for mailing
-var smtpTransport = nodemailer.createTransport("SMTP",{
-    service: "Gmail",
-    auth: {
-        user: "adapt.q",
-        pass: "quizoftheday"
-    }
-});
 
 function requireLogin (req, res, next) {
   if (!req.session.user) {
@@ -251,43 +242,28 @@ router.post('/ask', function(req, res){
 	//console.log(req.body.conceptId);
 
 	Question.addQuestion(req.body.question,options,answerss,req.body.conceptId,req.body.difficulty,req.body.hint)
-	.then(function (promise){
-		var id = promise._id;
+	.then(function (savedQuestion){
 		User.getAllUsers()
-    .then(function(promise){
+    	.then(function(promise){
 			var userEmails = [];
 			for (i in promise) {
   				userEmails.push(promise[i].email);
 			}
-
-			var mailOptions={
-				from : "adapt.q@gmail.com",
-			   	//to : userEmails,
-			   	bcc : userEmails,
-			   	subject : "Question of the day",
-			  	text : req.body.question + " your question" + "<a href = 'https://www.google.com/?gws_rd=ssl'></a>",
-			  	html : "<b>" + "Hello there! </b><br><br> Here is your question of the day! Best Of Luck!" + "<br><br>"
-			  		+ moment().tz(timezone).format('MMM D, YYYY') + " <br><br>"
-						+ "Topic : <b>" + req.body.conceptId + "</b><br><br>"
-            + "<a href='" + localhost + "/question?id="+id+"'>Attempt Question<a>"
-			}
-
-      smtpTransport.sendMail(mailOptions, function(error, response){
-  			if(error){
-  				console.log(error);
-  				res.end("error");
-  			}
-  			else{
-  				console.log("Message sent: " + response.message);
-  			}
+      console.log(savedQuestion);
+			emailer.sendQuestion(localhost,sysAccount,null,userEmails,savedQuestion._id, savedQuestion.concept,function(error, response){
+        console.log(response);
+        if(error){
+					message = "There was an error in sending emails.";
+					console.log(error);
+				}
+				else{
+					console.log(response);
+					message = "Email sent to students.";
+				}
+				res.render('askquestion',{Message: message});
 			});
 
-      // TODO : give acknowledgement that question has been asked
-			res.redirect('/question/ask');
-
-			},function (err){
-					console.log("error in update explaination" + err);
-	   		});
+			},function (err){});
 		});
 	});
 
