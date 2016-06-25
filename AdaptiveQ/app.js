@@ -25,7 +25,8 @@ var nodemailer = require("nodemailer");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'ejs');
+// app.set('view engine', 'ejs');       Changed engine to pug below
+app.set('view engine', 'pug');
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //app.use(nodemailer);
@@ -37,7 +38,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 var routes = require('./routes/index');
 var question = require('./routes/question');
-var analytics = require('./routes/analytics')
+var analytics = require('./routes/analytics');
 
 app.use('/', routes);
 app.use('/question', question);

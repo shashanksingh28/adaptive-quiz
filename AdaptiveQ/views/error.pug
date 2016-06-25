@@ -1,0 +1,14 @@
+extends ./layout.pug
+
+block title
+  title AdaptQ | Error
+
+block content
+  div(style="width: 75%; margin: auto;")
+    h1(style="margin: 40px auto;") AdaptQ: An Error Occured
+    div(style="display: inline-block; vertical-align: top; width: auto; max-width: 74%; overflow-x: auto;")
+      pre !{message}
+      h3 Sorry! Let us know and we'll fix it right away.
+    div(style="display: inline-block;")
+      img(src="/stylesheets/error.png")
+

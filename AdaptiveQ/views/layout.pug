@@ -1,0 +1,32 @@
+block variables
+  - var ngapp = ''
+
+doctype html
+html(ng-app=ngapp)
+  head
+    meta(charset="UTF-8")
+    block title
+      title AdaptQ Layout
+
+    block stylesheets
+      link(rel="stylesheet prefetch", href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
+      link(rel="stylesheet", href="/stylesheets/bootstrap.min.css")
+      link(rel="stylesheet", href="/stylesheets/theme-wip.css")
+
+    block AngularJS
+      script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js")
+      script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js")
+
+  body
+    block startscripts
+
+    block navbar
+
+    block content
+      h1 Default Layout Content
+
+    block footer  
+      .container.footer
+        | AdaptQ is one of the CS educational technologies created by <a href="https://sites.google.com/a/asu.edu/csi/" target="_blank">CSI Lab</a> of <a href="http://cidse.engineering.asu.edu/" target="_blank">School of Computing, Informatics & Decision Systems Engineering</a> at <a href="http://www.asu.edu/" target="_blank">Arizona State University</a>.
+
+    block endscripts

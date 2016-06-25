@@ -15,7 +15,7 @@ function requireLogin (req, res, next) {
   } else {
     next();
   }
-};
+}
 
 
 /* GET home page. */
