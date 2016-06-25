@@ -49,9 +49,9 @@ block content
     h2 Welcome
     form(ng-submit="login()")
       .form-group
-        input(type="email", class="form-control", ng-model="loginEmail", placeholder="Email")
+        input(type="email", class="form-control", ng-model="model.loginEmail", placeholder="Email")
       .form-group
-        input(type="password", class="form-control", ng-model="loginPassword", placeholder="Password")
+        input(type="password", class="form-control", ng-model="model.loginPassword", placeholder="Password")
       .form-group
         input(type="checkbox", ng-model="remember")
         span Remember Me
@@ -97,6 +97,6 @@ block content
       input(type="email", class="form-control", ng-model="recoveryEmail", placeholder="Account Email")
       p Your password will be sent to your e-mail.
       p(class="errormsg") {{ error_msg }}
-      button(type="submit", class="btn btn-primary btn-block") Recover Password 
+      button(type="submit", class="btn btn-primary btn-block") Recover Password
       p(class="centered") {{ recovery_msg }}
       button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin(); error_msg = recovery_msg = ''") Go Back to Login
