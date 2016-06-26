@@ -25,4 +25,6 @@ recoveryApp.controller('recoveryController', ['$http', '$window', '$scope', '$ro
           });
 
         };
+
+        $scope.redirectToLogin = function(){};
 }]);

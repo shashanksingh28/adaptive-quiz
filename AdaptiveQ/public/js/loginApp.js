@@ -50,12 +50,12 @@ loginApp.controller('registerController', function($scope, $rootScope){
                 $rootScope.form = 1;
         };
 
-        $scope.error_msg = "";
-        $scope.newuser = {accountType: $scope.accounttype,
-                          name: $scope.registerName,
-                          mail: $scope.registerEmail,
-                          password: $scope.registerPassword,
-                          teacherCode: $scope.teacherCode};
+        $scope.error_msg = '';
+        $scope.model = {accountType: '',
+                          name: '',
+                          email: '',
+                          password: '',
+                          teacherCode: ''};
 
         $scope.register = function(){
                 newhash();
