@@ -40,41 +40,43 @@ router.get('/logout', function(req, res){
 router.post('/login', function(req, res, next){
     var email = req.body.email;
     var pass = req.body.password;
+    console.log(email);
     User.getUserByEmail(email)
     .then(function (user){
       if(!user){
         console.log("Email not found");
-        res.render('login', {Message:'Email not found!'});
+        res.send({'status' : 'ERROR', 'eMessage' : 'Email Not Found!'});
       }
       if(user.email){
         if(user.password == pass){
-		  console.log("User "+user+ "is authenticated!");
+		      console.log("User "+user+ "is authenticated!");
           req.session.user = user;
           delete req.session.user.records;
           req.session.startTime = Date.now();
           req.session.isTeacher = false;
 
-          if (user.email == "adaptq@gmail.com"){
-            console.log("Teacher is here");
+          response = {'status':'OK'};
+          response.data = {};
+          response.data.user = {'id': user._id, 'email' : user.email};
+          if(user.email == "adaptq@gmail.com"){
             req.session.isTeacher = true;
-            res.redirect('/question/ask');
+            response.data.user.isInstructor = true;
           }
           else{
+            response.data.user.isInstructor = false;
             if(req.session.redirect_to != null){
               var url = req.session.redirect_to;
               req.session.redirect_to = null;
               console.log("redirecting to :"+url);
-              res.redirect(url);
-            }
-            else {
-              res.redirect('/');
+              response.data.url = url;
             }
           }
+          res.send(response);
         }
         else {
           // TODO password error
           console.log("Password mismatch");
-          res.render('login',{Message:'Incorrect Password!'});
+          res.send({'status' : 'ERROR', 'eMessage' : 'Incorrect password!'});
         }
       }
     });

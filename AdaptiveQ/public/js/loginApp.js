@@ -4,7 +4,8 @@ loginApp.run(function($rootScope){
         $rootScope.form = 1;
 });
 
-loginApp.controller('loginController',['$http','$scope','$rootScope', function($http, $scope, $rootScope){
+loginApp.controller('loginController',['$http','$window','$scope','$rootScope', function($http, $window, $scope, $rootScope){
+
         $scope.toRegister = function(){
                 $rootScope.form = 2;
         };
@@ -21,9 +22,23 @@ loginApp.controller('loginController',['$http','$scope','$rootScope', function($
         $scope.login = function(){
 
           console.log($scope.model);
-          $http.post('/login', $scope.model).then(function(successResponse){
-            $scope.error_msg = "Authenticated";
-            console.log(successResponse);
+          $http.post('/login', $scope.model).then(function(httpResponse){
+            //$scope.error_msg = "Authenticated";
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK") {
+              $scope.error_msg = response.eMessage;
+            }
+            else{
+              if(response.url){
+                // server suggests a url to go to
+                $window.location.href = url;
+              }
+              else{
+                // default behavior
+                $window.location.href = '/';
+              }
+            }
           }, function(error){
             $scope.error_msg = "Problem in connecting to server";
           });
