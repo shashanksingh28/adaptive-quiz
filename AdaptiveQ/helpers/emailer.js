@@ -40,4 +40,27 @@ var sendQuestion = function (hostname,fromEmail,toList,bccList,questionId,questi
 	});
 }
 
+var sendResetPasswordLink = function(fromEmail, toEmail, uri, callback){
+	console.log("Called");
+	var mailOptions = {
+		from : fromEmail,
+		to : toEmail,
+		subject : 'Reset your AdaptQ password',
+		html : 'Hello there! <br><br> To set a new password, click on the link below:<br>'
+		+ '<a href="'+uri+'"> Your custom reset link</a>'
+		+ '<br><br>' + footer
+	}
+	console.log(mailOptions);
+	smtpTransport.sendMail(mailOptions, function(error, response){
+		console.log(response);
+		if(error){
+			callback(error, message);
+		}
+		else{
+			callback(error, response.message);
+		}
+	});
+};
+
 module.exports.sendQuestion = sendQuestion;
+module.exports.sendResetPasswordLink = sendResetPasswordLink;

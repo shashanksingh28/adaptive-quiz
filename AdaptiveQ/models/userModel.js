@@ -10,7 +10,8 @@ var userSchema = new Schema({
   name: String,
   records: Array,
   created_at: Date,
-  hintsLeft: Number
+  hintsLeft: Number,
+  resetPasswordToken: String
 });
 
 userSchema.plugin(autoIncrement.plugin, 'User');
@@ -49,7 +50,7 @@ User.addRecordToUserId = function(userId,record){
 //User.updateHint(req.session.user._id);
 User.updateHint = function(userId){
   return User.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
-  
+
 }
 
 module.exports = User;
