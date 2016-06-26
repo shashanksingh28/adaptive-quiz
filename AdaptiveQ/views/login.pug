@@ -14,31 +14,9 @@ block AngularJS
   script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js")
   script(src="js/loginApp.js")
 
-
 block startscripts
   script(src="js/md5.js")
-  script(type="text/javascript").
-    var tooltip=true;
-      function hash(){
-        var pass = document.getElementById("password");
-        pass.value =  CryptoJS.MD5(pass.value).toString();
-        return true;
-      }
-
-  script(type="text/javascript").
-    function newhash(){
-
-        var pass = document.getElementById("new_password");
-        var passConfirm = document.getElementById("new_password_confirm");
-
-        if(pass.value != passConfirm.value) return false;
-        pass.value =  CryptoJS.MD5(pass.value).toString();
-        passConfirm.value = pass.value;
-        console.log(pass.value)
-
-
-        return true;
-      }
+  //- hash() and newhash() moved to loginApp.js
 
 block navbar
   .container.pen-title
@@ -49,14 +27,15 @@ block content
     h2 Welcome
     form(ng-submit="login()")
       .form-group
-        input(type="email", class="form-control", ng-model="model.email", placeholder="Email")
+        input(type="email", class="form-control", ng-model="model.email", placeholder="Email", required)
       .form-group
-        input(type="password", class="form-control", ng-model="model.password", placeholder="Password")
+        input(type="password", class="form-control", ng-model="model.password", id="password", placeholder="Password", required)
       .form-group
         input(type="checkbox", ng-model="remember")
         span Remember Me
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Login
+      br
       button(type="reset", class="btn btn-link btn-xs", ng-click="toRegister(); error_msg = ''") Create Account
       button(type="reset", class="btn btn-link btn-xs", style="float:right;", ng-click="toRecovery(); error_msg = ''") Forgot Password?
 
@@ -66,37 +45,39 @@ block content
       .form-group
         label I am a:
         #accountTypes
-          input(type="radio", name="accountType", ng-model="accountType" value="Student", checked)
+          input(type="radio", name="accountType", ng-model="accountType", value="Student", required)
           span Student
           br
-          input(type="radio", name="accountType", ng-model="accountType" value="Teacher")
+          input(type="radio", name="accountType", ng-model="accountType", value="Teacher")
           span Teacher
       .form-group.slidedown(ng-show="accountType == 'Teacher'")
         label Teacher Code:
-        input(type="text", class="form-control", ng-model="teacherCode", placeholder="xxxxxx")
+        input(type="text", class="form-control", ng-model="teacherCode", placeholder="xxxxxx", required)
         br
       .form-group
         label {{ accountType }} Name:
-        input(type="text", class="form-control", ng-model="registerName", placeholder="Full Name")
+        input(type="text", class="form-control", ng-model="registerName", placeholder="Full Name", required)
       .form-group
         label Email:
-        input(type="email", class="form-control", ng-model="registerEmail", placeholder="Email")
+        input(type="email", class="form-control", ng-model="registerEmail", placeholder="Email", required)
       .form-group
         label New Password:
-        input(type="password", class="form-control", ng-model="registerPassword", placeholder="New Password")
+        input(type="password", class="form-control", ng-model="registerPassword", id="new_password", placeholder="New Password", required)
       .form-group
         label Confirm Password:
-        input(type="password", class="form-control", ng-model="confirmPassword", placeholder="Confirm Password")
+        input(type="password", class="form-control", ng-model="confirmPassword", id="new_password_confirm", placeholder="Confirm Password", required)
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Create Account
+      br
       button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin(); accountType = 'Student'; error_msg = ''") Already Have an Account?
 
   .container.recovery-form(ng-controller="recoveryController", ng-show="form == 3")
     h2 Account Recovery
     form(ng-submit="recovery()")
-      input(type="email", class="form-control", ng-model="recoveryEmail", placeholder="Account Email")
-      p Your password will be sent to your e-mail.
+      input(type="email", class="form-control", ng-model="recoveryEmail", placeholder="Account Email", required)
+      p Password recovery link will be sent to your e-mail.
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Recover Password
       p(class="centered") {{ recovery_msg }}
+      br
       button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin(); error_msg = recovery_msg = ''") Go Back to Login

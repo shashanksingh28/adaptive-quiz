@@ -1,5 +1,5 @@
 block variables
-  - var ngapp = ''
+  - var ngapp = 'mainApp'
 
 doctype html
 html(ng-app=ngapp)
@@ -16,17 +16,100 @@ html(ng-app=ngapp)
     block AngularJS
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js")
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js")
+      script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js")
+      script(src="/js/main.js")
 
   body
     block startscripts
 
     block navbar
+      nav.navbar.navbar-default.navbar-static-top(ng-controller="mainController")
+        .container-fluid
+          //- Brand and Toggle for mobile displays
+          navbar-header
+            button(type="button", class="navbar-toggle collapsed", data-toggle="collapse", data-target="#navbar-collapse", aria-expanded="false")
+              span(class="sr-only") Toggle Navigation
+              - for (var i = 0; i < 3; i++)
+                span(class="icon-bar")
+            a(class="navbar-brand", href="#/dashboard")
+              img(src="favicon.ico" alt="AdaptQ")
+
+          //- NavBar Buttons
+          .collapse.navbar-collapse(id="navbar-collapse")
+             ul.nav.navbar-nav
+               li: a(href="#/question") Questions
+               - if(true)
+                 li: a(href="#/askquestion") Ask Question
+                 li: a(href="#/classdata") Class Data
+             ul.nav.navbar-nav.navbar-right
+               li: p.navbar-text Signed in as {{ message }}
+               li: a(href="#/myaccount") My Account
+               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
 
     block content
-      h1 Default Layout Content
+      main
+        link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
+        #content-container.container
+          .row
+            #left-col.col-md-7.hidden-xs
+              #concept-tree.panel.panel-primary
+                .panel-heading
+                  h3 Concepts
+                .panel-body
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+                  h4 Concepts>Content
+
+              #graph.panel.panel-primary
+                .panel-heading
+                  h3 Graph
+                .panel-body
+                  h4 Graph>Content
+                  h4 Graph>Content
+                  h4 Graph>Content
+                  h4 Graph>Content
+                  h4 Graph>Content
+
+            #right-col.col-md-5.col-xs-12
+              #questions.panel.panel-primary
+                .panel-heading
+                  h3 questions
+                .panel-body
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+                  h4 questions>Content
+
+              #recommendations.panel.panel-primary
+                .panel-heading
+                  h3 Recommendations
+                .panel-body
+                  h4 Recommendations>Content
+                  h4 Recommendations>Content
+                  h4 Recommendations>Content
+                  h4 Recommendations>Content
+                  h4 Recommendations>Content
+                  h4 Recommendations>Content
+                  h4 Recommendations>Content
 
     block footer  
       .container.footer
-        | AdaptQ is one of the CS educational technologies created by <a href="https://sites.google.com/a/asu.edu/csi/" target="_blank">CSI Lab</a> of <a href="http://cidse.engineering.asu.edu/" target="_blank">School of Computing, Informatics & Decision Systems Engineering</a> at <a href="http://www.asu.edu/" target="_blank">Arizona State University</a>.
+        span AdaptQ is one of the CS educational technologies created by <a href="https://sites.google.com/a/asu.edu/csi/" target="_blank">CSI Lab</a> of <a href="http://cidse.engineering.asu.edu/" target="_blank">School of Computing, Informatics & Decision Systems Engineering</a> at <a href="http://www.asu.edu/" target="_blank">Arizona State University</a>.
 
     block endscripts

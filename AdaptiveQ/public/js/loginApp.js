@@ -14,12 +14,12 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
         };
 
         $scope.model = {'email': '', 'password' : '' };
-        //$scope.loginEmail = "";
-        //$scope.error_msg = "";
-        //$scope.user = {email: $scope.loginEmail,
-        //               password: $scope.loginPassword};
 
         $scope.login = function(){
+          $scope.error_msg = "";
+            //Hash
+          var pass = document.getElementById("password");
+          pass.value =  CryptoJS.MD5(pass.value).toString();
 
           console.log($scope.model);
           $http.post('/login', $scope.model).then(function(httpResponse){
@@ -54,11 +54,26 @@ loginApp.controller('registerController', function($scope, $rootScope){
         $scope.newuser = {accountType: $scope.accounttype,
                           name: $scope.registerName,
                           mail: $scope.registerEmail,
-                          password: $scope.registerPassword};
+                          password: $scope.registerPassword,
+                          teacherCode: $scope.teacherCode};
 
         $scope.register = function(){
+                newhash();
                 $scope.error_msg = "register button pressed";
         };
+
+
+        function newhash(){
+          var pass = document.getElementById("new_password");
+          var passConfirm = document.getElementById("new_password_confirm");
+
+          if(pass.value != passConfirm.value) return false;
+          pass.value =  CryptoJS.MD5(pass.value).toString();
+          passConfirm.value = pass.value;
+          console.log(pass.value);
+
+          return true;
+        }
 });
 
 loginApp.controller('recoveryController', function($scope, $rootScope){

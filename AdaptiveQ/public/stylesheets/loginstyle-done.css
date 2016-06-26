@@ -49,10 +49,6 @@ h2 {
   margin-bottom: 10px;
 }
 
-span {
-  padding: 8px;
-}
-
 #accountTypes {
   display: inline-block;
   width: 90px;
@@ -69,7 +65,7 @@ p:not(.errormsg) {
   display: block;
   margin: 10px 0;
   color: #000000;
-  font-size: 0.9em;
+  font-size: 12px;
   text-align: center;
 }
 
