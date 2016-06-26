@@ -1,0 +1,24 @@
+#content-container {
+  background: red;
+  width: 100%;
+  min-width: 1200px;
+  overflow-x: auto;
+}
+
+#left-col {
+  padding-right: 0;
+}
+
+#right-col {
+  padding-left: 0;
+}
+
+.panel {
+  margin: 36px 18px 36px;
+}
+
+.panel-heading {
+  background-color: #a5c1d5 !important;
+  color: #030a0f !important;
+  border-style: none;
+}
