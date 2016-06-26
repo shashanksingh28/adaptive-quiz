@@ -45,24 +45,24 @@ block content
       .form-group
         label I am a:
         #accountTypes
-          input(type="radio", name="accountType", ng-model="accountType", value="Student", required)
+          input(type="radio", name="accountType", ng-model="model.accountType", value="Student", required)
           span Student
           br
-          input(type="radio", name="accountType", ng-model="accountType", value="Teacher")
+          input(type="radio", name="accountType", ng-model="model.accountType", value="Teacher")
           span Teacher
       .form-group.slidedown(ng-show="accountType == 'Teacher'")
         label Teacher Code:
-        input(type="text", class="form-control", ng-model="teacherCode", placeholder="xxxxxx", required)
+        input(type="text", class="form-control", ng-model="model.teacherCode", placeholder="xxxxxx", required)
         br
       .form-group
         label {{ accountType }} Name:
-        input(type="text", class="form-control", ng-model="registerName", placeholder="Full Name", required)
+        input(type="text", class="form-control", ng-model="model.name", placeholder="Full Name", required)
       .form-group
         label Email:
-        input(type="email", class="form-control", ng-model="registerEmail", placeholder="Email", required)
+        input(type="email", class="form-control", ng-model="model.email", placeholder="Email", required)
       .form-group
         label New Password:
-        input(type="password", class="form-control", ng-model="registerPassword", id="new_password", placeholder="New Password", required)
+        input(type="password", class="form-control", ng-model="model.password", id="new_password", placeholder="New Password", required)
       .form-group
         label Confirm Password:
         input(type="password", class="form-control", ng-model="confirmPassword", id="new_password_confirm", placeholder="Confirm Password", required)
@@ -75,7 +75,7 @@ block content
     h2 Account Recovery
     form(ng-submit="recovery()")
       input(type="email", class="form-control", ng-model="recoveryEmail", placeholder="Account Email", required)
-      p Password recovery link will be sent to your e-mail.
+      p Account recovery link will be sent to this email.
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Recover Password
       p(class="centered") {{ recovery_msg }}
