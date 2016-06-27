@@ -74,7 +74,7 @@ block content
   .container.recovery-form(ng-controller="recoveryController", ng-show="form == 3")
     h2 Account Recovery
     form(ng-submit="recovery()")
-      input(type="email", class="form-control", ng-model="recoveryEmail", placeholder="Account Email", required)
+      input(type="email", class="form-control", ng-model="model.recoveryEmail", placeholder="Account Email", required)
       p Account recovery link will be sent to this email.
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Recover Password

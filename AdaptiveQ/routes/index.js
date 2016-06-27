@@ -2,6 +2,10 @@ var express = require('express');
 var router = express.Router();
 var Concepts = require('../models/conceptModel');
 var User = require('../models/userModel');
+var randomstring = require('randomstring');
+var emailer = require('../helpers/emailer');
+var localhost = "http://localhost:3000/";
+var sysAccount = 'adaptq@gmail.com';
 
 router.get('/concepts', function(req, res, next){
   Concepts.getConceptTree(function (tree){
@@ -108,6 +112,35 @@ router.post('/register', function(req, res){
         });
       }
     });
+  });
+
+  router.post('/recover', function(req, res){
+    User.getUserByEmail(req.body.recoveryEmail)
+      .then(function (user){
+        if(!user){
+          res.send({'status' : 'ERROR', 'eMessage' : 'No such email found'});
+        }
+        else{
+          user.resetPasswordToken = randomstring.generate();
+          user.save().then(function (savedUser){
+            console.log(savedUser.resetPasswordToken);
+            var url = localhost + "resetPaswword?token=" + savedUser.resetPasswordToken;
+            emailer.sendResetPasswordLink(sysAccount,user.email,url,function(error, message){
+              if(error){
+                console.log(error);
+                res.send({status : 'ERROR', eMessage : 'Error sending email'});
+              }
+              else{
+                console.log(message);
+                res.send({status : 'OK', message : 'Check registered email for link to reset'});
+              }
+            });
+
+          });
+        }
+      }, function(err){
+        console.log("No such email found");
+      });
   });
 
 module.exports = router;

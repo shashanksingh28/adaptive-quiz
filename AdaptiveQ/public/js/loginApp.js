@@ -76,15 +76,29 @@ loginApp.controller('registerController', function($scope, $rootScope){
         }
 });
 
-loginApp.controller('recoveryController', function($scope, $rootScope){
+loginApp.controller('recoveryController', ['$http','$scope','$rootScope',function($http, $scope, $rootScope){
         $scope.toLogin = function(){
                 $rootScope.form = 1;
         };
 
         $scope.error_msg = "";
         $scope.recovery_msg = "";
+        $scope.model = { recoveryEmail : ''};
 
         $scope.recovery = function(){
-                $scope.recovery_msg = "recovery button pressed";
+            $http.post('/recover',$scope.model).then(function(httpResponse){
+              var response = httpResponse.data;
+              if(response.status != "OK") {
+                $scope.recovery_msg = "";
+                $scope.error_msg = response.eMessage;
+              }
+              else{
+                $scope.recovery_msg = "An email will be sent to your current email ID";
+                $scope.error_msg = "";
+              }
+            }, function(error){
+              $scope.recovery_msg = "";
+              $scope.error_msg = "Problem connecting to the server";
+            });
         };
-});
+}]);

@@ -25,6 +25,7 @@
     "nodemailer": "0.7.1",
     "nodemon": "^1.9.2",
     "pug": "^2.0.0-beta3",
+    "randomstring": "^1.1.5",
     "serve-favicon": "~2.3.0"
   }
 }
