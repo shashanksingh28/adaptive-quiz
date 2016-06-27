@@ -16,7 +16,6 @@ block AngularJS
 
 block startscripts
   script(src="js/md5.js")
-  //- hash() and newhash() moved to loginApp.js
 
 block navbar
   .container.pen-title
@@ -29,15 +28,15 @@ block content
       .form-group
         input(type="email", class="form-control", ng-model="model.email", placeholder="Email", required)
       .form-group
-        input(type="password", class="form-control", ng-model="model.password", id="password", placeholder="Password", required)
+        input(type="password", class="form-control", ng-model="model.password", placeholder="Password", required)
       .form-group
         input(type="checkbox", ng-model="remember")
         span Remember Me
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Login
       br
-      button(type="reset", class="btn btn-link btn-xs", ng-click="toRegister(); error_msg = ''") Create Account
-      button(type="reset", class="btn btn-link btn-xs", style="float:right;", ng-click="toRecovery(); error_msg = ''") Forgot Password?
+      button(type="reset", class="btn btn-link btn-xs", ng-click="toRegister()") Create Account
+      button(type="reset", class="btn btn-link btn-xs", style="float:right;", ng-click="toRecovery()") Forgot Password?
 
   .container.register-form(ng-controller="registerController", ng-show="form == 2")
     h2 Create Account
@@ -62,14 +61,14 @@ block content
         input(type="email", class="form-control", ng-model="model.email", placeholder="Email", required)
       .form-group
         label New Password:
-        input(type="password", class="form-control", ng-model="model.password", id="new_password", placeholder="New Password", required)
+        input(type="password", class="form-control", ng-model="model.password", placeholder="New Password", required)
       .form-group
         label Confirm Password:
-        input(type="password", class="form-control", ng-model="confirmPassword", id="new_password_confirm", placeholder="Confirm Password", required)
+        input(type="password", class="form-control", ng-model="confirmPassword", placeholder="Confirm Password", required)
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Create Account
       br
-      button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin(); accountType = 'Student'; error_msg = ''") Already Have an Account?
+      button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin()") Already Have an Account?
 
   .container.recovery-form(ng-controller="recoveryController", ng-show="form == 3")
     h2 Account Recovery
@@ -80,4 +79,4 @@ block content
       button(type="submit", class="btn btn-primary btn-block") Recover Password
       p(class="centered") {{ recovery_msg }}
       br
-      button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin(); error_msg = recovery_msg = ''") Go Back to Login
+      button(type="reset", class="btn btn-link btn-xs centered", ng-click="toLogin()") Go Back to Login
