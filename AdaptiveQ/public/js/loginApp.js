@@ -18,8 +18,7 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
         $scope.login = function(){
           $scope.error_msg = "";
             //Hash
-          var pass = document.getElementById("password");
-          pass.value =  CryptoJS.MD5(pass.value).toString();
+          $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
 
           console.log($scope.model);
           $http.post('/login', $scope.model).then(function(httpResponse){
@@ -58,8 +57,9 @@ loginApp.controller('registerController', function($scope, $rootScope){
                           teacherCode: ''};
 
         $scope.register = function(){
-                newhash();
-                $scope.error_msg = "register button pressed";
+            newhash();
+
+            $scope.error_msg = "register button pressed";
         };
 
 
@@ -67,9 +67,9 @@ loginApp.controller('registerController', function($scope, $rootScope){
           var pass = document.getElementById("new_password");
           var passConfirm = document.getElementById("new_password_confirm");
 
-          if(pass.value != passConfirm.value) return false;
-          pass.value =  CryptoJS.MD5(pass.value).toString();
-          passConfirm.value = pass.value;
+          if($scope.model.password != $scope.confirmPassword) return false;
+          $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
+          $scope.confirmPassword = $scope.model.password;
           console.log(pass.value);
 
           return true;
