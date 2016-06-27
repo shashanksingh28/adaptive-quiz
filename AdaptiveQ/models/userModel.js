@@ -50,7 +50,10 @@ User.addRecordToUserId = function(userId,record){
 //User.updateHint(req.session.user._id);
 User.updateHint = function(userId){
   return User.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
+}
 
+User.getUserForToken = function(token){
+  return User.findOne({resetPasswordToken : token}).exec();
 }
 
 module.exports = User;

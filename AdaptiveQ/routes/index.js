@@ -143,4 +143,41 @@ router.post('/register', function(req, res){
       });
   });
 
+  router.get('/resetPaswword', function(req, res){
+    var token = req.query.token;
+    console.log(token);
+    User.getUserForToken(token)
+      .then(function(user){
+        if(user){
+          res.render('pwrecovery',{userEmail: user.email, token: token});
+        }
+        else{
+          res.send({status: 'ERROR', eMessage: 'Invalid Token'});
+        }
+      }, function(error){
+        console.log(error);
+      });
+  });
+
+  router.post('/resetPaswword', function(req, res){
+    var userEmail = req.body.email;
+    var password = req.body.password;
+    var token = req.body.token;
+    User.getUserForToken(token)
+    .then(function(user){
+      if(user && userEmail == user.email){
+        user.password = password;
+        user.save()
+          .then(function(user){
+            res.send({status: 'OK', message: 'Password succesfuly reset', url : '/'});
+          });
+      }
+      else{
+        res.send({status: 'ERROR', eMessage: 'Invalid Token for emailId'});
+      }
+    }, function(error){
+      console.log(error);
+    });
+  })
+
 module.exports = router;
