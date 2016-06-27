@@ -5,24 +5,16 @@ loginApp.run(function($rootScope){
 });
 
 loginApp.controller('loginController',['$http','$window','$scope','$rootScope', function($http, $window, $scope, $rootScope){
-
-    $scope.toRegister = function(){
-        $rootScope.form = 2;
-    };
-    $scope.toRecovery = function(){
-        $rootScope.form = 3;
-    };
-
+    $scope.error_msg = '';
     $scope.model = {'email': '', 'password' : '' };
 
     $scope.login = function(){
         $scope.error_msg = "";
-        //Hash
-        $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
 
+        $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
         console.log($scope.model);
+
         $http.post('/login', $scope.model).then(function(httpResponse){
-            //$scope.error_msg = "Authenticated";
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK") {
@@ -38,46 +30,71 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
                     $window.location.href = '/';
                 }
             }
+
         }, function(error){
             $scope.error_msg = "Problem in connecting to server";
         });
+
+    };
+
+    $scope.toRegister = function(){
+        $scope.model.email = '';
+        $scope.model.password = '';
+        $rootScope.form = 2;
+    };
+    $scope.toRecovery = function(){
+        $scope.model.email = '';
+        $scope.model.password = '';
+        $rootScope.form = 3;
     };
 }]);
 
 loginApp.controller('registerController', function($scope, $rootScope){
-    $scope.toLogin = function(){
-        $rootScope.form = 1;
-    };
-
     $scope.error_msg = '';
-    $scope.model = {accountType: '',
+    $scope.model = 
+        {accountType: '',
         name: '',
         email: '',
         password: '',
         teacherCode: ''};
 
     $scope.register = function(){
-        newhash();
+        $scope.error_msg = "";
 
-        $scope.error_msg = "register button pressed";
+        if($scope.model.password != $scope.passwordConfirm){
+            $scope.error_msg = "Passwords do not match.";
+            return false;
+        }
+
+        $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
+        $scope.passwordConfirm = $scope.model.password;
+
+        console.log($scope.model);
+        $http.post('/register', $scope.model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                $scope.error_msg = response.eMessage;
+            }
+            else{
+                // login new account and go to dashboard
+                $window.location.href = '/';
+            }
+         
+        }, function(error){
+            $scope.error_msg = "Problem in connecting to server";
+        });
+
     };
 
-
-    function newhash(){
-        if($scope.model.password != $scope.confirmPassword) return false;
-        $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
-        $scope.confirmPassword = $scope.model.password;
-        console.log(pass.value);
-
-        return true;
-    }
+    $scope.toLogin = function(){
+        $scope.model.accountType = 'Student';
+        $scope.error_msg = '';
+        $rootScope.form = 1;
+    };
 });
 
 loginApp.controller('recoveryController', ['$http','$scope','$rootScope',function($http, $scope, $rootScope){
-    $scope.toLogin = function(){
-        $rootScope.form = 1;
-    };
-
     $scope.error_msg = "";
     $scope.recovery_msg = "";
     $scope.model = { recoveryEmail : ''};
@@ -97,5 +114,12 @@ loginApp.controller('recoveryController', ['$http','$scope','$rootScope',functio
             $scope.recovery_msg = "";
             $scope.error_msg = "Problem connecting to the server";
         });
+    };
+
+    $scope.toLogin = function(){
+        $scope.model.recoveryEmail = '';
+        $scope.recovery_msg = '';
+        $scope.error_msg = '';
+        $rootScope.form = 1;
     };
 }]);
