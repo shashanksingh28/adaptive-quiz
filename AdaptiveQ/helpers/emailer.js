@@ -41,7 +41,6 @@ var sendQuestion = function (hostname,fromEmail,toList,bccList,questionId,questi
 }
 
 var sendResetPasswordLink = function(fromEmail, toEmail, uri, callback){
-	console.log("Called");
 	var mailOptions = {
 		from : fromEmail,
 		to : toEmail,
@@ -50,7 +49,7 @@ var sendResetPasswordLink = function(fromEmail, toEmail, uri, callback){
 		+ '<a href="'+uri+'"> Your custom reset link</a>'
 		+ '<br><br>' + footer
 	}
-	console.log(mailOptions);
+	//console.log(mailOptions);
 	smtpTransport.sendMail(mailOptions, function(error, response){
 		console.log(response);
 		if(error){

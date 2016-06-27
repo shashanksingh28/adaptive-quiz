@@ -159,14 +159,18 @@ router.post('/register', function(req, res){
       });
   });
 
-  router.post('/resetPaswword', function(req, res){
+  router.post('/resetPassword', function(req, res){
     var userEmail = req.body.email;
     var password = req.body.password;
     var token = req.body.token;
+    if(!token || !userEmail || !password){
+      res.send({status: 'ERROR', eMessage: 'Required Parameters not provided'});
+    }
     User.getUserForToken(token)
     .then(function(user){
       if(user && userEmail == user.email){
         user.password = password;
+        user.resetPasswordToken = "";
         user.save()
           .then(function(user){
             res.send({status: 'OK', message: 'Password succesfuly reset', url : '/'});
