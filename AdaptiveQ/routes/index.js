@@ -114,26 +114,25 @@ router.post('/register', function(req, res){
     });
   });
 
-  router.get('/recover', function(req, res){
-    User.getUserByEmail(req.query.email)
+  router.post('/recover', function(req, res){
+    User.getUserByEmail(req.body.recoveryEmail)
       .then(function (user){
         if(!user){
-          console.log("No such email found");
-          res.send("No such email found");
+          res.send({'status' : 'ERROR', 'eMessage' : 'No such email found'});
         }
         else{
           user.resetPasswordToken = randomstring.generate();
           user.save().then(function (savedUser){
             console.log(savedUser.resetPasswordToken);
             var url = localhost + "resetPaswword?token=" + savedUser.resetPasswordToken;
-            console.log(url);
-            console.log(user.email);
             emailer.sendResetPasswordLink(sysAccount,user.email,url,function(error, message){
               if(error){
                 console.log(error);
+                res.send({status : 'ERROR', eMessage : 'Error sending email'});
               }
               else{
                 console.log(message);
+                res.send({status : 'OK', message : 'Check registered email for link to reset'});
               }
             });
 
