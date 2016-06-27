@@ -3,6 +3,7 @@ extends ./login.pug
 block variables
   - var ngapp = 'recoveryApp'
   - var email = userEmail;
+  - var token = token; //not sure if this is needed
 
 append AngularJS
   script(src="js/recoveryApp.js")

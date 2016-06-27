@@ -2,7 +2,7 @@ var recoveryApp = angular.module('recoveryApp');
 
 recoveryApp.controller('recoveryController', ['$http', '$window', '$scope', '$rootScope', function($http, $window, $scope, $rootScope){
 
-    $scope.model = {'email': '', 'password': '' };
+    $scope.model = {'email': '', 'password': '', 'token': token};
 
     $scope.resetPassword = function(){
         $scope.error_msg = "";
