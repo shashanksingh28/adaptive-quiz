@@ -1,27 +1,31 @@
 extends ./login.pug
 
 block variables
-  - var ngapp = 'recoveryApp'
-  - var email = userEmail;
-  - var token = token; //not sure if this is needed
+  - var ngapp = 'resetApp'
+  - var email = userEmail
+  - var token = userToken
+    //- Jade Code is converted to javascript code so it can be used by AngularJS
+  script(type='text/javascript').
+    var email = "#{email}";
+    var token = "#{token}";
 
-append AngularJS
-  script(src="js/recoveryApp.js")
+block AngularJS
+  script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular.min.js")
+  script(src="js/resetApp.js")
 
 block content
-  .container.recovery-form(ng-controller="recoveryController")
+  .container.recovery-form(style="margin-top: 70px;", ng-controller="resetController")
     h2 Account Recovery
-    span Setting password for
-    span(ng-model="model.email")= email
     form(ng-submit="resetPassword()")
       .form-group
+        label Email:
+        input(type="email", class="form-control", ng-model="model.email", readonly, required)
+      .form-group
         label New Password:
-        input(type="password", class="form-control", ng-model="model.password", placeholder="New Password")
+        input(type="password", class="form-control", ng-model="model.password", placeholder="New Password", required)
       .form-group
         label Confirm Password:
-        input(type="password", class="form-control", ng-model="passwordConfirm", placeholder="Confirm Password")
+        input(type="password", class="form-control", ng-model="passwordConfirm", placeholder="Confirm Password", required)
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Recover Password
       p(class="centered") {{ recovery_msg }}
-      br
-      button(type="reset", class="btn btn-link btn-xs centered", ng-click="redirectToLogin();") Go to Login Page

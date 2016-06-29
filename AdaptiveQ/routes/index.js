@@ -149,7 +149,7 @@ router.post('/register', function(req, res){
     User.getUserForToken(token)
       .then(function(user){
         if(user){
-          res.render('pwrecovery',{userEmail: user.email, token: token});
+          res.render('pwrecovery',{userEmail: user.email, userToken: token});
         }
         else{
           res.send({status: 'ERROR', eMessage: 'Invalid Token'});
@@ -182,6 +182,6 @@ router.post('/register', function(req, res){
     }, function(error){
       console.log(error);
     });
-  })
+  });
 
 module.exports = router;
