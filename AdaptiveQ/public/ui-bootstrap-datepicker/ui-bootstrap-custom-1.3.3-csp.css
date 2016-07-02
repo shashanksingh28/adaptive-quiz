@@ -1,0 +1,13 @@
+/* Include this file in your html if you are using the CSP mode. */
+
+.uib-datepicker .uib-title {
+  width: 100%;
+}
+
+.uib-day button, .uib-month button, .uib-year button {
+  min-width: 100%;
+}
+
+.uib-left, .uib-right {
+  width: 100%
+}

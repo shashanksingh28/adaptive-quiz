@@ -18,6 +18,7 @@ html(ng-app=ngapp)
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-animate.min.js")
       script(src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.0/angular-route.min.js")
       script(src="/js/main.js")
+      script(src="/ui-bootstrap-datepicker/ui-bootstrap-custom-tpls-1.3.3.min.js")
 
   body
     block startscripts
@@ -49,12 +50,13 @@ html(ng-app=ngapp)
     block content
       main
         link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
+        script(src="/js/dashboardCtrls.js")
         #content-container.container
           .row
             #left-col.col-md-7.hidden-xs
               #concept-tree.panel.panel-primary
                 .panel-heading
-                  h3 Concepts
+                  h2 Concepts
                 .panel-body
                   h4 Concepts>Content
                   h4 Concepts>Content
@@ -82,19 +84,28 @@ html(ng-app=ngapp)
                   h4 Graph>Content
 
             #right-col.col-md-5.col-xs-12
-              #questions.panel.panel-primary
+              #questions.panel.panel-primary(ng-controller="questionController")
                 .panel-heading
-                  h3 questions
+                  h2 Questions
                 .panel-body
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
-                  h4 questions>Content
+                  #questionInfo
+                    form(ng-submit="goToQuestion()")
+                      .form-group
+                        label Date Chosen:
+                        input(type="date", class="form-control", ng-model="dt", readonly)
+                      .form-group
+                        label Question Brief:
+                        input(type="text", class="form-control", ng-model="question.title", readonly)
+                      .form-group
+                        label Status:
+                        input(type="text", class="form-control", ng-model="prettyStatus", readonly)
+                      .form-group
+                        label Concept(s):
+                        p {{ question.concepts }}
+
+                      button(type="submit", class="btn btn-info btn-lg") Go to Question
+                  #questionCal
+                    uib-datepicker.well(ng-model="dt", datepicker-options="options")
 
               #recommendations.panel.panel-primary
                 .panel-heading

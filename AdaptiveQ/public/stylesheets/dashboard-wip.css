@@ -1,5 +1,4 @@
 #content-container {
-  background: red;
   width: 100%;
   min-width: 1200px;
   overflow-x: auto;
@@ -13,12 +12,58 @@
   padding-left: 0;
 }
 
-.panel {
-  margin: 36px 18px 36px;
+#left-col .panel-heading {
+  padding-left: 60px;
 }
 
-.panel-heading {
-  background-color: #a5c1d5 !important;
-  color: #030a0f !important;
-  border-style: none;
+#right-col .panel-heading {
+  padding-right: 60px;
+  text-align: right;
 }
+
+.panel {
+  margin: 36px 18px 36px;
+  box-shadow: 0px 10px 30px rgba(0,0,0,1);
+}
+
+.panel-heading h2, h3 {
+  margin: 0px;
+}
+
+/* Question Panel */
+#questionInfo {
+  float: left;
+  width: 300px;
+  margin: 20px;
+}
+
+#questionCal {
+  color: #000;
+  float: right;
+  margin: 20px;
+}
+
+.text-info {
+  color: #000;
+  font-weight: bold;
+}
+
+.uib-daypicker:focus{
+  outline: none;
+}
+
+.attemptedCorrect button span {
+  background-color: #99cc99;
+  color: #000;
+  }
+
+.attemptedIncorrect button span {
+  background-color: red;
+  color: #fff;
+  }
+
+.unattempted button span {
+  background-color: yellow;
+  border-radius: 32px;
+  color: #000;
+  }

@@ -91,6 +91,10 @@ p:not(.errormsg) {
   margin: 140px auto;
 }
 
+span {
+  padding: 8px;
+}
+
 /* Animations */
 .container.ng-hide-add {
   transition: all ease 0.7s;

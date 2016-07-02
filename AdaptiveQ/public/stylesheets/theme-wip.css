@@ -21,8 +21,11 @@ button {
 }
 
 span {
-  padding: 8px;
   font-size: 12px
+}
+
+.well {
+  background-color: #ccc;
 }
 
 /* NavBar */
