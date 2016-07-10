@@ -5,8 +5,9 @@ doctype html
 html(ng-app=ngapp)
   head
     meta(charset="UTF-8")
+    base(href='/')
     block title
-      title AdaptQ Layout
+      title AdaptQ
 
     block stylesheets
       link(rel="stylesheet prefetch", href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css")
@@ -24,7 +25,7 @@ html(ng-app=ngapp)
     block startscripts
 
     block navbar
-      nav.navbar.navbar-default.navbar-static-top(ng-controller="mainController")
+      nav.navbar.navbar-default.navbar-static-top(ng-controller="navController")
         .container-fluid
           //- Brand and Toggle for mobile displays
           navbar-header
@@ -32,93 +33,24 @@ html(ng-app=ngapp)
               span(class="sr-only") Toggle Navigation
               - for (var i = 0; i < 3; i++)
                 span(class="icon-bar")
-            a(class="navbar-brand", href="#/dashboard")
+            a(class="navbar-brand", href="/dashboard")
               img(src="favicon.ico" alt="AdaptQ")
 
           //- NavBar Buttons
           .collapse.navbar-collapse(id="navbar-collapse")
              ul.nav.navbar-nav
-               li: a(href="#/question") Questions
+               li: a(href="/question") Questions
                - if(true)
-                 li: a(href="#/askquestion") Ask Question
-                 li: a(href="#/classdata") Class Data
+                 li: a(href="/askquestion") Ask Question
+                 li: a(href="/classdata") Class Data
              ul.nav.navbar-nav.navbar-right
                li: p.navbar-text Signed in as {{ message }}
-               li: a(href="#/myaccount") My Account
+               li: a(href="/myaccount") My Account
                li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
 
     block content
-      main
-        link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
-        script(src="/js/dashboardCtrls.js")
-        #content-container.container
-          .row
-            #left-col.col-md-7.hidden-xs
-              #concept-tree.panel.panel-primary
-                .panel-heading
-                  h2 Concepts
-                .panel-body
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-                  h4 Concepts>Content
-
-              #graph.panel.panel-primary
-                .panel-heading
-                  h3 Graph
-                .panel-body
-                  h4 Graph>Content
-                  h4 Graph>Content
-                  h4 Graph>Content
-                  h4 Graph>Content
-                  h4 Graph>Content
-
-            #right-col.col-md-5.col-xs-12
-              #questions.panel.panel-primary(ng-controller="questionController")
-                .panel-heading
-                  h2 Questions
-                .panel-body
-                  #questionInfo
-                    form(ng-submit="goToQuestion()")
-                      .form-group
-                        label Date Chosen:
-                        input(type="date", class="form-control", ng-model="dt", readonly)
-                      .form-group
-                        label Question Brief:
-                        input(type="text", class="form-control", ng-model="question.title", readonly)
-                      .form-group
-                        label Status:
-                        input(type="text", class="form-control", ng-model="prettyStatus", readonly)
-                      .form-group
-                        label Concept(s):
-                        p {{ question.concepts }}
-
-                      button(type="submit", class="btn btn-info btn-lg") Go to Question
-                  #questionCal
-                    uib-datepicker.well(ng-model="dt", datepicker-options="options")
-
-              #recommendations.panel.panel-primary
-                .panel-heading
-                  h3 Recommendations
-                .panel-body
-                  h4 Recommendations>Content
-                  h4 Recommendations>Content
-                  h4 Recommendations>Content
-                  h4 Recommendations>Content
-                  h4 Recommendations>Content
-                  h4 Recommendations>Content
-                  h4 Recommendations>Content
-
+      main(ng-view)
+        
     block footer  
       .container.footer
         span AdaptQ is one of the CS educational technologies created by <a href="https://sites.google.com/a/asu.edu/csi/" target="_blank">CSI Lab</a> of <a href="http://cidse.engineering.asu.edu/" target="_blank">School of Computing, Informatics & Decision Systems Engineering</a> at <a href="http://www.asu.edu/" target="_blank">Arizona State University</a>.

@@ -1,0 +1,181 @@
+#content-container {
+  width: 100%;
+  min-width: 1200px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+ul {
+  list-style: none;
+}
+
+/* Sidebar */
+#sidebar {
+  position: absolute;
+  top: 50px;
+  bottom: 25px;
+  width: 320px;
+}
+
+#sidebar-content {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  bottom: 20px;
+  left: 20px;
+  box-shadow: 0px 10px 30px rgba(0,0,0,1);
+}
+
+#sidebar-header {
+  background-color: #428bca;
+  text-align: right;
+  padding: 5px;
+  height: 70px;
+  position: absolute;
+  top:0;
+  right: 0;
+  left: 0;
+}
+
+#question-list {
+  position: absolute;
+  top: 70px;
+  right: 0;
+  left: 0;
+  bottom: 35px;
+  background-color: #ccc;
+  overflow-y: auto;
+}
+
+.question-item {
+  background-color: #eee;
+  border-bottom-style: solid;
+  border-color: #ccc;
+  color: #1E6498;
+}
+
+.question-item input[type="radio"]:checked + label {
+  background-color: #0a5a9c;
+  color: #fff;
+}
+
+.question-item:hover {
+  background-color: #65a5da;
+  color: #fff;
+}
+
+.question-item label {
+  padding: 7px;
+  margin: 0;
+}
+
+.question-item span {
+  float: right;
+}
+
+#sidebar-footer {
+  background-color: #428bca;
+  position: absolute;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  height: 35px;
+  padding: 5px;
+}
+
+#sidebar-footer .btn-xs {
+  border-radius: 5px;
+  padding: 2px 8px;
+  float: right;
+}
+
+/* Question Area */
+#question-area {
+  position: absolute;
+  top: 50px;
+  bottom: 25px;
+  left: 320px;
+  right: 0;
+  min-width: 870px;
+  overflow-x: auto;
+}
+
+#question-box {
+  margin: 20px auto;
+  width: 870px;
+  background-color: #428bca;
+  box-shadow: 0px 10px 30px rgba(0,0,0,1);
+}
+
+#question {
+  width: 100%;
+  padding: 15px;
+  border-bottom-style: solid;
+  border-bottom-color: #fff;
+}
+
+#question h1 {
+}
+
+#question pre {
+  margin: 15px;
+  font-size: 14px;
+}
+
+#question pre:empty {
+  display: none;
+}
+
+#options {
+  width: 100%;
+  padding: 15px;
+}
+
+.option {
+  background-color: #fff;
+  color: #000;
+  font-size: 18px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+input[type="radio"] {
+  display: none;
+}
+
+.option input[type="radio"]:checked + label {
+  outline-style: solid;
+  outline-color: #fff;
+  background-color: #0a5a9c;
+  color: #fff;
+}
+
+.option:hover {
+  background-color: #0a5a9c;
+  color: #fff;
+}
+
+.option label {
+  height: 35px;
+  padding: 7px;
+}
+
+form button[type="submit"] {
+  border-style: solid;
+  border-width: 3px;
+  border-color: #fff;
+}
+
+form button[type="button"] {
+  color: #fff;
+  float: right;
+}
+
+form button[type="button"]:hover {
+  color: #fff;
+}

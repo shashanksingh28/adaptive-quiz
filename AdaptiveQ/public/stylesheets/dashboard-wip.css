@@ -32,15 +32,22 @@
 
 /* Question Panel */
 #questionInfo {
-  float: left;
-  width: 300px;
-  margin: 20px;
+  display: table;
+  max-width: 500px;
+  width: 75%;
+  min-width: 300px;
+  margin: 0 auto; 
+  align-content: center;
 }
 
 #questionCal {
+  display: table;
+  margin: 10px auto;
   color: #000;
-  float: right;
-  margin: 20px;
+}
+
+#questionCal .well { 
+  border-radius: 20px;
 }
 
 .text-info {
@@ -55,15 +62,15 @@
 .attemptedCorrect button span {
   background-color: #99cc99;
   color: #000;
-  }
+}
 
 .attemptedIncorrect button span {
   background-color: red;
   color: #fff;
-  }
+}
 
 .unattempted button span {
   background-color: yellow;
   border-radius: 32px;
   color: #000;
-  }
+}

@@ -1,0 +1,68 @@
+link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
+#content-container.container
+  .row
+    #left-col.col-md-7.hidden-xs
+      #concept-tree.panel.panel-primary
+        .panel-heading
+          h2 Concepts
+        .panel-body
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+          h4 Concepts>Content
+
+      #graph.panel.panel-primary
+        .panel-heading
+          h3 Graph
+        .panel-body
+          h4 Graph>Content
+          h4 Grh>Content
+          h4 Graph>Content
+          h4 Graph>Content
+          h4 Graph>Content
+
+    #right-col.col-md-5.col-xs-12
+      #questions.panel.panel-primary
+        .panel-heading
+          h2 Questions
+        .panel-body
+          #questionCal
+            uib-datepicker.well(ng-model="dt", datepicker-options="options")
+          #questionInfo
+            form(ng-submit="goToQuestion()")
+              .form-group
+                label Date Chosen:
+                input(type="date", class="form-control", ng-model="dt", readonly)
+              .form-group
+                label Question Brief:
+                input(type="text", class="form-control", ng-model="question.title", readonly)
+              .form-group
+                label Status:
+                input(type="text", class="form-control", ng-model="prettyStatus", readonly)
+              .form-group
+                label Concept(s):
+                p {{ question.concepts }}
+
+              button.centered(type="submit", class="btn btn-info btn-lg") Go to Question
+
+      #recommendations.panel.panel-primary
+        .panel-heading
+          h3 Recommendations
+        .panel-body
+          h4 Recommendations>Content
+          h4 Recommendations>Content
+          h4 Recommendations>Content
+          h4 Recommendations>Content
+          h4 Recommendations>Content
+          h4 Recommendations>Content
+          h4 Recommendations>Content
