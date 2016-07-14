@@ -1,0 +1,211 @@
+#content-container {
+  width: 100%;
+  min-width: 1000px;
+  overflow-x: auto;
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+h1 {
+  text-align: center;
+}
+
+ul {
+  list-style: none;
+}
+
+input, textarea{
+  color: #000;
+}
+
+/* Question Area */
+.question-box {
+  margin: 30px auto;
+  padding-top: 20px;
+  width: 900px;
+  background-color: #428bca;
+  box-shadow: 0px 10px 30px rgba(0,0,0,1);
+}
+
+.question, .options, .options-unattempted{
+  width: 100%;
+  padding: 15px;
+}
+
+.question {
+  border-bottom-style: solid;
+  border-bottom-color: #fff;
+}
+
+.question textarea {
+  width: 100%;
+  font-size: 24px;
+  resize: none;
+}
+
+.code {
+  margin-top: 10px;
+}
+
+span {
+  font-size: 14px;
+}
+
+.code textarea {
+  font-size: 14px;
+  font-family: monospace;
+  width: 96%;
+  resize: vertical;
+  vertical-align: top;
+}
+
+.option {
+  background-color: #fff;
+  font-size: 18px;
+  margin: 10px 0;
+  cursor: pointer;
+}
+
+.checkbox {
+  margin: 0;
+}
+
+input[type="checkbox"] {
+  display: none;
+}
+
+.option input[type="checkbox"]:checked + label {
+  outline-style: solid;
+  outline-color: #fff;
+  background-color: green;
+  color: #fff;
+}
+
+.option label {
+  height: 30px;
+  width: 30px;
+  background-color: grey;
+  padding: 2px;
+  color: grey;
+}
+
+.option label span {
+  font-size: 24px;
+}
+
+.option label:hover {
+  cursor: pointer;
+  background-color: green;
+  color: #fff;
+}
+
+.option input[type="text"]{
+  height: 30px;
+  width: 837px;
+  margin-left: 3px;
+}
+
+.option label, input[type="text"] {
+  display: inline-block;
+  vertical-align: top;
+  border-style: none;
+}
+
+.hint input[type="text"] {
+  vertical-align: middle;
+  width: 800px;
+}
+
+.concepts {
+  margin: 20px 0;
+}
+
+.question-footer {
+  margin: 10px auto;
+  text-align: center;
+}
+
+.question-footer h5 {
+  color: red;
+  margin-bottom: 15px;
+}
+
+form button[type="submit"] {
+  border: 3px solid #fff;
+}
+
+form button[type="button"] {
+  color: #fff;
+
+}
+
+form button[type="button"]:hover {
+  color: #fff;
+}
+
+/* Explanation */
+.chosen {
+  outline-style: solid;
+  outline-color: red;
+}
+
+.correct {
+  outline-style: none;
+  background-color: green;
+  color: #fff;
+}
+
+.explanations {
+  border-top-style: solid;
+  border-top-color: #fff;
+}
+
+.explanation-buttons {
+  width: 100%;
+}
+
+.explanation-buttons button {
+  display: inline;
+  margin: 0 5px 20px 5px;
+  padding: 0 5px;
+}
+
+.explanation-buttons .right{
+  float: right;
+}
+
+.explanation {
+  border: 2px solid #fff;
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: #0a5a9c;
+}
+
+.explanation h5 {
+  float: right;
+}
+
+.explanation h6 {
+  margin-bottom: 10px;
+}
+
+.explanation button {
+  font-size: 12px;
+  margin-right: 5px;
+  padding: 0 5px;
+  float: right;
+}
+
+#newExplanation button {
+  margin: 5px;
+  padding: 0 2px;
+}
+
+#newExplanation textarea {
+  color: #000;
+  resize: none;
+  width: 100%;
+}

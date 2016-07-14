@@ -1,2 +1,54 @@
-h1 This is the Ask Question Partial
-h2 {{ test }}
+link(rel="stylesheet", href="/stylesheets/askquestion-wip.css")
+link(rel="stylesheet", href="/stylesheets/ng-tags-input.min.css")
+link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
+#content-container
+  .question-box
+    h1 Create New Question
+    form#newQuestion
+      .question
+        label Question Text
+        textarea(rows="2", placeholder="Enter Question", form="newQuestion", ng-model="model.question", required) 
+        .code
+          button(type="button", class="btn btn-link btn-sm", ng-click="addCode=true", ng-hide="addCode")
+            span.fa.fa-plus-circle
+            span &nbspAdd Code
+          button(type="button", class="btn btn-link btn-sm", ng-click="addCode=false", ng-show="addCode")
+            span.fa.fa-minus-circle
+          textarea(rows="6", placeholder="Enter Code", form="newQuestion", ng-model="model.code", ng-show="addCode")
+      .options
+        label Options
+        .option
+          input(type="checkbox", id="option0", name="option", value="0", required)
+          label.checkbox(for="option0")
+            span.fa.fa-check
+          input(type="text", placeholder="Option 1")
+        .option
+          input(type="checkbox", id="option1", name="option", value="1", required)
+          label.checkbox(for="option1")
+            span.fa.fa-check
+          input(type="text", placeholder="Option 2")
+        .option
+          input(type="checkbox", id="option2", name="option", value="2", required)
+          label.checkbox(for="option2")
+            span.fa.fa-check
+          input(type="text", placeholder="Option 3")
+        .option
+          input(type="checkbox", id="option3", name="option", value="3", required)
+          label.checkbox(for="option3")
+            span.fa.fa-check
+          input(type="text", placeholder="Option 4")
+        .hint
+          button(type="button", class="btn btn-link btn-sm", ng-click="addHint=true", ng-hide="addHint")
+            span.fa.fa-plus-circle
+            span &nbspAdd Hint
+          button(type="button", class="btn btn-link btn-sm", ng-click="addHint=false", ng-show="addHint")
+            span.fa.fa-minus-circle
+            span &nbspHint: 
+          input(type="text", placeholder="Enter Hint", ng-model="model.hint", ng-show="addHint")
+        .concepts
+          label Concepts
+          tags-input(ng-model="model.concepts", placeholder="Add a concept...", add-from-autocomplete-only="true", item-is-object="false")
+            auto-complete(source="loadConcepts($query)", min-length="1", max-results-to-show="5")
+        .question-footer
+          h5 Error Message
+          button(type="submit", class="btn btn-success btn-lg") Submit

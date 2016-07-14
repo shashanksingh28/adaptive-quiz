@@ -1,11 +1,18 @@
 link(rel="stylesheet", href="/stylesheets/question-wip.css")
 #content-container
+
   #sidebar
     #sidebar-content
       #sidebar-header
         h3 Questions
-        br
-        h5 Sort By: Date
+        h6 Sort By:&nbsp
+        .btn-group(is-open="status.isopen", uib-dropdown)
+          button(type="button", class="btn btn-default btn-xs", uib-dropdown-toggle) {{ order }}
+          button(type="button", class="btn btn-default btn-xs", ng-click="switchReverse();")
+            span(ng-class="reverseIcon")
+          ul.dropdown-menu(uib-dropdown-menu, role="menu")
+            li(role="menuitem"): a(href="#", ng-click="sortByDate()") Date
+            li(role="menuitem"): a(href="#", ng-click="sortByStatus();") Status
       #question-list
         ul
           li(ng-repeat="question in questions")
@@ -13,22 +20,69 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
               input(type="radio", id="question{{ question.id }}", name="question", value="{{ question.id }}", ng-model="model.questionid")
               label.radio(for="question{{ question.id }}")
                 h4 {{ question.title }}
-                h6 {{ question.status }}
-                  span {{ question.date | date}}
+                .attemptindicator(ng-switch="checkStatus(question)")
+                  .attemptedCorrect(ng-switch-when="attemptedCorrect", title="Attempted Correct")
+                  .attemptedIncorrect(ng-switch-when="attemptedIncorrect", title="Attempted Incorrect")
+                  .unattempted(ng-switch-when="unattempted", title="Unattempted")
+                h6 {{ question.date | date}}
       #sidebar-footer
         button(type="button", class="btn btn-default btn-xs")
           span(class="glyphicon glyphicon-flag")
-  #question-area
-    #question-box
-      #question
+
+  .question-area(ng-show="!recordExists")
+    .question-box
+      .question
         h1 {{ question.title }}
         pre {{ question.code }}
-      #options
-        form(ng-submit="submitanswer()")
+      .options-unattempted
+        form(ng-submit="submitAnswer()")
           ul
             li(ng-repeat="option in question.options")
               .option
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.option")
                 label.radio(for="option{{$index}}") {{option}}
+          p(ng-show="showHint") Hint: {{ question.hint }}
           button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.option == ""') Confirm
-          button(type="button", class="btn btn-link btn-sm") Need a hint?
+          button(type="button", class="btn btn-link btn-sm", ng-click="showHint=true;") Need a hint?
+
+  .question-area(ng-show="recordExists")
+      .question-box
+        .question
+          h1 {{ question.title }}
+          pre {{ question.code }}
+        .options
+          form(ng-submit="submitAnswer()")
+            ul
+              li(ng-repeat="option in question.options")
+                .option(ng-class="{correct: $index == correctChoice, chosen: $index == userChoice}")
+                  input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.option")
+                  label.radio(for="option{{$index}}") {{option}}
+          button(type="button", class="btn btn-info", ng-click="showExplanations = true", ng-hide="showExplanations") View Explanations
+          button(type="button", class="btn btn-info", ng-click="showExplanations = false", ng-show="showExplanations") Hide Explanations
+        .explanations(ng-show="showExplanations")
+          
+          .new-explanation(ng-show="addExplanation")
+            form#newExplanation
+              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation")
+              button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Submit
+          .explanation-buttons
+            button(type="button", class="btn btn-default", ng-click="addExplanation = true", ng-hide="addExplanation")
+              span.fa.fa-plus-circle
+              span &nbspAdd Explanation
+            button(type="button", class="btn btn-default", ng-click="addExplanation = false", ng-show="addExplanation") Cancel
+            button.right(type="button", class="btn btn-default btn-sm", ng-click="expSortDate()", title="most recent")
+              span.fa.fa-clock-o
+            button.right(type="button", class="btn btn-default btn-sm", ng-click="expSortVotes()", title="most votes")
+              span.fa.fa-check
+          ul
+            li(ng-repeat="explanation in explanations")
+              .explanation
+                h5 Votes: {{ explanation.votes }}
+                button(type="button", class="btn btn-default btn-sm", ng-click="voted=true", ng-hide="voted")
+                  span.fa.fa-thumbs-o-up
+                button(type="button", class="btn btn-default btn-sm", ng-click="voted=false", ng-show="voted")
+                  span.fa.fa-thumbs-up
+                h4 {{ explanation.user }}
+                h6 {{ explanation.dateCreated | date : 'hh:mma MMM dd, yyyy' }}
+                p.
+                  {{ explanation.text }}

@@ -42,6 +42,25 @@ ul {
   left: 0;
 }
 
+#sidebar-header h3 {
+  margin-bottom: 10px;
+}
+
+#sidebar-header h6 {
+  display: inline;
+  font-size: 13px;
+}
+
+ul.dropdown-menu {
+  font-size: 13px;
+  text-align: left;
+  width: 60px;
+}
+
+ul.dropdown-menu a {
+  padding: 3px;
+}
+
 #question-list {
   position: absolute;
   top: 70px;
@@ -72,10 +91,38 @@ ul {
 .question-item label {
   padding: 7px;
   margin: 0;
+  padding-bottom: 10px;
 }
 
-.question-item span {
+.question-item label h4 {
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.attemptindicator {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 5px;
   float: right;
+}
+
+.attemptedCorrect {
+  height: 12px;
+  width: 12px;
+  background-color: green;
+}
+
+.attemptedIncorrect {
+  height: 12px;
+  width: 12px;
+  background-color: red;
+}
+
+.unattempted {
+  height: 12px;
+  width: 12px;
+  background-color: yellow;
 }
 
 #sidebar-footer {
@@ -95,7 +142,7 @@ ul {
 }
 
 /* Question Area */
-#question-area {
+.question-area {
   position: absolute;
   top: 50px;
   bottom: 25px;
@@ -105,35 +152,33 @@ ul {
   overflow-x: auto;
 }
 
-#question-box {
+.question-box {
   margin: 20px auto;
   width: 870px;
   background-color: #428bca;
   box-shadow: 0px 10px 30px rgba(0,0,0,1);
 }
 
-#question {
+.question, .options, .options-unattempted, .explanations {
   width: 100%;
   padding: 15px;
+}
+
+.question {
   border-bottom-style: solid;
   border-bottom-color: #fff;
 }
 
-#question h1 {
+.question h1 {
 }
 
-#question pre {
+.question pre {
   margin: 15px;
   font-size: 14px;
 }
 
-#question pre:empty {
+.question pre:empty {
   display: none;
-}
-
-#options {
-  width: 100%;
-  padding: 15px;
 }
 
 .option {
@@ -148,14 +193,14 @@ input[type="radio"] {
   display: none;
 }
 
-.option input[type="radio"]:checked + label {
+.options-unattempted .option input[type="radio"]:checked + label {
   outline-style: solid;
   outline-color: #fff;
   background-color: #0a5a9c;
   color: #fff;
 }
 
-.option:hover {
+.options-unattempted .option:hover {
   background-color: #0a5a9c;
   color: #fff;
 }
@@ -166,9 +211,7 @@ input[type="radio"] {
 }
 
 form button[type="submit"] {
-  border-style: solid;
-  border-width: 3px;
-  border-color: #fff;
+  border: 3px solid #fff;
 }
 
 form button[type="button"] {
@@ -178,4 +221,68 @@ form button[type="button"] {
 
 form button[type="button"]:hover {
   color: #fff;
+}
+
+/* Explanation */
+.chosen {
+  outline-style: solid;
+  outline-color: red;
+}
+
+.correct {
+  outline-style: none;
+  background-color: green;
+  color: #fff;
+}
+
+.explanations {
+  border-top-style: solid;
+  border-top-color: #fff;
+}
+
+.explanation-buttons {
+  width: 100%;
+}
+
+.explanation-buttons button {
+  display: inline;
+  margin: 0 5px 20px 5px;
+  padding: 0 5px;
+}
+
+.explanation-buttons .right{
+  float: right;
+}
+
+.explanation {
+  border: 2px solid #fff;
+  padding: 5px;
+  margin-bottom: 5px;
+  background-color: #0a5a9c;
+}
+
+.explanation h5 {
+  float: right;
+}
+
+.explanation h6 {
+  margin-bottom: 10px;
+}
+
+.explanation button {
+  font-size: 12px;
+  margin-right: 5px;
+  padding: 0 5px;
+  float: right;
+}
+
+#newExplanation button {
+  margin: 5px;
+  padding: 0 2px;
+}
+
+#newExplanation textarea {
+  color: #000;
+  resize: none;
+  width: 100%;
 }
