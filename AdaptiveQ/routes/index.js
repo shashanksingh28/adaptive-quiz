@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
-var Concepts = require('../models/conceptModel');
-var User = require('../models/userModel');
+var Concepts = require('../models/concept');
+var User = require('../models/user');
 var randomstring = require('randomstring');
 var emailer = require('../helpers/emailer');
 var localhost = "http://localhost:3000/";
@@ -53,7 +53,6 @@ router.post('/login', function(req, res, next){
             }
             if(user.email){
                 if(user.password == pass){
-                    console.log("User "+user+ "is authenticated!");
                     req.session.user = user;
                     delete req.session.user.records;
                     req.session.startTime = Date.now();
@@ -78,7 +77,6 @@ router.post('/login', function(req, res, next){
                     res.send(response);
                 }
                 else {
-                    // TODO password error
                     console.log("Password mismatch");
                     res.send({'status' : 'ERROR', 'eMessage' : 'Incorrect password!'});
                 }

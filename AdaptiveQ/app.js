@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var mongo = require('mongoose');
 
-mongo.connect("52.40.100.41/adaptq_dev");
+mongo.connect("52.40.100.41/adaptq_dev_v2");
 //mongo.connect("mongodb://localhost:27017/adaptq")
 var path = require('path');
 var favicon = require('serve-favicon');
@@ -17,6 +17,8 @@ app.use(session({
   duration: 20 * 60 * 1000,
   activeDuration: 5 * 60 * 1000,
 }));
+
+mongo.Promise = global.Promise;
 
 console.log("App started");
 
