@@ -9,8 +9,8 @@ var timezone = "America/Phoenix";
 var sysAccount = 'adaptq@gmail.com';
 
 // mongoose data models
-var Question = require('../models/questionModel');
-var User = require('../models/userModel');
+var Question = require('../models/question');
+var User = require('../models/user');
 
 function requireLogin (req, res, next) {
   if (!req.session.user) {

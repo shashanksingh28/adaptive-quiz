@@ -1,8 +1,8 @@
 var express = require('express');
 var router = express.Router();
-var Concepts = require('../models/conceptModel');
-var User = require('../models/userModel');
-var myLogger = require('../models/logModel');
+var Concepts = require('../models/concept');
+var User = require('../models/user');
+var myLogger = require('../models/log');
 var cossimilarity = require( 'compute-cosine-similarity' );
 
 function requireLogin (req, res, next) {

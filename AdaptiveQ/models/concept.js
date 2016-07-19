@@ -6,6 +6,7 @@ autoIncrement.initialize(mongo.connection);
 
 var conceptsSchema = new Schema({
   title: { type : String, required: true},
+  courseId: {type: Number, required: true},
   children: Array
 });
 
@@ -13,8 +14,8 @@ conceptsSchema.plugin(autoIncrement.plugin, 'Concepts');
 
 var Concepts = mongo.model('concepts', conceptsSchema);
 
-Concepts.getConceptByName = function(conceptName){
-	var promise = Concepts.find({'title':conceptName}).exec();
+Concepts.getConceptByTitle = function(courseId, conceptName){
+	var promise = Concepts.find({courseId: courseId, title:conceptName}).exec();
 	return promise;
 };
 
@@ -28,8 +29,8 @@ Concepts.findConceptByTitle = function(title, concepts){
   return null;
 };
 
-Concepts.getAllConcepts = function(){
-  return Concepts.find({}).exec();
+Concepts.getAllConcepts = function(courseId){
+  return Concepts.find({courseId: courseId}).exec();
 }
 
 Concepts.makeTree = function(concept, concepts, parentTitle){

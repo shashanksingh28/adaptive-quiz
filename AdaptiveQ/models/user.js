@@ -1,7 +1,6 @@
 var mongo = require('mongoose');
 var Schema = mongo.Schema;
 var autoIncrement = require('mongoose-auto-increment');
-// below to be done only once!
 autoIncrement.initialize(mongo.connection);
 
 var userSchema = new Schema({
@@ -14,24 +13,24 @@ var userSchema = new Schema({
   resetPasswordToken: String
 });
 
-userSchema.plugin(autoIncrement.plugin, 'User');
+userSchema.plugin(autoIncrement.plugin, 'Users');
 
-var User = mongo.model('User', userSchema);
+var Users = mongo.model('Users', userSchema);
 
-User.getUserByEmail = function(email){
+Users.getUserByEmail = function(email){
   return User.findOne({'email':email}).exec();
 };
 
-User.getUserById = function(id){
+Users.getUserById = function(id){
 
   return User.findById(id).exec();
 };
 
-User.getAllUsers = function(){
+Users.getAllUsers = function(){
   return User.find().exec();
 };
 
-User.createUser = function(email, password, name){
+Users.createUser = function(email, password, name){
   var newUser = User({
     email: email,
     password: password,
@@ -43,17 +42,16 @@ User.createUser = function(email, password, name){
   return newUser.save();
 };
 
-User.addRecordToUserId = function(userId,record){
+Users.addRecordToUserId = function(userId,record){
   return User.update({'_id': userId},{$push:{'records':record}}).exec();
 };
 
-//User.updateHint(req.session.user._id);
-User.updateHint = function(userId){
+Users.updateHint = function(userId){
   return User.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
 }
 
-User.getUserForToken = function(token){
+Users.getUserForToken = function(token){
   return User.findOne({resetPasswordToken : token}).exec();
 }
 
-module.exports = User;
+module.exports = Users;
