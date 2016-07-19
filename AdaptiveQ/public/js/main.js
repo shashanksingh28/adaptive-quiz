@@ -14,9 +14,9 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
        templateUrl: 'partials/askquestion',
        controller: 'askQuestionController'
        })
-       .when('/classdata', {
-       templateUrl: 'partials/classdata',
-       controller: 'classDataController'
+       .when('/coursedata', {
+       templateUrl: 'partials/coursedata',
+       controller: 'courseDataController'
        })
        .when('/myaccount', {
        templateUrl: 'partials/myaccount',
@@ -212,7 +212,7 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', function($s
 
                 // Reset Fields
                 $scope.model.option = '';
-                $scope.howHint = false;
+                $scope.showHint = false;
                 $scope.showExplanations = false;
                 $scope.addExplanation = false;
 
@@ -241,6 +241,12 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', function($s
       console.log("Option " + $scope.model.option + " confirmed for Question ID " + $scope.question.id);
     };
 
+    $scope.enableHint = function(){
+      $scope.showHint = true;
+      // TODO: Record that user used a hint
+      return 1;
+    };
+
     // Explanations
     $scope.expOrderVal = 'votes';
     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
@@ -265,7 +271,40 @@ mainApp.controller('askQuestionController', function($http, $scope){
         hint: "",
         concepts: [],
     };
-    
+
+    $scope.toggleSelection = function(answer){
+        var index = $scope.model.answer.indexOf(answer);
+
+        if(index > -1){
+          // Answer was selected and needs to be removed
+          $scope.model.answer.splice(index, 1);
+        }else{
+          $scope.model.answer.push(answer);
+        }
+    };
+
+    $scope.submitQuestion = function(){
+      console.log("Submitted");
+      $scope.errorMsg = "";
+      switch($scope.model.answer.length){
+        case 1:
+          //TODO: Post Question with only 1 answer
+          console.log("Question Created: ");
+          console.dir($scope.model);
+          $scope.success = true;
+          return 1;
+        case ($scope.model.answer.length > 1):
+          //TODO: Post Question with multiple answers
+          console.log("Question Created: ");
+          console.dir($scope.model);
+          $scope.success = true;
+          return 1;
+        default:
+          $scope.errorMsg = "Please Select Correct Answer(s)";
+          return 0;
+      }
+    };
+
     $scope.loadConcepts = function(query){
         var matches = [];
         for(var i = 0; i < validConcepts.length; i++){
@@ -275,25 +314,9 @@ mainApp.controller('askQuestionController', function($http, $scope){
                 matches.push(concept);
             }
         }
-
         console.log("Matches: " + matches);
-
         return matches;
     };
-
-    validConcepts = [
-        'variables',
-        'objects',
-        'primitive types',
-        'static methods',
-        'instance variables',
-        'if-else statements',
-        'classes',
-        'switch statements',
-        'logical operators',
-        'data structures',
-    ];
-
 
     $scope.submit = function(){
         if($scope.model.answer.length === 0){
@@ -305,8 +328,99 @@ mainApp.controller('askQuestionController', function($http, $scope){
     };
 });
 
-mainApp.controller('classDataController', function($scope){
-    $scope.test = 'Class Data Controller is connected.';
+mainApp.controller('courseDataController', function($scope){
+  $scope.students = students;
+  $scope.student = { name: 'No Student Chosen' };
+  $scope.$watch('student', function(){
+      console.dir($scope.student);
+      return true;
+  });
+
+  $scope.$watch('student.name', function(){
+      console.log($scope.student.name);
+      return true;
+  });
+
+  $scope.getConceptGreen = function(concept){
+      // getConceptGreen for every student
+      // find average
+      return '45%';
+  };
+
+  $scope.getConceptGreen = function(concept, studentName){
+      // get student from array of all students in course
+      // find questions in course that include the concept
+      // iterate every record with every question, checking for correct attempts
+      // return correct attempts / numOfQuestionsInCourse
+      return '45%';
+  };
+
+  $scope.getConceptRed = function(concept){
+      //getConceptRed for every student
+      //find average
+      return '30%';
+  };
+
+  $scope.getConceptRed = function(concept, studentName){
+      // get student from array of all students in course
+      // find questions in course that include the concept
+      // iterate every record with every question, checking for incorrect attempts
+      // return correct attempts / numOfQuestionsInCourse
+      return '30%';
+  };
+
+  $scope.getConceptYellow = function(concept){
+      //getConceptYellow for every student
+      //find average
+      return '25%';
+  };
+
+  $scope.getConceptYellow = function(concept, studentName){
+      // return 1 - (getConceptGreen() + getconceptRed())
+      return '25%';
+  };
+
+  $scope.getStudentGreen = function(studentName){
+      // for every concept, getConceptGreen(concept, studentName)
+      // return average
+      return '45%';
+  };
+
+  $scope.getStudentRed = function(){
+      // for every concept, getConceptRed(concept, studentName)
+      // return average
+      return '30%';
+  };
+
+  $scope.getStudentYellow = function(){
+      // for every concept, getConceptYellow(concept, studentName)
+      // return average
+      return '25%';
+  };
+
+  $scope.checkStatus = function(question){
+      for(var i = 0; i < records.length; i++) {
+          var currentRecord = records[i];
+
+          if(question.id == currentRecord.questionid) {
+              if(question.answer == currentRecord.choice) {
+                  return 'attemptedCorrect';
+              }
+              return 'attemptedIncorrect';
+          }
+      }
+      return 'unattempted';
+  };
+
+  $scope.createConcept = function(){
+    // Post $scope.newConcept to current course
+    console.log("New Concept: " + $scope.newConcept);
+    $scope.newConcept = '';
+    $scope.conceptReady = false;
+    $scope.open = false;
+    return 1;
+  };
+  
 });
 
 mainApp.controller('accountController', function($scope){
@@ -571,4 +685,69 @@ explanations = [
         text: 'Hello. I am a Alexander and this is my explanation.',
         votes: 0,
     },
+];
+
+validConcepts = [
+    'variables',
+    'objects',
+    'primitive types',
+    'static methods',
+    'instance variables',
+    'if-else statements',
+    'classes',
+    'switch statements',
+    'logical operators',
+    'data structures',
+];
+
+students = [
+  {
+      id: 101,
+      name: 'Jeff',
+      attemptedCorrect: 9,
+      attemptedIncorrect: 3,
+      unattempted: 4,
+  },
+  {
+      id: 102,
+      name: 'Mary',
+      attemptedCorrect: 6,
+      attemptedIncorrect: 2,
+      unattempted: 2,
+  },
+  {
+      id: 103,
+      name: 'Sally',
+      attemptedCorrect: 3,
+      attemptedIncorrect: 7,
+      unattempted: 5,
+  },
+  {
+      id: 104,
+      name: 'David',
+      attemptedCorrect: 3,
+      attemptedIncorrect: 5,
+      unattempted: 5,
+  },
+  {
+      id: 105,
+      name: 'Ben',
+      attemptedCorrect: 5,
+      attemptedIncorrect: 1,
+      unattempted: 1,
+  },
+  {
+      id: 106,
+      name: 'Clark',
+      attemptedCorrect: 2,
+      attemptedIncorrect: 4,
+      unattempted: 7,
+  },
+  {
+      id: 107,
+      name: 'Mandy',
+      attemptedCorrect: 4,
+      attemptedIncorrect: 2,
+      unattempted: 4,
+  },
 ];

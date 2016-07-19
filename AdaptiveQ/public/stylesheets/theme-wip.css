@@ -138,6 +138,11 @@ span {
   transform: scale(1);
 }
 
+.navbar .dropdown-menu li{
+  font-size: 14px;
+  padding: 2px 5px;
+}
+
 /* Main */
 main {
   margin-top: 50px;

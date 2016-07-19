@@ -51,14 +51,13 @@ ul {
   font-size: 13px;
 }
 
-ul.dropdown-menu {
-  font-size: 13px;
+.sortButtons {
+  display: inline-block;
   text-align: left;
-  width: 60px;
 }
 
-ul.dropdown-menu a {
-  padding: 3px;
+.sortButtons .dropdown-menu {
+  min-width: 0;
 }
 
 #question-list {
@@ -66,7 +65,7 @@ ul.dropdown-menu a {
   top: 70px;
   right: 0;
   left: 0;
-  bottom: 35px;
+  bottom: 15px;
   background-color: #ccc;
   overflow-y: auto;
 }
@@ -131,14 +130,8 @@ ul.dropdown-menu a {
   right: 0;
   left: 0;
   bottom: 0;
-  height: 35px;
+  height: 15px;
   padding: 5px;
-}
-
-#sidebar-footer .btn-xs {
-  border-radius: 5px;
-  padding: 2px 8px;
-  float: right;
 }
 
 /* Question Area */

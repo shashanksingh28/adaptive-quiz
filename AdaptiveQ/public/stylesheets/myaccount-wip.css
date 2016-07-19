@@ -1,0 +1,80 @@
+#content-container {
+  width: 100%;
+  min-width: 1000px;
+  overflow-x: auto;
+  color: white;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+ul {
+  list-style: none;
+}
+
+.content-box {
+  margin: 30px auto;
+  padding: 20px;
+  width: 900px;
+  background-color: #012441;
+  box-shadow: 0px 10px 30px rgba(0,0,0,1);
+}
+
+.item {
+  border-bottom: 1px solid #fff;
+  padding: 24px 0;
+}
+
+.item table.table th {
+  padding-top: 12px;
+  border-style: none;
+}
+
+th h5 {
+  margin-left: 80px;
+}
+
+th button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  float: right;
+}
+
+.glyphicon {
+  font-size: 16px;
+  top: 1px;
+  right: 4px;
+}
+
+#enroll {
+  width: initial;
+  float: left;
+  margin-left: 80px;
+}
+
+.dialog-box {
+  width: 250px;
+  margin: -100px 0 0 -125px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 3px solid #fff;
+  background-color: #428bca;
+  padding: 10px;
+  text-align: center;
+}
+
+.dialog-box h5, h6, .form-group {
+  padding: 10px;
+}
+
+.dialog-box .btn-success {
+  margin-right: 25px;
+}

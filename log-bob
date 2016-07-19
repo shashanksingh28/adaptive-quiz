@@ -1,24 +1,16 @@
 Created By: Bob Chen
-Last Update: 06/21/2016
+Last Update: 07/19/2016
 
-Finished but not committed:
+Finished:
 
-+Redo CSS for loginstyle
-+Create login view with Angular framework (login, register, forgot password)
-+Create single-page layout for use inside the app
++Views for askquestion, coursedata, and myaccount
 
+To Do:
 
+1. Create course-based structure in database
+2. Receive data in Angular from database
+3. Format data for display
 
-To Do Soon (Next two weeks):
+Later To Do:
 
-+Create views/CSS for use inside single-page layout (Dashboard w/ calendar, Questions, Ask Question, My Account)
-+Connect views to layout using Angular
-+Add pug module to app (rendering views)
-
-
-
-To Do Later:
-+Add accounttype(student or teacher) property to user model
-+Connect data from Angular to Node/MongoDB and vice versa
-+Add forget password functionality
-+Add class model and implement functionality to views
++ Restructure explanations system

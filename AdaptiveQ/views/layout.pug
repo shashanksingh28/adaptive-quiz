@@ -21,6 +21,8 @@ html(ng-app=ngapp)
       script(src="/js/main.js")
       script(src="/ui-bootstrap-custom-build/ui-bootstrap-custom-tpls-1.3.3.min.js")
       script(src="/js/ng-tags-input.min.js")
+      script(src="https://code.jquery.com/jquery-1.12.4.min.js", integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=", crossorigin="anonymous")
+      script(src="/js/bootstrap.min.js")
 
 
   body
@@ -40,15 +42,24 @@ html(ng-app=ngapp)
 
           //- NavBar Buttons
           .collapse.navbar-collapse(id="navbar-collapse")
-             ul.nav.navbar-nav
-               li: a(href="/question") Questions
-               - if(true)
-                 li: a(href="/askquestion") Ask Question
-                 li: a(href="/classdata") Class Data
-             ul.nav.navbar-nav.navbar-right
-               li: p.navbar-text Signed in as {{ message }}
-               li: a(href="/myaccount") My Account
-               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
+            ul.nav.navbar-nav
+              li: a(href="/question") Questions
+              - if(true)
+                li: a(href="/askquestion") Ask Question
+                li: a(href="/coursedata") Course Data
+            ul.nav.navbar-nav.navbar-right
+              li: p.navbar-text Signed in as {{ message }}
+
+              li.dropdown
+                a(data-toggle="dropdown", class="dropdown-toggle", href='#') Courses
+                  span.caret
+                ul.dropdown-menu
+                  li: a(href='#') Java
+                  li: a(href='#') Javascript
+                  li: a(href='#') Introduction to Computer Science
+
+              li: a(href="/myaccount") My Account
+              li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
 
     block content
       main(ng-view)

@@ -1,0 +1,87 @@
+link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
+#content-container.container
+  .row
+    .col-md-12
+      .course-box
+        .box-header
+          h1 Course: 
+            b Java
+          button(type="button", class="btn btn-default", ng-click="open=true") Add Concept
+        .concepts
+          ul
+            - for(var i = 0; i < 5; i ++)
+              li
+                .item
+                  h5 variables
+                  h6 10 Questions
+                  .data-bar
+                    .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
+                      .bar
+                      p {{ getConceptGreen() }}
+                    .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
+                      .bar
+                      p {{ getConceptYellow() }}
+                    .unattempted(ng-style="{'width': getConceptYellow()}")
+                      .bar
+                      p {{ getConceptRed() }}
+  .row
+    .col-md-6
+      .student-list-box
+        .box-header
+          h2 Students
+          h3 7 Enrolled
+        .students
+          form
+            ul
+              li(ng-repeat="student in students")
+                .item
+                  input(type="radio", id="student{{$index}}", name="students", ng-value="{{ student }}", ng-model="$parent.student")
+                  label.radio(for="student{{$index}}")
+                    h5 {{ student.name }}
+                    h6 More Info
+                    .data-bar
+                      .attemptedCorrect(ng-style="{'width': getStudentGreen()}")
+                        .bar
+                        p {{ getConceptGreen() }}
+                      .attemptedIncorrect(ng-style="{'width': getStudentRed()}")
+                        .bar
+                        p {{ getConceptYellow() }}
+                      .unattempted(ng-style="{'width': getStudentYellow()}")
+                        .bar
+                        p {{ getConceptRed() }}
+    .col-md-6
+      .student-data-box
+        .box-header
+          h2 {{ student.name }}
+        .concepts
+          ul(ng-hide="student.name == 'No Student Chosen'")
+            - for(var i = 0; i < 5; i ++)
+              li
+                .item
+                  h5 Concept 
+                  h6 Questions: 10
+                  .data-bar
+                    .attemptedCorrect(style="width:45%;")
+                      .bar
+                      p 45%
+                    .attemptedIncorrect(style="width:30%;")
+                      .bar
+                      p 30%
+                    .unattempted(style="width:25%;")
+                      .bar
+                      p 25%
+
+#addConcept(ng-show="open")
+  .modal-header
+    h3 Add Concept
+  .modal-body
+    form(ng-hide="conceptReady", ng-submit="conceptReady=true")
+      input(type="text", class="form-control", ng-model="newConcept", placeholder="New Concept", maxlength="28", required)
+      button(type="submit", class="btn btn-success") Create
+      button(type="button", class="btn btn-warning", ng-click="open=false") Cancel
+    .confirm(ng-show="conceptReady")
+      h4 Confirm concept?
+      h5 {{ newConcept }}
+      button(type="submit", class="btn btn-success", ng-click="createConcept()") Yes
+      button(type="button", class="btn btn-warning", ng-click="conceptReady=false") No
+

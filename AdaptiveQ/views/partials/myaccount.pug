@@ -1,2 +1,46 @@
-h1 This is the Account Partial
-h2 {{ test }}
+link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
+
+#content-container
+  .content-box
+    h1 Account Details
+    .item
+      h4 Name:
+    .item
+      h4 Email:
+    .item
+      h4 Password: ********
+    .item
+      h4 Courses:
+      table.table
+        tr
+          th: h5 Java
+          th: h5 Stephen Hawking
+          th: button(type="button", class="btn btn-danger btn-sm")
+                span.glyphicon.glyphicon-remove-circle
+        tr
+          th: h5 Javascript
+          th: h5 Carl Sagan
+          th: button(type="button", class="btn btn-danger btn-sm")
+                span.glyphicon.glyphicon-remove-circle
+        tr
+          th: h5 Introduction to Computer Science
+          th: h5 Bill Nye
+          th: button(type="button", class="btn btn-danger btn-sm")
+                span.glyphicon.glyphicon-remove-circle
+        tr
+          th: button#enroll(type="button", class="btn btn-success btn-sm", ng-click="open=true") Join A Course
+
+    .dialog-box(ng-show="open")
+      h3 Find a Course
+      form(ng-submit="courseFound=true", ng-hide="courseFound")
+        .form-group
+          label Enter Course Code
+          input(type="password", class="form-control", ng-model="courseCode", placeholder="XXXXXX", minlength="6", maxlength="6", required)
+          h6 No Courses Found
+          button(type="submit", class="btn btn-success") Find Course
+          button(type="button", class="btn btn-warning", ng-click="open=false") Cancel
+      .courseFound(ng-show="courseFound")
+        h5 Course Name:
+        h5 Instructor:
+        button(type="button", class="btn btn-success") Join Course
+        button(type="button", class="btn btn-warning", ng-click="courseFound=false") Cancel

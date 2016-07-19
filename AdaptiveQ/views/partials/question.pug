@@ -6,13 +6,13 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
       #sidebar-header
         h3 Questions
         h6 Sort By:&nbsp
-        .btn-group(is-open="status.isopen", uib-dropdown)
-          button(type="button", class="btn btn-default btn-xs", uib-dropdown-toggle) {{ order }}
+        .btn-group.sortButtons
+          button(data-toggle="dropdown", class="btn btn-default btn-xs dropdown-toggle") {{ order }}
+          ul.dropdown-menu
+            li: a(href='#', ng-click="sortByDate()") Date
+            li: a(href='#', ng-click="sortByStatus()") Status
           button(type="button", class="btn btn-default btn-xs", ng-click="switchReverse();")
             span(ng-class="reverseIcon")
-          ul.dropdown-menu(uib-dropdown-menu, role="menu")
-            li(role="menuitem"): a(href="#", ng-click="sortByDate()") Date
-            li(role="menuitem"): a(href="#", ng-click="sortByStatus();") Status
       #question-list
         ul
           li(ng-repeat="question in questions")
@@ -26,8 +26,6 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                   .unattempted(ng-switch-when="unattempted", title="Unattempted")
                 h6 {{ question.date | date}}
       #sidebar-footer
-        button(type="button", class="btn btn-default btn-xs")
-          span(class="glyphicon glyphicon-flag")
 
   .question-area(ng-show="!recordExists")
     .question-box
@@ -43,7 +41,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 label.radio(for="option{{$index}}") {{option}}
           p(ng-show="showHint") Hint: {{ question.hint }}
           button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.option == ""') Confirm
-          button(type="button", class="btn btn-link btn-sm", ng-click="showHint=true;") Need a hint?
+          button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="showHint") Need a hint?
 
   .question-area(ng-show="recordExists")
       .question-box
