@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Concepts = require('../models/concept');
-var User = require('../models/user');
+var Users = require('../models/user');
 var randomstring = require('randomstring');
 var emailer = require('../helpers/emailer');
 var localhost = "http://localhost:3000/";
@@ -45,13 +45,14 @@ router.post('/login', function(req, res, next){
     var email = req.body.email;
     var pass = req.body.password;
     console.log(email);
-    User.getUserByEmail(email)
+    Users.getUserByEmail(email)
         .then(function (user){
             if(!user){
                 console.log("Email not found");
                 res.send({'status' : 'ERROR', 'eMessage' : 'Email Not Found!'});
             }
             if(user.email){
+ 
                 if(user.password == pass){
                     req.session.user = user;
                     delete req.session.user.records;
@@ -81,20 +82,22 @@ router.post('/login', function(req, res, next){
                     res.send({'status' : 'ERROR', 'eMessage' : 'Incorrect password!'});
                 }
             }
+        },function(error){
+			console.log("Database connectivity issue");
+			res.send({'status' : 'ERROR', 'eMessage' : 'Incorrect password!'});
         });
 });
 
 router.post('/register', function(req, res){
-    User.getUserByEmail(req.body.email)
+    Users.getUserByEmail(req.body.email)
         .then(function (user){
             if(user && user.email){
-                // TODO: redirect to error
                 console.log("Found an existing user : " + user);
+                res.send("Found an existing user with same email. Please use reset password link");
             }
             else{
-                User.createUser(req.body.email, req.body.password, req.body.username)
+                Users.createUser(req.body.email, req.body.password, req.body.username)
                     .then(function(savedUser){
-                        console.log("Saved: " + savedUser);
                         req.session.user = savedUser;
                         if(savedUser.email != "adaptq@gmail.com"){
                             req.session.isTeacher = false;
@@ -103,17 +106,18 @@ router.post('/register', function(req, res){
                             req.session.isTeacher = true;
                         }
                         req.session.startTime = Date.now();
-                        res.redirect('/');
+                        res.send({status : 'OK'});
                     }, function (err){
-                        console.log("Error in saving" + newUser +"\n"+err);
-                        // TODO redirect to error
-                    });
+                        console.log("Error in saving" + newUsers +"\n"+err);
+                });
             }
+        }, function(error){
+        	console.log('Failed to search ' + error);
         });
 });
 
 router.post('/recover', function(req, res){
-    User.getUserByEmail(req.body.recoveryEmail)
+    Users.getUserByEmail(req.body.recoveryEmail)
         .then(function (user){
             if(!user){
                 res.send({'status' : 'ERROR', 'eMessage' : 'No such email found'});
@@ -144,7 +148,7 @@ router.post('/recover', function(req, res){
 router.get('/resetPaswword', function(req, res){
     var token = req.query.token;
     console.log(token);
-    User.getUserForToken(token)
+    Users.getUserForToken(token)
         .then(function(user){
             if(user){
                 res.render('pwrecovery',{userEmail: user.email, userToken: token});
@@ -164,7 +168,7 @@ router.post('/resetPassword', function(req, res){
     if(!token || !userEmail || !password){
         res.send({status: 'ERROR', eMessage: 'Required Parameters not provided'});
     }
-    User.getUserForToken(token)
+    Users.getUserForToken(token)
         .then(function(user){
             if(user && userEmail == user.email){
                 user.password = password;

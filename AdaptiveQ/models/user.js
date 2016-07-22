@@ -18,20 +18,19 @@ userSchema.plugin(autoIncrement.plugin, 'Users');
 var Users = mongo.model('Users', userSchema);
 
 Users.getUserByEmail = function(email){
-  return User.findOne({'email':email}).exec();
+  	return Users.findOne({'email':email}).exec();
 };
 
 Users.getUserById = function(id){
-
-  return User.findById(id).exec();
+  return Users.findById(id).exec();
 };
 
 Users.getAllUsers = function(){
-  return User.find().exec();
+  return Users.find().exec();
 };
 
 Users.createUser = function(email, password, name){
-  var newUser = User({
+  var newUser = Users({
     email: email,
     password: password,
     name: name,
@@ -43,15 +42,15 @@ Users.createUser = function(email, password, name){
 };
 
 Users.addRecordToUserId = function(userId,record){
-  return User.update({'_id': userId},{$push:{'records':record}}).exec();
+  return Users.update({'_id': userId},{$push:{'records':record}}).exec();
 };
 
 Users.updateHint = function(userId){
-  return User.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
+  return Users.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
 }
 
 Users.getUserForToken = function(token){
-  return User.findOne({resetPasswordToken : token}).exec();
+  return Users.findOne({resetPasswordToken : token}).exec();
 }
 
 module.exports = Users;

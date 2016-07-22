@@ -5,8 +5,8 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongo.connection);
 
 var conceptsSchema = new Schema({
-  title: { type : String, required: true},
   courseId: {type: Number, required: true},
+  title: { type : String, required: true},
   children: Array
 });
 

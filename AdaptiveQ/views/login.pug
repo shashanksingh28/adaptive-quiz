@@ -44,14 +44,14 @@ block content
       .form-group
         label I am a:
         #accountTypes
-          input(type="radio", name="accountType", ng-model="model.accountType", value="Student", checked, required)
+          input(type="radio", name="accountType", ng-model="model.accountType", value="Student", checked)
           span Student
           br
           input(type="radio", name="accountType", ng-model="model.accountType", value="Teacher")
           span Teacher
       .form-group.slidedown(ng-show="model.accountType == 'Teacher'")
         label Teacher Code:
-        input(type="text", class="form-control", ng-model="model.teacherCode", placeholder="xxxxxx", required)
+        input(type="text", class="form-control", ng-model="model.teacherCode", placeholder="xxxxxx")
         br
       .form-group
         label Name:
