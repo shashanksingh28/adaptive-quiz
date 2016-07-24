@@ -23,9 +23,12 @@ function requireLogin (req, res, next) {
 
 router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
-        // show dashboard here
-        //MeanData = getMean();
-        res.render('layout',{ isTeacher : req.session.isTeacher});
+        Users.getUserById(req.session.user._id)
+            .then(function(user){
+                res.render('layout', user);
+            }, function (error){
+                res.send({'status': 'ERROR', 'eMessage': error });
+            });
     }
     else
     {
