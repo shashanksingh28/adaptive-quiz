@@ -42,18 +42,6 @@ block content
     h2 Create Account
     form(ng-submit="register()")
       .form-group
-        label I am a:
-        #accountTypes
-          input(type="radio", name="accountType", ng-model="model.accountType", value="Student", checked)
-          span Student
-          br
-          input(type="radio", name="accountType", ng-model="model.accountType", value="Teacher")
-          span Teacher
-      .form-group.slidedown(ng-show="model.accountType == 'Teacher'")
-        label Teacher Code:
-        input(type="text", class="form-control", ng-model="model.teacherCode", placeholder="xxxxxx")
-        br
-      .form-group
         label Name:
         input(type="text", class="form-control", ng-model="model.name", placeholder="Full Name", required)
       .form-group
@@ -64,7 +52,7 @@ block content
         input(type="password", class="form-control", ng-model="model.password", placeholder="New Password", required)
       .form-group
         label Confirm Password:
-        input(type="password", class="form-control", ng-model="confirmPassword", placeholder="Confirm Password", required)
+        input(type="password", class="form-control", ng-model="passwordConfirm", placeholder="Confirm Password", required)
       p(class="errormsg") {{ error_msg }}
       button(type="submit", class="btn btn-primary btn-block") Create Account
       br

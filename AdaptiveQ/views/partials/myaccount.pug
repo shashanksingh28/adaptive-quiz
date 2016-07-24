@@ -5,42 +5,87 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
     h1 Account Details
     .item
       h4 Name:
+      button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangeName=true") Change
     .item
       h4 Email:
+      button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangeEmail=true") Change
     .item
       h4 Password: ********
+      button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangePassword=true") Change
     .item
       h4 Courses:
       table.table
         tr
           th: h5 Java
           th: h5 Stephen Hawking
-          th: button(type="button", class="btn btn-danger btn-sm")
+          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave('Java')")
                 span.glyphicon.glyphicon-remove-circle
         tr
           th: h5 Javascript
           th: h5 Carl Sagan
-          th: button(type="button", class="btn btn-danger btn-sm")
+          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave('Javascript')")
                 span.glyphicon.glyphicon-remove-circle
         tr
           th: h5 Introduction to Computer Science
           th: h5 Bill Nye
-          th: button(type="button", class="btn btn-danger btn-sm")
+          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave('Introduction to Computer Science')")
                 span.glyphicon.glyphicon-remove-circle
         tr
-          th: button#enroll(type="button", class="btn btn-success btn-sm", ng-click="open=true") Join A Course
+          th: button#enroll(type="button", class="btn btn-success btn-sm", ng-click="resetDialogs(); openAddCourse=true") Join A Course
 
-    .dialog-box(ng-show="open")
+    .dialog-box.changeName(ng-show="openChangeName")
+      h3 Change Name
+      form(ng-submit="changeName()")
+        .form-group
+          label Enter New Name 
+          input(type="text", class="form-control", ng-model="newName", placeholder="New Name", required)
+          h6 {{ errorMsg }}
+          button(type="submit", class="btn btn-success") Confirm 
+          button(type="button", class="btn btn-warning", ng-click="resetDialogs()") Cancel
+
+    .dialog-box.changeEmail(ng-show="openChangeEmail")
+      h3 Change Email
+      form(ng-submit="changeEmail()")
+        .form-group
+          label Enter New Email 
+          input(type="email", class="form-control", ng-model="newEmail", placeholder="New Email", required)
+          h6 {{ errorMsg }}
+          button(type="submit", class="btn btn-success") Confirm 
+          button(type="button", class="btn btn-warning", ng-click="resetDialogs()") Cancel
+
+    .dialog-box.changePassword(ng-show="openChangePassword")
+      h3 Change Password
+      form(ng-submit="changePassword()")
+        .form-group
+          label Enter New Password 
+          input(type="password", class="form-control", ng-model="newPassword", placeholder="New Password", required)
+          label Confirm Password
+          input(type="password", class="form-control", ng-model="confirmPassword", placeholder="New Password", required)
+          h6 {{ errorMsg }}
+          button(type="submit", class="btn btn-success") Confirm 
+          button(type="button", class="btn btn-warning", ng-click="resetDialogs()") Cancel
+
+    .dialog-box.addCourse(ng-show="openAddCourse")
       h3 Find a Course
-      form(ng-submit="courseFound=true", ng-hide="courseFound")
+      form(ng-submit="findCourse()", ng-hide="courseFound")
         .form-group
           label Enter Course Code
           input(type="password", class="form-control", ng-model="courseCode", placeholder="XXXXXX", minlength="6", maxlength="6", required)
-          h6 No Courses Found
+          h6 {{ errorMsg }}
           button(type="submit", class="btn btn-success") Find Course
-          button(type="button", class="btn btn-warning", ng-click="open=false") Cancel
+          button(type="button", class="btn btn-warning", ng-click="resetDialogs()") Cancel
       .courseFound(ng-show="courseFound")
-        h5 Course Name:
-        h5 Instructor:
-        button(type="button", class="btn btn-success") Join Course
+        h6 Course Name:
+        h5 Sample Course Name
+        h6 Instructor:
+        h5 Sample Instructor
+        button(type="button", class="btn btn-success", ng-click="joinCourse()") Join Course
         button(type="button", class="btn btn-warning", ng-click="courseFound=false") Cancel
+
+    .dialog-box.deleteCourse(ng-show="openDeleteCourse")
+      h3 Leave Course
+      h6 Are you sure you want to leave this course?
+      h6 {{ courseToLeave }}
+      button(type="button", class="btn btn-danger", ng-click="leaveCourse()") Confirm
+      button(type="button", class="btn btn-warning", ng-click="openDeleteCourse=false") Cancel
+

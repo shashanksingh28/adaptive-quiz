@@ -30,7 +30,7 @@ input, textarea{
   box-shadow: 0px 10px 30px rgba(0,0,0,1);
 }
 
-.question, .options, .options-unattempted{
+.question, .options {
   width: 100%;
   padding: 15px;
 }
@@ -129,7 +129,6 @@ input[type="checkbox"] {
 }
 
 .question-footer h5 {
-  color: red;
   margin-bottom: 15px;
 }
 
@@ -146,70 +145,6 @@ form button[type="button"]:hover {
   color: #fff;
 }
 
-/* Explanation */
-.chosen {
-  outline-style: solid;
-  outline-color: red;
-}
-
-.correct {
-  outline-style: none;
-  background-color: green;
-  color: #fff;
-}
-
-.explanations {
-  border-top-style: solid;
-  border-top-color: #fff;
-}
-
-.explanation-buttons {
-  width: 100%;
-}
-
-.explanation-buttons button {
-  display: inline;
-  margin: 0 5px 20px 5px;
-  padding: 0 5px;
-}
-
-.explanation-buttons .right{
-  float: right;
-}
-
-.explanation {
-  border: 2px solid #fff;
-  padding: 5px;
-  margin-bottom: 5px;
-  background-color: #0a5a9c;
-}
-
-.explanation h5 {
-  float: right;
-}
-
-.explanation h6 {
-  margin-bottom: 10px;
-}
-
-.explanation button {
-  font-size: 12px;
-  margin-right: 5px;
-  padding: 0 5px;
-  float: right;
-}
-
-#newExplanation button {
-  margin: 5px;
-  padding: 0 2px;
-}
-
-#newExplanation textarea {
-  color: #000;
-  resize: none;
-  width: 100%;
-}
-
 .success {
   text-align: center;
   z-index: 999;
@@ -217,9 +152,10 @@ form button[type="button"]:hover {
   background-color: #428bca;
   color: #fff;
   position: absolute;
-  top: 230px;
-  left: 602px;
+  top: 45%;
+  left: 50%;
   padding: 10px;
+  margin: -50px 0 0 -90px;
 }
 
 .success h4 {

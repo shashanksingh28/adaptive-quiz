@@ -29,6 +29,10 @@ ul {
   display: inline-block;
 }
 
+.box-header h3 {
+  float: right;
+}
+
 .box-header button {
   display: inline-block;
   float: right;
@@ -71,15 +75,15 @@ ul {
 }
 
 .attemptedCorrect .bar {
-  background-color: green;
+  background-color: #009400;
 }
 
 .attemptedIncorrect .bar {
-  background-color: red;
+  background-color: #ad2a1a;
 }
 
 .unattempted .bar {
-  background-color: yellow;
+  background-color: #bcb000;
 }
 
 input[type="radio"] {

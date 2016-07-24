@@ -49,7 +49,7 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
     };
 }]);
 
-loginApp.controller('registerController', ['$http','$window', '$scope', '$rootScope', function($http, $window, $scope, $rootScope){
+loginApp.controller('registerController', function($scope, $rootScope){
     $scope.error_msg = '';
     $scope.model = 
         {accountType: '',
@@ -57,12 +57,11 @@ loginApp.controller('registerController', ['$http','$window', '$scope', '$rootSc
         email: '',
         password: '',
         teacherCode: ''};
-    $scope.passwordConfirm = '';
 
     $scope.register = function(){
         $scope.error_msg = "";
 
-        if($scope.model.password != $scope.confirmPassword){
+        if($scope.model.password != $scope.passwordConfirm){
             $scope.error_msg = "Passwords do not match.";
             return false;
         }
@@ -93,7 +92,7 @@ loginApp.controller('registerController', ['$http','$window', '$scope', '$rootSc
         $scope.error_msg = '';
         $rootScope.form = 1;
     };
-}]);
+});
 
 loginApp.controller('recoveryController', ['$http','$scope','$rootScope',function($http, $scope, $rootScope){
     $scope.error_msg = "";

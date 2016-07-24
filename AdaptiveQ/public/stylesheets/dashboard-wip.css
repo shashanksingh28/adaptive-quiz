@@ -30,6 +30,52 @@
   margin: 0px;
 }
 
+/* Concept Panel */
+
+ul {
+  list-style: none;
+}
+
+.item {
+  border-bottom: 1px solid #428bca;
+  padding: 5px 0;
+}
+
+.item h5 {
+  float: left;
+}
+
+.item h6 {
+  float: right;
+  margin-bottom: 15px;
+}
+
+.data-bar {
+  clear: both;
+}
+
+.data-bar .attemptedCorrect, .data-bar .attemptedIncorrect, .data-bar .unattempted {
+  display: inline-block;
+  font-size: 12px;
+}
+
+.bar {
+  height: 10px;
+}
+
+.attemptedCorrect .bar {
+  background-color: #009400;
+}
+
+.attemptedIncorrect .bar {
+  background-color: #ad2a1a;
+}
+
+.unattempted .bar {
+  background-color: #bcb000;
+}
+
+
 /* Question Panel */
 #questionInfo {
   display: table;
@@ -59,18 +105,17 @@
   outline: none;
 }
 
-.attemptedCorrect button span {
-  background-color: #99cc99;
-  color: #000;
-}
-
-.attemptedIncorrect button span {
-  background-color: red;
+.attemptedCorrect button{
+  background-color: #009400;
   color: #fff;
 }
 
-.unattempted button span {
-  background-color: yellow;
-  border-radius: 32px;
-  color: #000;
+.attemptedIncorrect button {
+  background-color: #ad2a1a;
+  color: #fff;
+}
+
+.unattempted button {
+  background-color: #bcb000;
+  color: #fff;
 }

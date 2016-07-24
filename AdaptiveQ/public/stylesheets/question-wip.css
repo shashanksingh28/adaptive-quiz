@@ -109,19 +109,19 @@ ul {
 .attemptedCorrect {
   height: 12px;
   width: 12px;
-  background-color: green;
+  background-color: #009400;
 }
 
 .attemptedIncorrect {
   height: 12px;
   width: 12px;
-  background-color: red;
+  background-color: #ad2a1a;
 }
 
 .unattempted {
   height: 12px;
   width: 12px;
-  background-color: yellow;
+  background-color: #bcb000;
 }
 
 #sidebar-footer {

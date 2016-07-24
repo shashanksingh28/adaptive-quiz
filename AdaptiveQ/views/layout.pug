@@ -48,16 +48,13 @@ html(ng-app=ngapp)
                 li: a(href="/askquestion") Ask Question
                 li: a(href="/coursedata") Course Data
             ul.nav.navbar-nav.navbar-right
-              li: p.navbar-text Signed in as {{ message }}
-
+              li: p.navbar-text Signed in as {{ user.name }}
               li.dropdown
                 a(data-toggle="dropdown", class="dropdown-toggle", href='#') Courses
                   span.caret
                 ul.dropdown-menu
-                  li: a(href='#') Java
-                  li: a(href='#') Javascript
-                  li: a(href='#') Introduction to Computer Science
-
+                  li(ng-repeat="course in courses")
+                    a(href='#') {{ course }}
               li: a(href="/myaccount") My Account
               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
 
