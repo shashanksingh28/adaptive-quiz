@@ -49,7 +49,7 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
     };
 }]);
 
-loginApp.controller('registerController', function($scope, $rootScope){
+loginApp.controller('registerController', ['$http', '$window', '$scope', '$rootScope', function($http, $window, $scope, $rootScope){
     $scope.error_msg = '';
     $scope.model = 
         {accountType: '',
@@ -92,7 +92,7 @@ loginApp.controller('registerController', function($scope, $rootScope){
         $scope.error_msg = '';
         $rootScope.form = 1;
     };
-});
+}]);
 
 loginApp.controller('recoveryController', ['$http','$scope','$rootScope',function($http, $scope, $rootScope){
     $scope.error_msg = "";

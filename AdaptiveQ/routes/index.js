@@ -25,7 +25,8 @@ router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
         Users.getUserById(req.session.user._id)
             .then(function(user){
-                res.render('layout', user);
+                console.log(user);
+                res.render('layout', { user_server : user } );
             }, function (error){
                 res.send({'status': 'ERROR', 'eMessage': error });
             });

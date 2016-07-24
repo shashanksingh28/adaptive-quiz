@@ -1,6 +1,6 @@
 block variables
   - var ngapp = 'mainApp'
-
+  
 doctype html
 html(ng-app=ngapp)
   head
@@ -23,7 +23,9 @@ html(ng-app=ngapp)
       script(src="/js/ng-tags-input.min.js")
       script(src="https://code.jquery.com/jquery-1.12.4.min.js", integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=", crossorigin="anonymous")
       script(src="/js/bootstrap.min.js")
-
+      script.
+        //Receive User from res.render
+        var user_client = !{ JSON.stringify(user_server) }
 
   body
     block startscripts
@@ -48,13 +50,13 @@ html(ng-app=ngapp)
                 li: a(href="/askquestion") Ask Question
                 li: a(href="/coursedata") Course Data
             ul.nav.navbar-nav.navbar-right
-              li: p.navbar-text Signed in as {{ user.name }}
+              li: p.navbar-text Signed In as {{user.email}} 
               li.dropdown
                 a(data-toggle="dropdown", class="dropdown-toggle", href='#') Courses
                   span.caret
                 ul.dropdown-menu
-                  li(ng-repeat="course in courses")
-                    a(href='#') {{ course }}
+                  li(ng-repeat="course in user.courses")
+                    a(href='#') {{ course.name }}
               li: a(href="/myaccount") My Account
               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
 

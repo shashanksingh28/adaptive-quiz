@@ -30,12 +30,9 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
 }]);
 
 mainApp.service('dbService', ['$http', function($http){
-    this.getCourse = function(){
-        //Course can be retrieved here or in routes when page is loaded
-    };
     
     this.getUser = function(){
-        //User can be retrieved here or in routes when page is loaded
+        return user_client;
     };
 
     this.getCourseQuestions = function(){
@@ -44,6 +41,22 @@ mainApp.service('dbService', ['$http', function($http){
 
     this.postAttempt = function(){
         //$http.post an question attempt to user.records[]
+    };
+
+    this.postQuestions = function(model){
+        $http.post('/postquestion', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                $scope.error_msg = response.eMessage;
+            }
+            else{
+                $scope.error_msg = "Question Created";
+                //refresh page
+            }
+        }, function(error){
+            $scope.error_msg = "Problem in connecting to server";
+        });  
     };
 
     this.postExplanation = function(){
@@ -59,8 +72,26 @@ mainApp.service('dbService', ['$http', function($http){
     };
 }]);
 
+mainApp.service('courseService', ['dbService', function(dbService){
+    
+    //Initialize array of course objects
+    this.courses = dbService.getUser().courses;
+
+    this.currentCourse = courses[0];
+
+
+
+}]);
+
 mainApp.controller('navController', ['$scope', '$http', 'dbService', function ($scope, $http, dbService) {
-    $scope.user = { name: 'Frank Realman' };
+
+    var loadData = function(){
+        //$scope.user = user;
+        //$scope.
+    };
+
+    $scope.user = dbService.getUser();
+
     $scope.courses = ['Java', 'Javascript', 'Introduction To Computer Science'];
 
     $scope.logout = function(){
@@ -312,6 +343,7 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
 
 mainApp.controller('askQuestionController', ['$scope', 'dbService', function($scope, dbService){
     $scope.model = {
+        course: {},
         question: "",
         code: "",
         options: [],
@@ -334,6 +366,7 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
     $scope.submitQuestion = function(){
         console.log("Submitted");
         $scope.errorMsg = "";
+        dbService.postQuestion($scope.model);
         switch($scope.model.answer.length){
             case 1:
                 //TODO: Post Question with only 1 answer
@@ -373,6 +406,7 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
         }
         console.log("Question Created");
         console.dir($scope.model);
+
     };
 }]);
 
