@@ -34,9 +34,8 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/logout', function(req, res){
-    console.log("Destroying session");
     req.session.reset();
-    res.redirect('/');
+    res.send({'status': 'OK'});
 });
 
 router.post('/login', function(req, res, next){

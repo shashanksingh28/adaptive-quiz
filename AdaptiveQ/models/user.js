@@ -36,6 +36,7 @@ Users.createUser = function(email, password, name){
     password: password,
     name: name,
     records: [],
+    courses: [],
     created_at: Date.now(),
     hintsLeft: 10
   });
