@@ -21,8 +21,6 @@ function requireLogin (req, res, next) {
     }
 }
 
-
-/* GET home page. */
 router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
         // show dashboard here
@@ -44,7 +42,6 @@ router.get('/logout', function(req, res){
 router.post('/login', function(req, res, next){
     var email = req.body.email;
     var pass = req.body.password;
-    console.log(email);
     Users.getUserByEmail(email)
         .then(function (user){
             if(!user){
@@ -57,11 +54,10 @@ router.post('/login', function(req, res, next){
                     req.session.user = user;
                     delete req.session.user.records;
                     req.session.startTime = Date.now();
-                    req.session.isTeacher = false;
 
                     response = {'status':'OK'};
                     response.data = {};
-                    response.data.user = {'id': user._id, 'email' : user.email};
+                    response.data.user = {'id': user._id, 'email' : user.email, 'name': user.name, 'courses': user.courses};
                     if(user.email == "adaptq@gmail.com"){
                         req.session.isTeacher = true;
                         response.data.user.isInstructor = true;

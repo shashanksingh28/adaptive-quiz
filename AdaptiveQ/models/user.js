@@ -7,6 +7,7 @@ var userSchema = new Schema({
   email: { type : String, required: true},
   password: String,
   name: String,
+  courses : Array,
   records: Array,
   created_at: Date,
   hintsLeft: Number,
