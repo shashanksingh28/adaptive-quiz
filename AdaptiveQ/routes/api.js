@@ -62,7 +62,7 @@ router.post('/addQuestion', requireLogin, function(req, res){
                 Questions.addQuestion(q)
                 .then(function (savedQuestion){
                     // TODO : Send email to students
-                    res.send({'status' : 'OK'});
+                    sendOK(savedQuestion);
                 }, function (error){ sendError(error); });
             }
         }, function (error){ sendError(error); });
@@ -76,7 +76,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
         Questions.getAllCourseQuestions(courseId)
             .then(function (questions){
                 // Get user records. Delete answers if user has not attempted
-                User.getUserById(req.session.user._id)
+                Users.getUserById(req.session.user._id)
                     .then(function (user){
                         for(var i = 0; i < questions.length; ++i){
                             var attempted = false;
@@ -86,11 +86,16 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                                     break;
                                 }
                             }
-                            if (attempted) delete questions[i].answers;
+                            if (!attempted){
+                                // TODO : test why delete statement doesnt work
+                                questions[i].answers = [];
+                            }
                         }
-                        res.sendOK(questions);
+                        sendOK(questions);
                     }, function (error) {sendError(error);});
-            }, function (error) {sendError(error);});
+            }, function (error) {
+                sendError(error);
+            });
     }
 });
 
@@ -132,7 +137,6 @@ router.post('/addConcept', requireLogin, function(req, res, next){
                                         sendOK(savedConcept);
                                      },function (error){ sendError(error) });
                             }
-
                         }, function (error){ sendError(error); });
                 }
             }, function (error) {sendError(error);}

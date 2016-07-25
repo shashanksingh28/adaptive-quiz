@@ -48,7 +48,7 @@ Questions.getQuestionIdsOfConcept = function(courseId, conceptName){
 }
 
 Questions.getAllCourseQuestions = function(courseId){
-  return Questions.find({courseId: courseId},{ _id : 1 , concept : 1}).exec();
+  return Questions.find({courseId: courseId}).exec();
 }
 
 module.exports = Questions;

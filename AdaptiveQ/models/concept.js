@@ -7,7 +7,8 @@ autoIncrement.initialize(mongo.connection);
 var conceptsSchema = new Schema({
   courseId: {type: Number, required: true},
   name : { type : String, required: true},
-  children: Array
+  children : Array,
+  created_at : Date
 });
 
 conceptsSchema.plugin(autoIncrement.plugin, 'Concepts');
@@ -25,7 +26,8 @@ Concepts.getCourseConcepts = function(courseId){
 Concepts.addConcept = function(courseId, name){
     var concept = Concepts({
         courseId : courseId,
-        name : name
+        name : name,
+        created_at : Date.now()
     });
     return concept.save();
 }
