@@ -94,7 +94,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res, next){
     }
 });
 
-router.post('/addconcept', requireLogin, function(req, res, next){
+router.post('/addConcept', requireLogin, function(req, res, next){
     var concept = req.body;
     if(isEmpty(concept.name)){
         sendError('Cannot be empty');

@@ -15,7 +15,7 @@ conceptsSchema.plugin(autoIncrement.plugin, 'Concepts');
 var Concepts = mongo.model('concepts', conceptsSchema);
 
 Concepts.getConceptByName = function(courseId, conceptName){
-	return Concepts.find({courseId: courseId, name:conceptName}).exec();
+	return Concepts.findOne({courseId: courseId, name:conceptName}).exec();
 };
 
 Concepts.getCourseConcepts = function(courseId){
