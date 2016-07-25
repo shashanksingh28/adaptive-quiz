@@ -1,7 +1,7 @@
 var mongo = require('mongoose');
 var Schema = mongo.Schema;
 var autoIncrement = require('mongoose-auto-increment');
-autoincrement.initialize(mongo.connection);
+autoIncrement.initialize(mongo.connection);
 
 var courseSchema = new Schema({
 	instructorIds : Array, // list of instructor's  user Id's

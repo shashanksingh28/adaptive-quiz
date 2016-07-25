@@ -1,11 +1,10 @@
 var express = require('express');
 var router = express.Router();
 
-// Models to be used
 var Users = require('../models/user');
-var Courses = require('../models/courses');
-var Concepts = require('../models/concepts');
-var Questions = require('../models/questions');
+var Courses = require('../models/course');
+var Concepts = require('../models/concept');
+var Questions = require('../models/question');
 
 function requireLogin (req, res, next) {
     if (!req.session.user) {
@@ -19,25 +18,38 @@ function isEmpty(str){
     return (!str || str.length === 0);
 }
 
+function checkIfInstructor(course, userId){
+    var isInstructor = false;
+    for(var i = 0; i < course.instructorIds.length; ++i){
+        if(course.instructorIds[i] == userId){
+            isInstructor = true;
+            break;
+        }
+    }
+    return isInstructor;
+}
+
+function sendError(error){
+    console.log(error);
+    res.send({'status' : 'ERROR', 'eMessage' : error});
+}
+
+function sendOK(data){
+    res.send({'status' : 'OK', 'data' : data});
+}
+
 router.post('/addquestion', requireLogin, function(req, res, next){    
     var q = req.body;
     if((isEmpty(q.question) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers)){
-        res.send({ 'status' : 'ERROR', 'eMessage' : 'Empty question or not enough answers provided' });
+        sendError('Empty question or not enough answers provided');
     }
     else if(!q.course || q.concepts.len == 0){
-        res.send({'status' : 'ERROR', 'eMessage' : 'Question must belong to a course and have at least one concept'});
+        sendError('Question must belong to a course and have at least one concept');
     }
 
-    var course = Courses.getUserById
+    var course = Courses.getCourseById
         .then(function (course){
-            var isInstructor = false;
-            for(var i = 0; i < course.instructorIds.length; ++i){
-                if(course.instructorIds[i] == req.session.user._id){
-                    isInstructor = true;
-                    break;
-                }
-            }
-            if(!isInstructor){
+            if(!checkIfInstructor(course, req.session.user._id)){
                 res.send({'status' : 'ERROR', 'eMessage' : 'User not instructor for course!'});
             }
             else{
@@ -45,16 +57,47 @@ router.post('/addquestion', requireLogin, function(req, res, next){
                 .then(function (savedQuestion){
                     // TODO : Send email to students
                     res.send({'status' : 'OK'});
-                }, function (error){
-                    res.send({'status': 'ERROR', 'eMessage' : error});
-                });
+                }, function (error){ sendError(error); });
             }
-        }, function (error){
-            res.send({'status': 'ERROR', 'eMessage' : error});
-        });
-
+        }, function (error){ sendError(error); });
 });
 
 router.post('/addconcept', requireLogin, function(req, res, next){
-    
+    var concept = req.body;
+    if(isEmpty(concept.name)){
+        sendError('Cannot be empty');
+    }
+    else if(!concept.courseId){
+        sendError('No course specified');
+    }
+    else{
+        Courses.getCourseById(concept.courseId)
+            .then(function (course){
+                if(!checkIfInstructor(course, req.session.user._id)){
+                    sendError('Not instructor of the course!');                  
+                }
+                else{
+                    Concepts.getConceptByName(course._id, concept.name)
+                        .then(function (existingConcept){
+                            if(existingConcept){
+                                sendError('Concept already exists');
+                            }
+                            else{
+                                Concepts.addConcept(course._id,concept.name)
+                                    .then(function (savedConcept){
+                                        sendOK(savedConcept);
+                                     },function (error){ sendError(error) });
+                            }
+
+                        }, function (error){
+                            console.log(error);
+                            res.send({'status' : 'ERROR', 'eMessage' : error});
+                        });
+                }
+            }, function (error) {sendError(error);}
+        );
+    }
+
 });
+
+module.exports = router;
