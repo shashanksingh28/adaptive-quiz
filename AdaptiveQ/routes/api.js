@@ -46,10 +46,10 @@ function sendOK(data){
 //------- API functions --------//
 router.post('/addquestion', requireLogin, function(req, res, next){    
     var q = req.body;
-    if((isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers)){
+    if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
         sendError('Empty question or not enough answers provided');
     }
-    else if(!q.courseId || q.concepts.len == 0){
+    else if(!q.courseId || q.concepts.length == 0){
         sendError('Question must belong to a course and have at least one concept');
     }
 
@@ -68,7 +68,7 @@ router.post('/addquestion', requireLogin, function(req, res, next){
         }, function (error){ sendError(error); });
 });
 
-router.get('/courseQuestions', requireLogin, function(req, res, next){
+router.get('/getCourseQuestions', requireLogin, function(req, res, next){
     var courseId = req.query.courseId;
     if (!courseId) { sendError('No CourseId given.');}
     else
@@ -78,10 +78,17 @@ router.get('/courseQuestions', requireLogin, function(req, res, next){
                 // Get user records. Delete answers if user has not attempted
                 User.getUserById(req.session.user._id)
                     .then(function (user){
-                    for(var i = 0; i < questions.length; ++i){
-                        
-                        delete questions[i].answers;
-                    }
+                        for(var i = 0; i < questions.length; ++i){
+                            var attempted = false;
+                            for(var j = 0; j < user.records.length; ++j){
+                                if(user.records[j].qId == questions[i]._id){
+                                    attempted = true;
+                                    break;
+                                }
+                            }
+                            if (attempted) delete questions[i].answers;
+                        }
+                        res.sendOK(questions);
                     }, function (error) {sendError(error);});
             }, function (error) {sendError(error);});
     }
@@ -104,7 +111,7 @@ router.post('/addconcept', requireLogin, function(req, res, next){
                 else{
                     Concepts.getConceptByName(course._id, concept.name)
                         .then(function (existingConcept){
-                            if(existingConcept){
+                            if (existingConcept != null || ! typeof existingConcept === "undefined"){
                                 sendError('Concept already exists');
                             }
                             else{

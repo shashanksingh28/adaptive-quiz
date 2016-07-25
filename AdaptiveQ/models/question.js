@@ -13,7 +13,7 @@ var questionSchema = new Schema({
 	difficulty: Number, // Number {0,1,2}
 	created_at: Date,
 	hint: String,
-  	explainations: Array
+  	explanations: Array
 });
 
 questionSchema.plugin(autoIncrement.plugin, 'Questions');
