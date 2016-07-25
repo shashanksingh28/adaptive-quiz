@@ -81,7 +81,7 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
       button(type="button", class="btn btn-warning", ng-click="open=false") Cancel
     .confirm(ng-show="conceptReady")
       h4 Confirm concept?
-      h5 {{ newConcept }}
+      h5 {{ newConcept.name }}
       button(type="submit", class="btn btn-success", ng-click="createConcept()") Yes
       button(type="button", class="btn btn-warning", ng-click="conceptReady=false") No
 

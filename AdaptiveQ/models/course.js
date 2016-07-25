@@ -1,5 +1,6 @@
 var mongo = require('mongoose');
 var Schema = mongo.Schema;
+
 var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongo.connection);
 

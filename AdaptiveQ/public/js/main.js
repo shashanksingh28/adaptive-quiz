@@ -43,24 +43,41 @@ mainApp.service('dbService', ['$http', function($http){
         //$http.post an question attempt to user.records[]
     };
 
-    this.postQuestions = function(model){
-        $http.post('/postquestion', model).then(function(httpResponse){
+    this.postQuestion = function(model){
+        $http.post('/api/addquestion', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
-                $scope.error_msg = response.eMessage;
+                console.log(response.eMessage);
             }
             else{
                 $scope.error_msg = "Question Created";
                 //refresh page
             }
         }, function(error){
-            $scope.error_msg = "Problem in connecting to server";
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
         });  
     };
 
     this.postExplanation = function(){
         //$http.post an explanation to a question
+    };
+
+    this.postConcept = function(model){
+        $http.post('addconcept', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                $scope.error_msg = response.eMessage;
+            }
+            else{
+                $scope.error_msg = "Concept Added";
+                //refresh page
+            }
+        }, function(error){
+            $scope.error_msg = "Problem in connecting to server";
+        });
     };
 
     this.getStudents = function(){
@@ -79,7 +96,9 @@ mainApp.service('courseService', ['dbService', function(dbService){
 
     this.currentCourse = courses[0];
 
-
+    this.changeCourse = function(courseName){
+        
+    };
 
 }]);
 
@@ -343,47 +362,33 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
 
 mainApp.controller('askQuestionController', ['$scope', 'dbService', function($scope, dbService){
     $scope.model = {
-        course: {},
-        question: "",
+        courseId: 1,
+        text: "",
         code: "",
         options: [],
-        answer: [],
-        hint: "",
+        answers: [],
         concepts: [],
+        created_at: Date.now(),
+        hint: "",
+        explanations: [],
     };
 
     $scope.toggleSelection = function(answer){
-        var index = $scope.model.answer.indexOf(answer);
+        var index = $scope.model.answers.indexOf(answer);
 
         if(index > -1){
             // Answer was selected and needs to be removed
-            $scope.model.answer.splice(index, 1);
+            $scope.model.answers.splice(index, 1);
         }else{
-            $scope.model.answer.push(answer);
+            $scope.model.answers.push(answer);
         }
     };
 
     $scope.submitQuestion = function(){
         console.log("Submitted");
+        console.dir($scope.model);
         $scope.errorMsg = "";
         dbService.postQuestion($scope.model);
-        switch($scope.model.answer.length){
-            case 1:
-                //TODO: Post Question with only 1 answer
-                console.log("Question Created: ");
-                console.dir($scope.model);
-                $scope.success = true;
-                return 1;
-            case ($scope.model.answer.length > 1):
-                //TODO: Post Question with multiple answers
-                console.log("Question Created: ");
-                console.dir($scope.model);
-                $scope.success = true;
-                return 1;
-            default:
-                $scope.errorMsg = "Please Select Correct Answer(s)";
-                return 0;
-        }
     };
 
     $scope.loadConcepts = function(query){
@@ -399,15 +404,6 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
         return matches;
     };
 
-    $scope.submit = function(){
-        if($scope.model.answer.length === 0){
-            console.log("Please choose answers");
-            return false;
-        }
-        console.log("Question Created");
-        console.dir($scope.model);
-
-    };
 }]);
 
 mainApp.controller('courseDataController', ['$scope', 'dbService', function($scope, dbService){
@@ -496,8 +492,11 @@ mainApp.controller('courseDataController', ['$scope', 'dbService', function($sco
 
     $scope.createConcept = function(){
         // Post $scope.newConcept to current course
+        $scope.newConcept.courseId = 1;
+        //$scope.newConcept.courseId = courseService.currentCourse.courseId;
         console.log("New Concept: " + $scope.newConcept);
-        $scope.newConcept = '';
+        //dbService.postConcept($scope.newConcept);
+        $scope.newConcept.name = '';
         $scope.conceptReady = false;
         $scope.open = false;
         return 1;
