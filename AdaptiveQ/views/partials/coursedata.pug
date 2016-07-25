@@ -5,7 +5,7 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
       .course-box
         .box-header
           h1 Course: 
-            b Java
+            b {{ course }}
           button(type="button", class="btn btn-default", ng-click="open=true") Add Concept
         .concepts
           ul
@@ -76,7 +76,7 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
     h3 Add Concept
   .modal-body
     form(ng-hide="conceptReady", ng-submit="conceptReady=true")
-      input(type="text", class="form-control", ng-model="newConcept", placeholder="New Concept", maxlength="28", required)
+      input(type="text", class="form-control", ng-model="newConcept.name", placeholder="New Concept", maxlength="28", required)
       button(type="submit", class="btn btn-success") Create
       button(type="button", class="btn btn-warning", ng-click="open=false") Cancel
     .confirm(ng-show="conceptReady")

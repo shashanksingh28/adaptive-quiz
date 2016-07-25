@@ -51,7 +51,7 @@ mainApp.service('dbService', ['$http', function($http){
                 console.log(response.eMessage);
             }
             else{
-                $scope.error_msg = "Question Created";
+                console.log("Question Created");
                 //refresh page
             }
         }, function(error){
@@ -65,18 +65,18 @@ mainApp.service('dbService', ['$http', function($http){
     };
 
     this.postConcept = function(model){
-        $http.post('addconcept', model).then(function(httpResponse){
+        $http.post('/api/addconcept', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
-                $scope.error_msg = response.eMessage;
+                console.log(response.eMessage);
             }
             else{
-                $scope.error_msg = "Concept Added";
+                console.log("Concept Added");
                 //refresh page
             }
         }, function(error){
-            $scope.error_msg = "Problem in connecting to server";
+            console.log("Problem in connecting to server");
         });
     };
 
@@ -94,7 +94,7 @@ mainApp.service('courseService', ['dbService', function(dbService){
     //Initialize array of course objects
     this.courses = dbService.getUser().courses;
 
-    this.currentCourse = courses[0];
+    this.currentCourse = this.courses[0];
 
     this.changeCourse = function(courseName){
         
@@ -406,7 +406,8 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
 
 }]);
 
-mainApp.controller('courseDataController', ['$scope', 'dbService', function($scope, dbService){
+mainApp.controller('courseDataController', ['$scope', 'dbService', 'courseService', function($scope, dbService, courseService){
+    $scope.course = courseService.currentCourse.name;
     $scope.students = students;
     $scope.student = { name: 'No Student Chosen' };
     $scope.$watch('student', function(){
@@ -491,12 +492,11 @@ mainApp.controller('courseDataController', ['$scope', 'dbService', function($sco
     };
 
     $scope.createConcept = function(){
-        // Post $scope.newConcept to current course
-        $scope.newConcept.courseId = 1;
-        //$scope.newConcept.courseId = courseService.currentCourse.courseId;
-        console.log("New Concept: " + $scope.newConcept);
-        //dbService.postConcept($scope.newConcept);
-        $scope.newConcept.name = '';
+        $scope.newConcept.courseId = courseService.currentCourse._id;
+        console.log("New Concept: ");
+        console.dir($scope.newConcept);
+        var storeConcept = $scope.newConcept;
+        dbService.postConcept(storeConcept);
         $scope.conceptReady = false;
         $scope.open = false;
         return 1;
