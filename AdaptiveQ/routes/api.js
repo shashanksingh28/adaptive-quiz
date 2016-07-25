@@ -44,7 +44,7 @@ function sendOK(data){
 }
 
 //------- API functions --------//
-router.post('/addquestion', requireLogin, function(req, res, next){    
+router.post('/addQuestion', requireLogin, function(req, res){    
     var q = req.body;
     if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
         sendError('Empty question or not enough answers provided');
@@ -68,7 +68,7 @@ router.post('/addquestion', requireLogin, function(req, res, next){
         }, function (error){ sendError(error); });
 });
 
-router.get('/getCourseQuestions', requireLogin, function(req, res, next){
+router.get('/getCourseQuestions', requireLogin, function(req, res){
     var courseId = req.query.courseId;
     if (!courseId) { sendError('No CourseId given.');}
     else
@@ -91,6 +91,18 @@ router.get('/getCourseQuestions', requireLogin, function(req, res, next){
                         res.sendOK(questions);
                     }, function (error) {sendError(error);});
             }, function (error) {sendError(error);});
+    }
+});
+
+router.get('/getCourseConcepts', requireLogin, function(req, res){
+    var courseId = req.query.courseId;
+    if (!courseId) { sendError('No CourseId given.');}
+    else
+    {
+        Concepts.getCourseConcepts(courseId)
+            .then(function(concepts){
+                sendOK(concepts);
+            }, function (error){sendError(error);})
     }
 });
 
