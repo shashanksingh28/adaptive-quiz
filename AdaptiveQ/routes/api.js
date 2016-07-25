@@ -6,6 +6,7 @@ var Courses = require('../models/course');
 var Concepts = require('../models/concept');
 var Questions = require('../models/question');
 
+//------- Helper Functions --------//
 function requireLogin (req, res, next) {
     if (!req.session.user) {
         res.send({'status': 'ERROR', eMessage: 'Not signed in! Sign in first.'});
@@ -16,6 +17,10 @@ function requireLogin (req, res, next) {
 
 function isEmpty(str){
     return (!str || str.length === 0);
+}
+
+function checkIfEnrolled(user, courseId){
+    
 }
 
 function checkIfInstructor(course, userId){
@@ -38,16 +43,17 @@ function sendOK(data){
     res.send({'status' : 'OK', 'data' : data});
 }
 
+//------- API functions --------//
 router.post('/addquestion', requireLogin, function(req, res, next){    
     var q = req.body;
-    if((isEmpty(q.question) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers)){
+    if((isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers)){
         sendError('Empty question or not enough answers provided');
     }
     else if(!q.courseId || q.concepts.len == 0){
         sendError('Question must belong to a course and have at least one concept');
     }
 
-    var course = Courses.getCourseById
+    var course = Courses.getCourseById(q.courseId)
         .then(function (course){
             if(!checkIfInstructor(course, req.session.user._id)){
                 sendError('User not instructor for course.');
@@ -60,6 +66,25 @@ router.post('/addquestion', requireLogin, function(req, res, next){
                 }, function (error){ sendError(error); });
             }
         }, function (error){ sendError(error); });
+});
+
+router.get('/courseQuestions', requireLogin, function(req, res, next){
+    var courseId = req.query.courseId;
+    if (!courseId) { sendError('No CourseId given.');}
+    else
+    {
+        Questions.getAllCourseQuestions(courseId)
+            .then(function (questions){
+                // Get user records. Delete answers if user has not attempted
+                User.getUserById(req.session.user._id)
+                    .then(function (user){
+                    for(var i = 0; i < questions.length; ++i){
+                        
+                        delete questions[i].answers;
+                    }
+                    }, function (error) {sendError(error);});
+            }, function (error) {sendError(error);});
+    }
 });
 
 router.post('/addconcept', requireLogin, function(req, res, next){
