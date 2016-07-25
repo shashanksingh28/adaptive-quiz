@@ -31,6 +31,7 @@ Users.getAllUsers = function(){
 };
 
 Users.createUser = function(email, password, name){
+  console.log(email+password+name);
   var newUser = Users({
     email: email,
     password: password,

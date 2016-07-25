@@ -95,7 +95,7 @@ router.post('/register', function(req, res){
                 res.send("Found an existing user with same email. Please use reset password link");
             }
             else{
-                Users.createUser(req.body.email, req.body.password, req.body.username)
+                Users.createUser(req.body.email, req.body.password, req.body.name)
                     .then(function(savedUser){
                         req.session.user = savedUser;
                         if(savedUser.email != "adaptq@gmail.com"){

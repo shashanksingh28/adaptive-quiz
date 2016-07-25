@@ -20,20 +20,19 @@ questionSchema.plugin(autoIncrement.plugin, 'Questions');
 
 var Questions = mongo.model('Questions', questionSchema);
 
-Questions.addQuestion = function(courseId, text, code, options, answers, conceptName, difficulty, hint){
+Questions.addQuestion = function(question){
+    var newQuestion = Questions({
+        course : question.course,
+        text : question.text,
+        options : question.options,
+        answers : question.answers,
+        concepts : question.concepts,
+        hint : question.hint,
+        created_at : Date.now(),
+        explanations : []
+    });
 
-  var newQuestion = Questions({
-	  	courseId: courseId,
-	  	text: text,
-		options: options,
-		answers: answers,
-		concept: conceptName,
-		difficulty: difficulty,
-    	hint: hint,
-		created_at: Date.now(),
-		explainations: []
-	});
-  return newQuestion.save();
+    return newQuestion.save();
 }
 
 Questions.getQuestionById = function(qId){
