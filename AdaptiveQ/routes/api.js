@@ -43,14 +43,14 @@ router.post('/addquestion', requireLogin, function(req, res, next){
     if((isEmpty(q.question) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers)){
         sendError('Empty question or not enough answers provided');
     }
-    else if(!q.course || q.concepts.len == 0){
+    else if(!q.courseId || q.concepts.len == 0){
         sendError('Question must belong to a course and have at least one concept');
     }
 
     var course = Courses.getCourseById
         .then(function (course){
             if(!checkIfInstructor(course, req.session.user._id)){
-                res.send({'status' : 'ERROR', 'eMessage' : 'User not instructor for course!'});
+                sendError('User not instructor for course.');
             }
             else{
                 Questions.addQuestion(q)
@@ -89,15 +89,11 @@ router.post('/addconcept', requireLogin, function(req, res, next){
                                      },function (error){ sendError(error) });
                             }
 
-                        }, function (error){
-                            console.log(error);
-                            res.send({'status' : 'ERROR', 'eMessage' : error});
-                        });
+                        }, function (error){ sendError(error); });
                 }
             }, function (error) {sendError(error);}
         );
     }
-
 });
 
 module.exports = router;

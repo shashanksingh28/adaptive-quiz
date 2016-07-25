@@ -22,7 +22,7 @@ var Questions = mongo.model('Questions', questionSchema);
 
 Questions.addQuestion = function(question){
     var newQuestion = Questions({
-        course : question.course,
+        courseId : question.courseId,
         text : question.text,
         options : question.options,
         answers : question.answers,
