@@ -34,43 +34,45 @@ function checkIfInstructor(course, userId){
     return isInstructor;
 }
 
-function sendError(error){
-    console.log(error);
-    res.send({'status' : 'ERROR', 'eMessage' : error});
+var respOK = function(data){
+    this.status = "OK";
+    this.data = data;
 }
 
-function sendOK(data){
-    res.send({'status' : 'OK', 'data' : data});
+var respError = function(error){
+    console.log(error);
+    this.status = "ERROR";
+    this.eMessage = error;
 }
 
 //------- API functions --------//
 router.post('/addQuestion', requireLogin, function(req, res){    
     var q = req.body;
     if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
-        sendError('Empty question or not enough answers provided');
+        res.send(new respError('Empty question or not enough answers provided'));
     }
     else if(!q.courseId || q.concepts.length == 0){
-        sendError('Question must belong to a course and have at least one concept');
+        res.send(new respError('Question must belong to a course and have at least one concept'));
     }
 
     var course = Courses.getCourseById(q.courseId)
         .then(function (course){
             if(!checkIfInstructor(course, req.session.user._id)){
-                sendError('User not instructor for course.');
+                res.send(new respError('User not instructor for course.'));
             }
             else{
                 Questions.addQuestion(q)
                 .then(function (savedQuestion){
                     // TODO : Send email to students
-                    sendOK(savedQuestion);
-                }, function (error){ sendError(error); });
+                    res.send(new respOK(savedQuestion));
+                }, function (error){ res.send(new respError(error)); });
             }
-        }, function (error){ sendError(error); });
+        }, function (error){ res.send(new respError(error)); });
 });
 
 router.get('/getCourseQuestions', requireLogin, function(req, res){
     var courseId = req.query._id;
-    if (!courseId) { sendError('No CourseId given.');}
+    if (!courseId) { res.send(new respError('No CourseId given.')); }
     else
     {
         Questions.getAllCourseQuestions(courseId)
@@ -87,59 +89,61 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                                 }
                             }
                             if (!attempted){
-                                // TODO : test why delete statement doesnt work
                                 questions[i].answers = [];
                             }
                         }
-                        sendOK(questions);
-                    }, function (error) {sendError(error);});
+                        res.send(new respOK(questions));
+                    }, function (error) {
+                        res.send(new respError(error));
+                    });
             }, function (error) {
-                sendError(error);
+                res.send(new respError(error));
             });
     }
 });
 
 router.get('/getCourseConcepts', requireLogin, function(req, res){
     var courseId = req.query.courseId;
-    if (!courseId) { sendError('No CourseId given.');}
+    if (!courseId) { res.send(new respError('No CourseId given.'));}
     else
     {
         Concepts.getCourseConcepts(courseId)
-            .then(function(concepts){
-                sendOK(concepts);
-            }, function (error){sendError(error);})
+            .then( function(concepts){
+                console.log(concepts);
+                res.send(new respOK(concepts));
+                }, function (error) { res.send(new respError(error)); });
     }
 });
 
 router.post('/addConcept', requireLogin, function(req, res, next){
     var concept = req.body;
     if(isEmpty(concept.name)){
-        sendError('Cannot be empty');
+        res.send(new respError('Cannot be empty'));
     }
     else if(!concept.courseId){
-        sendError('No course specified');
+        res.send(new respError('No course specified'));
     }
     else{
         Courses.getCourseById(concept.courseId)
             .then(function (course){
                 if(!checkIfInstructor(course, req.session.user._id)){
-                    sendError('Not instructor of the course!');                  
+                    res.send(new respError('Not instructor of the course!')); 
                 }
                 else{
                     Concepts.getConceptByName(course._id, concept.name)
                         .then(function (existingConcept){
                             if (existingConcept != null || ! typeof existingConcept === "undefined"){
-                                sendError('Concept already exists');
+                                res.send(new respError('Concept already exists'));
                             }
                             else{
                                 Concepts.addConcept(course._id,concept.name)
                                     .then(function (savedConcept){
                                         sendOK(savedConcept);
-                                     },function (error){ sendError(error) });
+                                     },function (error){ res.send(new respError(error)); });
                             }
-                        }, function (error){ sendError(error); });
+                        }, function (error){ res.send(new respError(error)); });
                 }
-            }, function (error) {sendError(error);}
+            }, function (error) { res.send(new respError(error));}
         );
     }
 });
