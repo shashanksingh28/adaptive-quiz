@@ -69,7 +69,7 @@ router.post('/addQuestion', requireLogin, function(req, res){
 });
 
 router.get('/getCourseQuestions', requireLogin, function(req, res){
-    var courseId = req.query.courseId;
+    var courseId = req.query._id;
     if (!courseId) { sendError('No CourseId given.');}
     else
     {

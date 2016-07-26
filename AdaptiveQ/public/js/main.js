@@ -35,8 +35,21 @@ mainApp.service('dbService', ['$http', function($http){
         return user_client;
     };
 
-    this.getCourseQuestions = function(){
-        //$http.get all Questions that include current Course
+    this.getCourseQuestions = function(course){
+        $http.get('/api/getCourseQuestions', {params: course}).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Questions Retrieved");
+                console.dir(response.data);
+            }
+        }, function(error){
+          console.log("Problem in Connecting to Server:");
+          console.log(error);
+        });
     };
 
     this.postAttempt = function(){
@@ -240,7 +253,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', function($scop
     } 
 }]);
 
-mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService', function($scope, orderBy, dbService){
+mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService', 'courseService', function($scope, orderBy, dbService, courseService){
 
     $scope.questions = questions;
     $scope.order = 'Date';
@@ -356,6 +369,8 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
     $scope.expSortVotes = function() {
         $scope.expOrderVal = 'votes';
     };
+
+    $scope.data = dbService.getCourseQuestions(courseService.currentCourse);
 
 
 }]);
