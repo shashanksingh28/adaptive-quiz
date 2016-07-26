@@ -20,7 +20,14 @@ function isEmpty(str){
 }
 
 function checkIfEnrolled(user, courseId){
-    
+    var isEnrolled = false;
+    for(var i = 0; i < user.courses.length; ++i){
+        if(user.courses[i]._id == courseId){
+            isEnrolled = true;
+            break;
+        }
+    }
+    return isEnrolled;
 }
 
 function checkIfInstructor(course, userId){
@@ -46,7 +53,7 @@ var respError = function(error){
 }
 
 //------- API functions --------//
-router.post('/addQuestion', requireLogin, function(req, res){    
+router.post('/addQuestion', requireLogin, function(req, res){
     var q = req.body;
     if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
         res.send(new respError('Empty question or not enough answers provided'));
@@ -115,7 +122,7 @@ router.get('/getCourseConcepts', requireLogin, function(req, res){
     }
 });
 
-router.post('/addConcept', requireLogin, function(req, res, next){
+router.post('/addConcept', requireLogin, function(req, res){
     var concept = req.body;
     if(isEmpty(concept.name)){
         res.send(new respError('Cannot be empty'));
@@ -127,7 +134,7 @@ router.post('/addConcept', requireLogin, function(req, res, next){
         Courses.getCourseById(concept.courseId)
             .then(function (course){
                 if(!checkIfInstructor(course, req.session.user._id)){
-                    res.send(new respError('Not instructor of the course!')); 
+                    res.send(new respError('Not instructor of the course!'));
                 }
                 else{
                     Concepts.getConceptByName(course._id, concept.name)
@@ -146,6 +153,59 @@ router.post('/addConcept', requireLogin, function(req, res, next){
             }, function (error) { res.send(new respError(error));}
         );
     }
+});
+
+router.post('/postAttempt', requireLogin, function(req, res){
+    var questionId = req.body.questionId;
+    var optionsSelected = req.body.optionsSelected;
+    if (!questionId || !optionsSelected || optionsSelected.length == 0) { res.send(new respError("No questionId or no options provided")); }
+    else{
+        Users.getUserById(req.session.user._id)
+        .then(function (user){
+            Questions.getQuestionById(questionId)
+            .then(function (question){
+                if(!checkIfEnrolled(user, question.courseId)){
+                    res.send(new respError("User not enrolled in course"));
+                }
+                Courses.getCourseById(question.courseId)
+                .then(function (course){
+                    if(checkIfInstructor(course, user._id)){
+                        res.send(new respError("Instructor should not attempt"));
+                    }
+                    else{
+                        // Score = No of correct answers given / (No of total correct + No of total incorrect)
+                        var correctOptions = question.answers;
+                        var correctCount = 0;
+                        var incorrectCount = 0;
+                        for(var i = 0; i < question.options.length; ++i){
+                            if(correctOptions.indexOf(i) > -1){
+                                // Check if user has given a correct answer
+                                if(optionsSelected.indexOf(i) > -1){
+                                    correctCount++;
+                                }
+                            }
+                            else if(optionsSelected.indexOf(i) > -1){
+                                incorrectCount++;
+                            }
+                        }
+                        score = correctCount / (correctOptions.length + incorrectCount);
+                        var attempt = {questionId : questionId, optionsSelected : optionsSelected, score: score, attempted_at: Date.now()};
+                        Users.addAttemptToUserId(user._id,attempt)
+                        .then(function (attempt){
+                            // Append correct answers to object for client to show
+                            attempt.answers = question.answers;
+                            res.send(new respOK(attempt));
+                            }, function(erorr){ res.send(new respError(error)); }
+                        );
+                    }
+                });
+
+            })
+
+
+        })
+    }
+
 });
 
 module.exports = router;

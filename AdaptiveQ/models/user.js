@@ -8,7 +8,7 @@ var userSchema = new Schema({
   password: String,
   name: String,
   courses : Array,
-  records: Array,
+  attempts: Array,
   created_at: Date,
   hintsLeft: Number,
   resetPasswordToken: String
@@ -36,7 +36,7 @@ Users.createUser = function(email, password, name){
     email: email,
     password: password,
     name: name,
-    records: [],
+    attempts: [],
     courses: [],
     created_at: Date.now(),
     hintsLeft: 10
@@ -44,8 +44,8 @@ Users.createUser = function(email, password, name){
   return newUser.save();
 };
 
-Users.addRecordToUserId = function(userId,record){
-  return Users.update({'_id': userId},{$push:{'records':record}}).exec();
+Users.addAttemptToUserId = function(userId,record){
+  return Users.update({'_id': userId},{$push:{'attempts':attempt}}).exec();
 };
 
 Users.updateHint = function(userId){
