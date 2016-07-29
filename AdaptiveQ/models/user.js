@@ -36,6 +36,7 @@ Users.createUser = function(email, password, name){
     email: email,
     password: password,
     name: name,
+    // attempts should have questionId, courseId, options_selected , score, attempted_at
     attempts: [],
     courses: [],
     created_at: Date.now(),
@@ -45,15 +46,19 @@ Users.createUser = function(email, password, name){
 };
 
 Users.addAttemptToUserId = function(userId,record){
-  return Users.update({'_id': userId},{$push:{'attempts':attempt}}).exec();
+    return Users.update({'_id': userId},{$push:{'attempts':attempt}}).exec();
 };
 
 Users.updateHint = function(userId){
-  return Users.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
+    return Users.update({'_id':userId},{$inc:{'hintsLeft':-1}}).exec();
 }
 
 Users.getUserForToken = function(token){
-  return Users.findOne({resetPasswordToken : token}).exec();
+    return Users.findOne({resetPasswordToken : token}).exec();
+}
+
+Users.getCourseUsers = function(courseId){
+    return Users.find({courses: courseId}).exec();
 }
 
 module.exports = Users;
