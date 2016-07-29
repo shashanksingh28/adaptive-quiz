@@ -44,7 +44,7 @@ function checkIfInstructor(course, userId){
 var respOK = function(data){
     this.status = "OK";
     this.data = data;
-    console.log(data);
+    // console.log(data);
 }
 
 var respError = function(error){
@@ -89,7 +89,6 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                 Users.getUserById(req.session.user._id)
                     .then(function (user){
                         for(var i = 0; i < questions.length; ++i){
-                            console.log("testing question" + i);
                             var attempted = false;
                             for(var j = 0; j < user.attempts.length; ++j){
                                 if(user.attempts[j].qId == questions[i]._id){
@@ -99,7 +98,6 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                             }
                             if (!attempted){
                                 questions[i].answers = [];
-                                console.log("deleted answers");
                             }
                         }
                         res.send(new respOK(questions));
@@ -192,7 +190,7 @@ router.post('/postAttempt', requireLogin, function(req, res){
                             }
                         }
                         score = correctCount / (correctOptions.length + incorrectCount);
-                        var attempt = {questionId : questionId, optionsSelected : optionsSelected, score: score, attempted_at: Date.now()};
+                        var attempt = {questionId : questionId, courseId : question.courseId, optionsSelected : optionsSelected, score: score, attempted_at: Date.now()};
                         Users.addAttemptToUserId(user._id,attempt)
                         .then(function (attempt){
                             // Append correct answers to object for client to show
@@ -205,10 +203,44 @@ router.post('/postAttempt', requireLogin, function(req, res){
 
             })
 
-
-        })
+        });
     }
 
+});
+
+router.get('/getCourseStudents', requireLogin, function(req, res){
+    var courseId = req.query.courseId;
+    if(!courseId){ res.send(new respError('CourseID required')); }
+    else{
+        Courses.getCourseById(courseId)
+        .then(function (course){
+            if(!checkIfInstructor(course, req.session.user._id)){
+                res.send(new respError('Not an instructor'));
+            }
+            else{
+                Users.getCourseUsers(course._id)
+                .then(function (users){
+                    // remove user records not pertaining to the course
+                    var students = [];
+                    for(var i = 0; i < users.length; ++i){
+                        var student = { id : users[i]._id, name : users[i].name, attempts: []};
+                        for(var j = 0; j < users.attempts.length; ++j){
+                            if(users[i].attempts[j].courseId == courseId){
+                                student.attempts.push(users[i].attempts[j]);
+                            }
+                        }
+                        students.push(student);
+                    }
+                    res.send(new respOK(students));
+                }, function(error)
+                { 
+                    res.send(new respError(error)); 
+                });
+            }
+        }, function(error){
+            res.send(new respError(error));
+        });
+     }
 });
 
 module.exports = router;
