@@ -196,7 +196,7 @@ router.post('/postAttempt', requireLogin, function(req, res){
                             // Append correct answers to object for client to show
                             attempt.answers = question.answers;
                             res.send(new respOK(attempt));
-                            }, function(erorr){ res.send(new respError(error)); }
+                            }, function(error){ res.send(new respError(error)); }
                         );
                     }
                 });
@@ -209,7 +209,7 @@ router.post('/postAttempt', requireLogin, function(req, res){
 });
 
 router.get('/getCourseStudents', requireLogin, function(req, res){
-    var courseId = req.query.courseId;
+    var courseId = req.query._id;
     if(!courseId){ res.send(new respError('CourseID required')); }
     else{
         Courses.getCourseById(courseId)

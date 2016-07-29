@@ -30,6 +30,11 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
                     .then(function(response){
                         return response;});
             },
+            studentsData: function(dbService, courseService){
+                return dbService.getCourseStudents(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
         },
         reload: true,
     })
@@ -83,16 +88,16 @@ mainApp.service('dbService', ['$http', function($http){
         });
     };
 
-    this.getStudents = function(){
-        $http.get('/api/getStudents', {params: course}).then(function(httpResponse){
+    this.getCourseStudents = function(course){
+        return $http.get('/api/getCourseStudents', {params: course}).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Questions Retrieved");
-                console.dir(response.data);
+                console.log("Students Retrieved");
+                console.log(response.data);
                 return response.data;
             }
         }, function(error){
@@ -101,7 +106,7 @@ mainApp.service('dbService', ['$http', function($http){
         });
     };
 
-    this.postAttempt = function(){
+    this.postAttempt = function(model){
         $http.post('/api/postAttempt', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -323,7 +328,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', function($scop
     } 
 }]);
 
-mainApp.controller('questionController', ['$scope', 'questionsData', 'orderByFilter', function($scope, questionsData, orderBy){
+mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService', 'orderByFilter', function($scope, questionsData, dbService, orderBy){
 
     $scope.questions = questionsData;
     console.log($scope.questions);
@@ -437,6 +442,7 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'orderByFil
 
     $scope.submitAnswer = function(){
         console.log("Options " + $scope.model.optionsSelected + " confirmed for Question ID " + $scope.question._id);
+        dbService.postAttempt($scope.model);
     };
 
     $scope.enableHint = function(){
@@ -506,7 +512,7 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
 
 }]);
 
-mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', function($scope, $route, dbService, courseService, conceptsData){
+mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', 'studentsData', function($scope, $route, dbService, courseService, conceptsData, studentsData){
     $scope.course = courseService.currentCourse.name;
     $scope.students = students;
     $scope.student = { name: 'No Student Chosen' };
