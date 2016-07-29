@@ -209,7 +209,7 @@ router.post('/postAttempt', requireLogin, function(req, res){
 });
 
 router.get('/getCourseStudents', requireLogin, function(req, res){
-    var courseId = req.query.courseId;
+    var courseId = req.query._id;
     if(!courseId){ res.send(new respError('CourseID required')); }
     else{
         Courses.getCourseById(courseId)
@@ -224,7 +224,7 @@ router.get('/getCourseStudents', requireLogin, function(req, res){
                     var students = [];
                     for(var i = 0; i < users.length; ++i){
                         var student = { id : users[i]._id, name : users[i].name, attempts: []};
-                        for(var j = 0; j < users.attempts.length; ++j){
+                        for(var j = 0; j < users[i].attempts.length; ++j){
                             if(users[i].attempts[j].courseId == courseId){
                                 student.attempts.push(users[i].attempts[j]);
                             }
