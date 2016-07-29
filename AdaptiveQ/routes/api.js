@@ -44,6 +44,7 @@ function checkIfInstructor(course, userId){
 var respOK = function(data){
     this.status = "OK";
     this.data = data;
+    console.log(data);
 }
 
 var respError = function(error){
@@ -87,16 +88,21 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                 // Get user records. Delete answers if user has not attempted
                 Users.getUserById(req.session.user._id)
                     .then(function (user){
+                        console.log(user);
                         for(var i = 0; i < questions.length; ++i){
+                            console.log("testing question" + i);
                             var attempted = false;
-                            for(var j = 0; j < user.records.length; ++j){
-                                if(user.records[j].qId == questions[i]._id){
+                            for(var j = 0; j < user.attempts.length; ++j){
+                                console.log("testing record index " + j);
+                                if(user.attempts[j].qId == questions[i]._id){
                                     attempted = true;
                                     break;
                                 }
                             }
+                            console.log("checked records");
                             if (!attempted){
                                 questions[i].answers = [];
+                                console.log("deleted answers");
                             }
                         }
                         res.send(new respOK(questions));
