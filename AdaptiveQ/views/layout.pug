@@ -45,17 +45,17 @@ html(ng-app=ngapp)
           //- NavBar Buttons
           .collapse.navbar-collapse(id="navbar-collapse")
             ul.nav.navbar-nav
-              li: a(href="/question") Questions
+              li: a(href="{{ questionRoute() }}") Questions
               - if(true)
                 li: a(href="/askquestion") Ask Question
                 li: a(href="/coursedata") Course Data
             ul.nav.navbar-nav.navbar-right
-              li: p.navbar-text Signed In as {{user.email}} 
+              li: p.navbar-text Signed In as {{ user.name }} 
               li.dropdown
                 a(data-toggle="dropdown", class="dropdown-toggle", href='#') Courses
                   span.caret
                 ul.dropdown-menu
-                  li(ng-repeat="course in user.courses")
+                  li(ng-repeat="course in courses")
                     a(ng-href="/", ng-click="changeCourse(course.name)") {{ course.name }}
               li: a(href="/myaccount") My Account
               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout

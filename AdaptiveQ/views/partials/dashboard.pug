@@ -5,7 +5,7 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
       #concept-tree.panel.panel-primary
         .panel-heading
           h2 Concepts
-        .panel-body
+        .panel-body(ng-show="courseExists")
           ul
             - for(var i = 0; i < 5; i ++)
               li
@@ -22,8 +22,11 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
                     .unattempted(ng-style="{'width': getConceptYellow()}")
                       .bar
                       p {{ getConceptRed() }}
+        .panel-body(ng-hide="courseExists")
+          h4 Course currently has no concepts.
+          h4 To enroll, go to My Account
 
-      #graph.panel.panel-primary
+      #graph.panel.panel-primary(ng-show="false")
         .panel-heading
           h3 Graph
         .panel-body
@@ -58,7 +61,7 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
 
               button.centered(type="submit", class="btn btn-info btn-lg") Go to Question
 
-      #recommendations.panel.panel-primary
+      #recommendations.panel.panel-primary(ng-show="false")
         .panel-heading
           h3 Recommendations
         .panel-body

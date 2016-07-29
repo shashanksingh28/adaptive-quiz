@@ -4,7 +4,17 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
     $routeProvider
     .when('/', {
         templateUrl: 'partials/dashboard',
-        controller: 'dashboardController'
+        controller: 'dashboardController',
+        resolve: {
+            questionsData: function(dbService, courseService){
+                if(!courseService.enrolled){
+                    return [];
+                }
+                return dbService.getCourseQuestions(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
+        },
     })
     .when('/question', {
         templateUrl: 'partials/question',
@@ -16,6 +26,9 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
                         return response;});
             },
         },
+    })
+    .when('/questionsunavailable',{
+        templateUrl: 'partials/questionsunavailable',
     })
     .when('/askquestion', {
         templateUrl: 'partials/askquestion',
@@ -170,6 +183,8 @@ mainApp.service('courseService', ['dbService', function(dbService){
     //Initialize array of course objects
     this.courses = dbService.getUser().courses;
 
+    this.enrolled = this.courses.length > 0;
+
     this.currentCourse = this.courses[0];
 
     this.changeCourse = function(courseName){
@@ -189,12 +204,17 @@ mainApp.service('courseService', ['dbService', function(dbService){
 
 mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseService', function ($scope, $http, dbService, courseService) {
 
-    var loadData = function(){
-        //$scope.user = user;
-        //$scope.
-    };
-
     $scope.user = dbService.getUser();
+
+    $scope.courses = ($scope.user.courses.length > 0) ? $scope.user.courses : [{name: "No Courses"}];
+
+    $scope.questionRoute = function(){
+        if($scope.user.courses.length > 0){
+            return '/question';
+        }else{
+            return '/questionsunavailable';
+        }
+    };
 
     $scope.logout = function(){
         console.log("Logging out");
@@ -214,7 +234,10 @@ mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseServ
 
 }]);
 
-mainApp.controller('dashboardController', ['$scope', 'dbService', function($scope, dbService){
+mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData', function($scope, dbService, questionsData){
+
+    $scope.courseExists = questionsData.length > 0;
+    console.log($scope.courseExists);
 
     // -------- Concepts Panel --------
     $scope.getConceptGreen = function(concept){
@@ -331,7 +354,6 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', function($scop
 mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService', 'orderByFilter', function($scope, questionsData, dbService, orderBy){
 
     $scope.questions = questionsData;
-    console.log($scope.questions);
 
     $scope.model = {
         questionId: $scope.questions[$scope.questions.length - 1]._id,
