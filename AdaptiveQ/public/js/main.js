@@ -22,7 +22,7 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
         resolve: {
             questionsData: function(dbService, courseService){
                 return dbService.getCourseQuestions(courseService.currentCourse)
-                    .then(function(response){
+                    .then(function(response){ 
                         return response;});
             },
         },
@@ -206,10 +206,10 @@ mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseServ
 
     $scope.user = dbService.getUser();
 
-    $scope.courses = ($scope.user.courses.length > 0) ? $scope.user.courses : [{name: "No Courses"}];
+    $scope.courses = (courseService.enrolled) ? $scope.user.courses : [{name: "No Courses"}];
 
     $scope.questionRoute = function(){
-        if($scope.user.courses.length > 0){
+        if(courseService.enrolled){
             return '/question';
         }else{
             return '/questionsunavailable';
@@ -353,7 +353,9 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData
 
 mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService', 'orderByFilter', function($scope, questionsData, dbService, orderBy){
 
-    $scope.questions = questionsData;
+    $scope.noQuestions = questionsData.length == 0;
+
+    $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
     $scope.model = {
         questionId: $scope.questions[$scope.questions.length - 1]._id,
@@ -361,6 +363,9 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
     };
 
     $scope.checkStatus = function(question){
+        if(question.noData){
+            return 'unattempted';
+        }
         for(var i = 0; i < records.length; i++) {
             var currentRecord = records[i];
 
