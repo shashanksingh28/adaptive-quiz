@@ -82,6 +82,10 @@ ul {
   color: #fff;
 }
 
+.question-item input[type="checkbox"]:checked + label {
+  background-color: #0a5a9c;
+  color: #fff;
+}
 .question-item:hover {
   background-color: #65a5da;
   color: #fff;
@@ -182,7 +186,7 @@ ul {
   cursor: pointer;
 }
 
-input[type="radio"] {
+input[type="radio"], input[type="checkbox"] {
   display: none;
 }
 
@@ -193,6 +197,12 @@ input[type="radio"] {
   color: #fff;
 }
 
+.options-unattempted .option input[type="checkbox"]:checked + label {
+  outline-style: solid;
+  outline-color: #fff;
+  background-color: #0a5a9c;
+  color: #fff;
+}
 .options-unattempted .option:hover {
   background-color: #0a5a9c;
   color: #fff;

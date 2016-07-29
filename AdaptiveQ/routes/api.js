@@ -103,7 +103,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
 });
 
 router.get('/getCourseConcepts', requireLogin, function(req, res){
-    var courseId = req.query.courseId;
+    var courseId = req.query._id;
     if (!courseId) { res.send(new respError('No CourseId given.'));}
     else
     {

@@ -17,44 +17,54 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         ul
           li(ng-repeat="question in questions")
             .question-item
-              input(type="radio", id="question{{ question.id }}", name="question", value="{{ question.id }}", ng-model="model.questionid")
-              label.radio(for="question{{ question.id }}")
-                h4 {{ question.title }}
+              input(type="radio", id="question{{ question._id }}", name="question", value="{{ question._id }}", ng-model="model.questionId")
+              label.radio(for="question{{ question._id }}")
+                h4 {{ question.text }}
                 .attemptindicator(ng-switch="checkStatus(question)")
                   .attemptedCorrect(ng-switch-when="attemptedCorrect", title="Attempted Correct")
                   .attemptedIncorrect(ng-switch-when="attemptedIncorrect", title="Attempted Incorrect")
                   .unattempted(ng-switch-when="unattempted", title="Unattempted")
-                h6 {{ question.date | date}}
+                h6 {{ question.created_at | date}}
       #sidebar-footer
 
   .question-area(ng-show="!recordExists")
     .question-box
       .question
-        h1 {{ question.title }}
+        h1 {{ question.text }}
         pre {{ question.code }}
-      .options-unattempted
+      .options-unattempted(ng-hide="multipleAnswers")
         form(ng-submit="submitAnswer()")
           ul
             li(ng-repeat="option in question.options")
               .option
-                input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.option")
+                input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
           p(ng-show="showHint") Hint: {{ question.hint }}
+          button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.option == ""') Confirm
+          button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="showHint") Need a hint?
+      .options-unattempted(ng-show="multipleAnswers")
+        form(ng-submit="submitAnswer()")
+          p This question requires more than one correct answer.
+          ul
+            li(ng-repeat="option in question.options")
+              .option
+                input(type="checkbox", id="options{{$index}}", name="option", ng-click="toggleSelection($index)")
+                label.checkbox(for="options{{$index}}") {{option}}
+            p(ng-show="showHint") Hint: {{ question.hint }}
           button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.option == ""') Confirm
           button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="showHint") Need a hint?
 
   .question-area(ng-show="recordExists")
       .question-box
         .question
-          h1 {{ question.title }}
+          h1 {{ question.text }}
           pre {{ question.code }}
         .options
-          form(ng-submit="submitAnswer()")
-            ul
-              li(ng-repeat="option in question.options")
-                .option(ng-class="{correct: $index == correctChoice, chosen: $index == userChoice}")
-                  input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.option")
-                  label.radio(for="option{{$index}}") {{option}}
+          ul
+            li(ng-repeat="option in question.options")
+              .option(ng-class="{correct: correctChoices.indexOf($index) != -1, chosen: userChoices.indexOf($index) != -1}")
+                input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
+                label.radio(for="option{{$index}}") {{option}}
           button(type="button", class="btn btn-info", ng-click="showExplanations = true", ng-hide="showExplanations") View Explanations
           button(type="button", class="btn btn-info", ng-click="showExplanations = false", ng-show="showExplanations") Hide Explanations
         .explanations(ng-show="showExplanations")

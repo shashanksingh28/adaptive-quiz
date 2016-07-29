@@ -56,7 +56,7 @@ html(ng-app=ngapp)
                   span.caret
                 ul.dropdown-menu
                   li(ng-repeat="course in user.courses")
-                    a(href='#') {{ course.name }}
+                    a(ng-href="/", ng-click="changeCourse(course.name)") {{ course.name }}
               li: a(href="/myaccount") My Account
               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
 

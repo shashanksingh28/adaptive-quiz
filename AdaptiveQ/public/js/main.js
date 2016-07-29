@@ -2,13 +2,20 @@ var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap',
 
 mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
     $routeProvider
-        .when('/', {
-            templateUrl: 'partials/dashboard',
-            controller: 'dashboardController'
-        })
+    .when('/', {
+        templateUrl: 'partials/dashboard',
+        controller: 'dashboardController'
+    })
     .when('/question', {
         templateUrl: 'partials/question',
-        controller: 'questionController'
+        controller: 'questionController',
+        resolve: {
+            questionsData: function(dbService, courseService){
+                return dbService.getCourseQuestions(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
+        },
     })
     .when('/askquestion', {
         templateUrl: 'partials/askquestion',
@@ -16,7 +23,15 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
     })
     .when('/coursedata', {
         templateUrl: 'partials/coursedata',
-        controller: 'courseDataController'
+        controller: 'courseDataController',
+        resolve: {
+            conceptsData: function(dbService, courseService){
+                return dbService.getCourseConcepts(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
+        },
+        reload: true,
     })
     .when('/myaccount', {
         templateUrl: 'partials/myaccount',
@@ -36,7 +51,40 @@ mainApp.service('dbService', ['$http', function($http){
     };
 
     this.getCourseQuestions = function(course){
-        $http.get('/api/getCourseQuestions', {params: course}).then(function(httpResponse){
+        return $http.get('/api/getCourseQuestions', {params: course}).then(function(httpResponse){
+            var response = httpResponse.data;
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Questions Retrieved in dbService");
+                return response.data;
+            }
+        }, function(error){
+          console.log("Problem in Connecting to Server:");
+          console.log(error);
+        });
+    };
+
+    this.getCourseConcepts = function(course){
+        return $http.get('/api/getCourseConcepts', {params: course}).then(function(httpResponse){
+            var response = httpResponse.data;
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Concepts Retrieved in dbService");
+                console.log(response.data);
+                return response.data;
+            }
+        }, function(error){
+          console.log("Problem in Connecting to Server:");
+          console.log(error);
+        });
+    };
+
+    this.getStudents = function(){
+        $http.get('/api/getStudents', {params: course}).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -45,6 +93,7 @@ mainApp.service('dbService', ['$http', function($http){
             else{
                 console.log("Questions Retrieved");
                 console.dir(response.data);
+                return response.data;
             }
         }, function(error){
           console.log("Problem in Connecting to Server:");
@@ -53,7 +102,20 @@ mainApp.service('dbService', ['$http', function($http){
     };
 
     this.postAttempt = function(){
-        //$http.post an question attempt to user.records[]
+        $http.post('/api/postAttempt', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Attempt Posted");
+                //refresh page
+            }
+        }, function(error){
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
+        });
     };
 
     this.postQuestion = function(model){
@@ -93,10 +155,6 @@ mainApp.service('dbService', ['$http', function($http){
         });
     };
 
-    this.getStudents = function(){
-        //$http.get array of users that are in a course but not an instructor
-    };
-
     this.changeUser = function(nameORemailORpasswordORcourses){
         //based on argument, change a property of the current user
     };
@@ -110,12 +168,21 @@ mainApp.service('courseService', ['dbService', function(dbService){
     this.currentCourse = this.courses[0];
 
     this.changeCourse = function(courseName){
-        
+      for(var i = 0; i < this.courses.length; i++){
+        if(this.courses[i].name == courseName){
+          this.currentCourse = this.courses[i];
+          console.log("Course Changed:");
+          console.dir(this.currentCourse);
+          return 1;
+        }
+      }  
+      console.log("Course not found");
+      return 0;
     };
 
 }]);
 
-mainApp.controller('navController', ['$scope', '$http', 'dbService', function ($scope, $http, dbService) {
+mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseService', function ($scope, $http, dbService, courseService) {
 
     var loadData = function(){
         //$scope.user = user;
@@ -123,8 +190,6 @@ mainApp.controller('navController', ['$scope', '$http', 'dbService', function ($
     };
 
     $scope.user = dbService.getUser();
-
-    $scope.courses = ['Java', 'Javascript', 'Introduction To Computer Science'];
 
     $scope.logout = function(){
         console.log("Logging out");
@@ -137,6 +202,11 @@ mainApp.controller('navController', ['$scope', '$http', 'dbService', function ($
             }
             );
     };
+
+    $scope.changeCourse = function(courseName){
+        courseService.changeCourse(courseName);
+    };
+
 }]);
 
 mainApp.controller('dashboardController', ['$scope', 'dbService', function($scope, dbService){
@@ -253,18 +323,36 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', function($scop
     } 
 }]);
 
-mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService', 'courseService', function($scope, orderBy, dbService, courseService){
+mainApp.controller('questionController', ['$scope', 'questionsData', 'orderByFilter', function($scope, questionsData, orderBy){
 
-    $scope.questions = questions;
+    $scope.questions = questionsData;
+    console.log($scope.questions);
+
+    $scope.model = {
+        questionId: $scope.questions[$scope.questions.length - 1]._id,
+        optionsSelected: [],
+    };
+
+    $scope.checkStatus = function(question){
+        for(var i = 0; i < records.length; i++) {
+            var currentRecord = records[i];
+
+            if(question._id == currentRecord.questionId) {
+                if(question.answers == currentRecord.optionsSelected) {
+                    return 'attemptedCorrect';
+                }
+                return 'attemptedIncorrect';
+            }
+        }
+        return 'unattempted';
+    };
+
+    // Question List Ordering
+
     $scope.order = 'Date';
     $scope.orderVal = 'date';
     $scope.reverse = true;
     $scope.reverseIcon = 'fa fa-chevron-down';
-
-    $scope.model = {
-        questionid: 11,
-        option: ''
-    };
 
     $scope.switchReverse = function() {
         $scope.reverse = !$scope.reverse;
@@ -273,7 +361,7 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
 
     $scope.sortByDate = function() {
         $scope.order = 'Date';
-        $scope.orderVal = 'date';
+        $scope.orderVal = 'created_at';
     };
 
     $scope.sortByStatus = function() {
@@ -292,52 +380,40 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
     };
 
     $scope.$watchGroup(['orderVal', 'reverse', 'expOrderVal'], function(){
-        $scope.questions = orderBy(questions, $scope.orderVal, $scope.reverse);
+        $scope.questions = orderBy($scope.questions, $scope.orderVal, $scope.reverse);
         $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
         console.log('Order was changed');
     });
 
-    $scope.checkStatus = function(question){
-        for(var i = 0; i < records.length; i++) {
-            var currentRecord = records[i];
-
-            if(question.id == currentRecord.questionid) {
-                if(question.answer == currentRecord.choice) {
-                    return 'attemptedCorrect';
-                }
-                return 'attemptedIncorrect';
-            }
-        }
-        return 'unattempted';
-    };
-
     // Change data whenever a new question is selected from sidebar
-    $scope.$watch('model.questionid', function(){
+
+    $scope.$watch('model.questionId', function(){
         for (var i = 0; i < $scope.questions.length; i++) {
             var currentQuestion = $scope.questions[i];
 
-            if ($scope.model.questionid == currentQuestion.id) {
+            if ($scope.model.questionId == currentQuestion._id) {
                 $scope.question = currentQuestion;
                 console.log('Question changed to:');
                 console.dir($scope.question);
 
                 // Reset Fields
-                $scope.model.option = '';
+                $scope.model.optionsSelected = [];
                 $scope.showHint = false;
                 $scope.showExplanations = false;
                 $scope.addExplanation = false;
 
                 // Direct to Question or Explanation
                 $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
+                $scope.multipleAnswers = ($scope.question.answers.length > 1) || true;
 
                 // Retrieve Correct Choice and User Choice if Attempted
                 if($scope.recordExists) {
                     for(var j = 0; j < records.length; j++) {
                         var currentRecord = records[j];
-                        if(currentRecord.questionid == $scope.question.id){
-                            $scope.correctChoice = $scope.question.answer;
-                            $scope.userChoice = currentRecord.choice;
-                            console.log('Correct Answer: ' + $scope.correctChoice + '; User Answer: ' + $scope.userChoice);
+                        if(currentRecord.questionId == $scope.question._id){
+                            $scope.correctChoices = $scope.question.answers;
+                            $scope.userChoices = currentRecord.optionsSelected;
+                            console.log('Correct Answer: ' + $scope.correctChoices + '; User Answer: ' + $scope.userChoices);
                         }
                     } 
                 }
@@ -347,9 +423,20 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
         }
     });
 
+    $scope.toggleSelection = function(answer){
+        var index = $scope.model.optionsSelected.indexOf(answer);
+
+        if(index > -1){
+            // Answer was selected and needs to be removed
+            $scope.model.optionsSelected.splice(index, 1);
+        }else{
+            $scope.model.optionsSelected.push(answer);
+        }
+        console.log($scope.model.optionsSelected);
+    };
 
     $scope.submitAnswer = function(){
-        console.log("Option " + $scope.model.option + " confirmed for Question ID " + $scope.question.id);
+        console.log("Options " + $scope.model.optionsSelected + " confirmed for Question ID " + $scope.question._id);
     };
 
     $scope.enableHint = function(){
@@ -369,9 +456,6 @@ mainApp.controller('questionController', ['$scope', 'orderByFilter', 'dbService'
     $scope.expSortVotes = function() {
         $scope.expOrderVal = 'votes';
     };
-
-    $scope.data = dbService.getCourseQuestions(courseService.currentCourse);
-
 
 }]);
 
@@ -397,6 +481,7 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
         }else{
             $scope.model.answers.push(answer);
         }
+        console.log($scope.model.answers);
     };
 
     $scope.submitQuestion = function(){
@@ -421,10 +506,13 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
 
 }]);
 
-mainApp.controller('courseDataController', ['$scope', 'dbService', 'courseService', function($scope, dbService, courseService){
+mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', function($scope, $route, dbService, courseService, conceptsData){
     $scope.course = courseService.currentCourse.name;
     $scope.students = students;
     $scope.student = { name: 'No Student Chosen' };
+
+    $scope.concepts = conceptsData;
+
     $scope.$watch('student', function(){
         console.dir($scope.student);
         return true;
@@ -512,6 +600,7 @@ mainApp.controller('courseDataController', ['$scope', 'dbService', 'courseServic
         console.dir($scope.newConcept);
         var storeConcept = $scope.newConcept;
         dbService.postConcept(storeConcept);
+        $route.reload();
         $scope.conceptReady = false;
         $scope.open = false;
         return 1;
@@ -606,6 +695,7 @@ mainApp.controller('accountController', ['$scope', 'dbService', function($scope,
     };
 }]);
 
+/*
 questions = [
 {
     id: 11,
@@ -785,53 +875,18 @@ questions = [
     answer: 1,
 }
 ];
+*/
 
 records = [
 {
-    questionid: 11,
-    choice: 0,
+    questionId: 0,
+    optionsSelected: [0],
 },
 {
-    questionid: 12,
-    choice: 3,
+    questionId: 1,
+    optionsSelected: [1],
 },
-{
-    questionid: 13,
-    choice: 1,
-},
-{
-    questionid: 14,
-    choice: 2,
-},
-{
-    questionid: 15,
-    choice: 2,
-},
-{
-    questionid: 17,
-    choice: 1,
-},
-{
-    questionid: 18,
-    choice: 0,
-},
-{
-    questionid: 19,
-    choice: 1,
-},
-{
-    questionid: 110,
-    choice: 1,
-},
-{
-    questionid: 113,
-    choice: 2,
-},
-{
-    questionid: 115,
-    choice: 1,
-},
-    ];
+];
 
 explanations = [
 {

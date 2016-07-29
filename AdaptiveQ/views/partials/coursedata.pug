@@ -9,21 +9,20 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
           button(type="button", class="btn btn-default", ng-click="open=true") Add Concept
         .concepts
           ul
-            - for(var i = 0; i < 5; i ++)
-              li
-                .item
-                  h5 variables
-                  h6 10 Questions
-                  .data-bar
-                    .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
-                      .bar
-                      p {{ getConceptGreen() }}
-                    .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
-                      .bar
-                      p {{ getConceptYellow() }}
-                    .unattempted(ng-style="{'width': getConceptYellow()}")
-                      .bar
-                      p {{ getConceptRed() }}
+            li(ng-repeat="concept in concepts")
+              .item
+                h5 {{ concept.name }} 
+                h6 10 Questions
+                .data-bar
+                  .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
+                    .bar
+                    p {{ getConceptGreen() }}
+                  .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
+                    .bar
+                    p {{ getConceptYellow() }}
+                  .unattempted(ng-style="{'width': getConceptYellow()}")
+                    .bar
+                    p {{ getConceptRed() }}
   .row
     .col-md-6
       .student-list-box
