@@ -44,7 +44,7 @@ function checkIfInstructor(course, userId){
 var respOK = function(data){
     this.status = "OK";
     this.data = data;
-    console.log(data);
+    // console.log(data);
 }
 
 var respError = function(error){
@@ -88,21 +88,16 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                 // Get user records. Delete answers if user has not attempted
                 Users.getUserById(req.session.user._id)
                     .then(function (user){
-                        console.log(user);
                         for(var i = 0; i < questions.length; ++i){
-                            console.log("testing question" + i);
                             var attempted = false;
                             for(var j = 0; j < user.attempts.length; ++j){
-                                console.log("testing record index " + j);
                                 if(user.attempts[j].qId == questions[i]._id){
                                     attempted = true;
                                     break;
                                 }
                             }
-                            console.log("checked records");
                             if (!attempted){
                                 questions[i].answers = [];
-                                console.log("deleted answers");
                             }
                         }
                         res.send(new respOK(questions));
@@ -228,10 +223,10 @@ router.get('/getCourseStudents', requireLogin, function(req, res){
                     // remove user records not pertaining to the course
                     var students = [];
                     for(var i = 0; i < users.length; ++i){
-                        var student = { id : users[i]._id, name : users[i].name, records: []};
-                        for(var j = 0; j < users.records.length; ++j){
-                            if(users[i].records[j].courseId == courseId){
-                                student.records.push(users[i].records[j]);
+                        var student = { id : users[i]._id, name : users[i].name, attempts: []};
+                        for(var j = 0; j < users.attempts.length; ++j){
+                            if(users[i].attempts[j].courseId == courseId){
+                                student.attempts.push(users[i].attempts[j]);
                             }
                         }
                         students.push(student);

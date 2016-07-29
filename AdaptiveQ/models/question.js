@@ -24,6 +24,7 @@ Questions.addQuestion = function(question){
     var newQuestion = Questions({
         courseId : question.courseId,
         text : question.text,
+        code : question.code,
         options : question.options,
         answers : question.answers,
         concepts : question.concepts,
