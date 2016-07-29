@@ -58,7 +58,7 @@ Users.getUserForToken = function(token){
 }
 
 Users.getCourseUsers = function(courseId){
-    return Users.find({courses: courseId}).exec();
+    return Users.find({ courses: { $elemMatch : { _id : courseId } } }).exec();
 }
 
 module.exports = Users;
