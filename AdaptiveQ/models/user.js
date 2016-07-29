@@ -45,7 +45,7 @@ Users.createUser = function(email, password, name){
   return newUser.save();
 };
 
-Users.addAttemptToUserId = function(userId,record){
+Users.addAttemptToUserId = function(userId, attempt){
     return Users.update({'_id': userId},{$push:{'attempts':attempt}}).exec();
 };
 
