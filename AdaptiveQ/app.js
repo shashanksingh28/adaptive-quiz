@@ -41,14 +41,15 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 var routes = require('./routes/index');
-var question = require('./routes/question');
-var analytics = require('./routes/analytics');
-var api = require('./routes/api');
+var quiz_api = require('./routes/quiz_api');
+var analytics_api = require('./routes/analytics_api');
+var users_api = require('./routes/users_api');
 
 app.use('/', routes);
-app.use('/question', question);
-app.use('/analytics', analytics);
-app.use('/api', api);
+app.use('/api', quiz_api);
+app.use('/api',analytics_api);
+app.use('/api', users_api);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
