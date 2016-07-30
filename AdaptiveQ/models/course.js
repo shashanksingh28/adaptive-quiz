@@ -17,4 +17,8 @@ Courses.getCourseById = function (courseId){
     return Courses.findOne({_id: courseId}).exec();
 }
 
+Courses.getAllCourses = function (){
+	return Courses.find({}).exec();
+}
+
 module.exports = Courses;

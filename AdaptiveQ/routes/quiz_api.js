@@ -54,6 +54,15 @@ var respError = function(error){
 }
 
 //------- API functions --------//
+router.get('/getAllCourses', requireLogin, function(req, res){
+    Courses.getAllCourses()
+    .then(function (courses){
+        res.send(new respOK(courses));
+    }, function(error){
+        res.send(new respError(error));
+    });
+});
+
 router.post('/addQuestion', requireLogin, function(req, res){
     var q = req.body;
     if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
@@ -116,10 +125,10 @@ router.get('/getCourseConcepts', requireLogin, function(req, res){
     else
     {
         Concepts.getCourseConcepts(courseId)
-            .then( function(concepts){
-                console.log(concepts);
-                res.send(new respOK(concepts));
-                }, function (error) { res.send(new respError(error)); });
+        .then( function(concepts){
+            console.log(concepts);
+            res.send(new respOK(concepts));
+            }, function (error) { res.send(new respError(error)); });
     }
 });
 
@@ -133,26 +142,25 @@ router.post('/addConcept', requireLogin, function(req, res){
     }
     else{
         Courses.getCourseById(concept.courseId)
-            .then(function (course){
-                if(!checkIfInstructor(course, req.session.user._id)){
-                    res.send(new respError('Not instructor of the course!'));
-                }
-                else{
-                    Concepts.getConceptByName(course._id, concept.name)
-                        .then(function (existingConcept){
-                            if (existingConcept != null || ! typeof existingConcept === "undefined"){
-                                res.send(new respError('Concept already exists'));
-                            }
-                            else{
-                                Concepts.addConcept(course._id,concept.name)
-                                    .then(function (savedConcept){
-                                        sendOK(savedConcept);
-                                     },function (error){ res.send(new respError(error)); });
-                            }
-                        }, function (error){ res.send(new respError(error)); });
-                }
-            }, function (error) { res.send(new respError(error));}
-        );
+        .then(function (course){
+            if(!checkIfInstructor(course, req.session.user._id)){
+                res.send(new respError('Not instructor of the course!'));
+            }
+            else{
+                Concepts.getConceptByName(course._id, concept.name)
+                    .then(function (existingConcept){
+                        if (existingConcept != null || ! typeof existingConcept === "undefined"){
+                            res.send(new respError('Concept already exists'));
+                        }
+                        else{
+                            Concepts.addConcept(course._id,concept.name)
+                                .then(function (savedConcept){
+                                    sendOK(savedConcept);
+                                 },function (error){ res.send(new respError(error)); });
+                        }
+                    }, function (error){ res.send(new respError(error)); });
+            }
+        }, function (error) { res.send(new respError(error)); });
     }
 });
 
@@ -233,8 +241,8 @@ router.get('/getCourseStudents', requireLogin, function(req, res){
                     }
                     res.send(new respOK(students));
                 }, function(error)
-                { 
-                    res.send(new respError(error)); 
+                {
+                    res.send(new respError(error));
                 });
             }
         }, function(error){
