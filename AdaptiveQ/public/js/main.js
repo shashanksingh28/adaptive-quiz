@@ -163,10 +163,6 @@ mainApp.service('dbService', ['$http', function($http){
         });  
     };
 
-    this.postExplanation = function(){
-        //$http.post an explanation to a question
-    };
-
     this.postConcept = function(model){
         $http.post('/api/addconcept', model).then(function(httpResponse){
             var response = httpResponse.data;
@@ -183,9 +179,26 @@ mainApp.service('dbService', ['$http', function($http){
         });
     };
 
-    this.changeUser = function(nameORemailORpasswordORcourses){
-        //based on argument, change a property of the current user
+    this.postExplanation = function(){
+        //$http.post an explanation to a question
     };
+
+    this.postUserUpdate = function(model){
+        $http.post('/api/postUserUpdate', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("User Updated");
+                //refresh page
+            }
+        }, function(error){
+            console.log("Problem in connecting to server");
+        });
+    };
+
 }]);
 
 mainApp.service('courseService', ['dbService', function(dbService){
@@ -644,7 +657,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
 mainApp.controller('accountController', ['$scope', 'dbService', function($scope, dbService){
 
-    $scope.user = dbService.getUser();
+    $scope.model = dbService.getUser();
     console.log($scope.courses);
 
     $scope.resetDialogs = function(){
@@ -663,22 +676,33 @@ mainApp.controller('accountController', ['$scope', 'dbService', function($scope,
 
     $scope.changeName = function(){
         $scope.errorMsg = '';
+        if($scope.newName === ""){
+            $scope.errorMsg = 'Name cannot be empty';
+            return false;
+        }
+        $scope.model.name = $scope.newName;
+        dbService.postUserUpdate($scope.model);
         console.log('Name Changed: ' + $scope.newName);
-        //Change Name
-        //Refresh
-        $scope.openChangeName = false;
+        $scope.resetDialogs();
     };
 
     $scope.changeEmail = function(){
         $scope.errorMsg = '';
+        if($scope.newEmail === ""){
+            $scope.errorMsg = 'Email cannot be empty';
+            return false;
+        }
+        $scope.model.email = $scope.newEmail;
+        dbService.postUserUpdate($scope.model);
         console.log('Email Changed: ' + $scope.newEmail);
-        //Change Email
-        //Refresh
-        $scope.openChangeEmail = false;
+        $scope.resetDialogs();
     };
 
     $scope.changePassword = function(){
         $scope.errorMsg = '';
+        if($scope.newPassword === ""){
+            $scope.errorMsg = 'Password cannot be empty';
+        }
         if($scope.newPassword != $scope.confirmPassword){
             $scope.errorMsg = 'Passwords do not match';
             return 0;
@@ -724,11 +748,17 @@ mainApp.controller('accountController', ['$scope', 'dbService', function($scope,
         return 1;
     };
 
-    $scope.leaveCourse = function(){
-        //Remove $scope.courseToLeave from user.courses
-        //Refresh
-        $scope.openDeleteCourse = false;
-        return 1;
+    $scope.leaveCourse = function(course){
+        $scope.errorMsg = '';
+        var index = $scope.model.courses.indexOf(course);
+        if(index == -1){
+            console.log("Not enrolled in Course");
+            return false;
+        }
+        $scope.model.courses.splice(index, 1);
+        dbService.postUserUpdate($scope.model);
+        console.log('Left Course: ' + course.name);
+        $scope.resetDialogs();
     };
 }]);
 

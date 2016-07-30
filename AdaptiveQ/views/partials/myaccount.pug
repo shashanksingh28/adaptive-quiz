@@ -4,10 +4,10 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
   .content-box
     h1 Account Details
     .item
-      h4 Name: {{ user.name }}
+      h4 Name: {{ model.name }}
       button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangeName=true") Change
     .item
-      h4 Email: {{ user.email }}
+      h4 Email: {{ model.email }}
       button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangeEmail=true") Change
     .item
       h4 Password: ********
@@ -15,10 +15,10 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
     .item
       h4 Courses:
       table.table
-        tr(ng-repeat="course in user.courses")
+        tr(ng-repeat="course in model.courses")
           th: h5 {{ course.name }}
           th: h5 {{ course.Instructors[0] }}
-          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave(course.name)")
+          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave(course)")
                 span.glyphicon.glyphicon-remove-circle
         tr
           th: button#enroll(type="button", class="btn btn-success btn-sm", ng-click="resetDialogs(); openAddCourse=true") Join A Course
