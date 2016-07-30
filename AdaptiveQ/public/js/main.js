@@ -1,8 +1,9 @@
 var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput']);
+var baseURL = "localhost:3000/";
 
 mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
     $routeProvider
-    .when('/', {
+    .when('/dashboard', {
         templateUrl: 'partials/dashboard',
         controller: 'dashboardController',
         resolve: {
@@ -69,10 +70,17 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
     })
     .when('/myaccount', {
         templateUrl: 'partials/myaccount',
-        controller: 'accountController'
+        controller: 'accountController',
+        resolve: {
+            coursesData: function(dbService, courseService){
+                return dbService.getAllCourses()
+                    .then(function(response){
+                        return response;});
+            },
+        },
     })
     .otherwise({
-        redirectTo: '/'
+        redirectTo: '/dashboard'
     });
 
     $locationProvider.html5Mode(true);
@@ -116,6 +124,21 @@ mainApp.service('dbService', ['$http', function($http){
 
     this.getCourseStudents = function(course){
         return $http.get('/api/getCourseStudents', {params: course}).then(function(httpResponse){
+            var response = httpResponse.data;
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                return response.data;
+            }
+        }, function(error){
+          console.log("Problem in Connecting to Server:");
+          console.log(error);
+        });
+    };
+
+    this.getAllCourses = function(){
+        return $http.get('/api/getAllCourses').then(function(httpResponse){
             var response = httpResponse.data;
             if(response.status != "OK"){
                 console.log(response.eMessage);
@@ -260,9 +283,7 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
         $http.get('/api/logout')
             .then(function(successResponse){
                 $scope.message = "Logging out";
-                console.log(successResponse);
                 $window.location.href = '/';
-                $window.location.reload(true);
             }, function(error){
                 console.log("Failed to log out");
             }
@@ -542,7 +563,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     
     $scope.getStudentConceptBar = function(student, concept){
         console.log(concept);
-        if($scope.student.name == 'No Student Chosen'){ return 0; }
+        if($scope.student.name == 'No Student Chosen'){ return [0, 0, 1]; }
         var correct = 0;
         var incorrect = 0;
         var courseAttempts = [];
@@ -589,8 +610,51 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
             var conceptPercentages = $scope.getStudentConceptBar(student, currentConcept);
             allPercentages.push(conceptPercentages);
         }
+        if(allPercentages == []){ return [0, 0, 1]; }
 
         var percentages = [];
+        for(var j = 0; j < allPercentages.length; j++){
+            for(var k = 0; k < allPercentages[j].length; k++){
+                percentages[j] += allPercentages[j][k];
+            }
+            percentages[j] /= $scope.concepts.length;
+        }
+        return percentages;
+    };
+
+    $scope.getConceptBar = function(concept){
+        var allPercentages = [];
+        for(var i = 0; i < $scope.students.length; i++){
+            var currentStudent = $scope.students[i];
+            var studentPercentages = $scope.getStudentConceptBar(currentStudent, concept);
+            allPercentages.push(studentPercentages);
+        }
+        if(allPercentages == []){ return [0, 0, 1]; }
+        
+        var percentages = [];
+        for(var j = 0; j < allPercentages.length; j++){
+            for(var k = 0; k < allPercentages[j].length; k++){
+                percentages[j] += allPercentages[j][k];
+            }
+            percentages[j] /= $scope.students.length;
+        }
+        return percentages;
+    };
+
+    $scope.formatPercentages = function(percentages, index){
+        var formattedPercentages = [];
+        for(var i = 0; i < percentages.length; i++){
+            formattedPercentages.push((percentages[i] * 100) + "%");
+        }
+        return formattedPercentages;
+    };
+
+    $scope.formatRoundPercentages = function(percentages, index){
+        var formattedPercentages = [];
+        for(var i = 0; i < percentages.length; i++){
+            formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
+        }
+        return formattedPercentages;
     };
 
     $scope.getConceptGreen = function(concept){
