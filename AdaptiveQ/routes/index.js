@@ -18,11 +18,6 @@ router.get('/', function(req, res, next) {
     }
 });
 
-router.get('/logout', function(req, res){
-    req.session.reset();
-    res.send({'status': 'OK'});
-});
-
 router.get('/resetPaswword', function(req, res){
     var token = req.query.token;
     Users.getUserForToken(token)

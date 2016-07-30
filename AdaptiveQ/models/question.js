@@ -10,10 +10,10 @@ var questionSchema = new Schema({
 	options: Array, // list of options, array of strings
 	answers: Array, // Array of Number
 	concept: String,
-	difficulty: Number, // Number {0,1,2}
 	created_at: Date,
 	hint: String,
-  	explanations: Array
+  	explanations: Array,
+	multiOption : Boolean
 });
 
 questionSchema.plugin(autoIncrement.plugin, 'Questions');
@@ -30,7 +30,8 @@ Questions.addQuestion = function(question){
         concepts : question.concepts,
         hint : question.hint,
         created_at : Date.now(),
-        explanations : []
+        explanations : [],
+		multiOption : question.answers.length > 1
     });
 
     return newQuestion.save();
