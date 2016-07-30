@@ -9,7 +9,7 @@ var questionSchema = new Schema({
 	code: String,
 	options: Array, // list of options, array of strings
 	answers: Array, // Array of Number
-	concept: String,
+	concepts: Array, // Array of strings
 	created_at: Date,
 	hint: String,
   	explanations: Array,

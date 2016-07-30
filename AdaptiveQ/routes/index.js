@@ -18,7 +18,7 @@ router.get('/', function(req, res, next) {
     }
 });
 
-router.get('/resetPaswword', function(req, res){
+router.get('/resetPassword', function(req, res){
     var token = req.query.token;
     Users.getUserForToken(token)
     .then(function(user){
