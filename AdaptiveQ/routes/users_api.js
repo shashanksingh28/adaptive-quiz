@@ -160,7 +160,7 @@ router.post('/recover', function(req, res){
     Users.getUserByEmail(req.body.recoveryEmail)
         .then(function (user){
             if(!user){
-                res.send({'status' : 'ERROR', 'eMessage' : 'No such email found'});
+                res.send(new respError('No such email found'));
             }
             else{
                 user.resetPasswordToken = randomstring.generate();
@@ -195,6 +195,7 @@ router.post('/postUserUpdate', requireLogin, function(req, res){
             if(updatedUser.email != user.email) { user.email = updatedUser.email; }
             if(updatedUser.password != user.password) { user.password = updatedUser.password; }
             enrolled_courseIds = [];
+            // these loops add newer courses that user might have enrolled to
             for(var i = 0; i < updatedUser.courses.length; ++i){
                 var enrolled = false;
                 for(var j = 0; j < user.courses.length; ++j){
@@ -205,6 +206,7 @@ router.post('/postUserUpdate', requireLogin, function(req, res){
                     }
                 }
             }
+            // this loop removes courses that user might have un-enrolled to
             for(var j = 0; j < user.courses.length; ++j){
                 if (enrolled_courseIds.indexOf(user.courses[j]._id) == -1){
                     delete user.courses[j];
