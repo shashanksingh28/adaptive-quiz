@@ -72,7 +72,7 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
         templateUrl: 'partials/myaccount',
         controller: 'accountController',
         resolve: {
-            coursesData: function(dbService, courseService){
+            coursesData: function(dbService){
                 return dbService.getAllCourses()
                     .then(function(response){
                         return response;});
@@ -531,10 +531,18 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', 'conceptsDat
     };
 
     $scope.submitQuestion = function(){
+        if($scope.model.answers.length === 0){
+            $scope.errorMsg = "Please choose correct answers";
+            return false;
+        }
+        if($scope.model.concepts.length === 0){
+            $scope.errorMsg = "Please choose concepts related to question";
+            return false;
+        }
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
         console.log($scope.model.concepts);
         console.dir($scope.model);
-        //dbService.postQuestion($scope.model);
+        dbService.postQuestion($scope.model);
     };
 
 }]);
@@ -742,7 +750,8 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
 }]);
 
-mainApp.controller('accountController', ['$scope', 'dbService', function($scope, dbService){
+mainApp.controller('accountController', ['$scope', 'dbService', 'coursesData', function($scope, dbService, coursesData){
+    $scope.allCourses = coursesData;
 
     $scope.model = dbService.getUser();
     console.log($scope.courses);
