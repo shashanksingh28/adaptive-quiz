@@ -14,7 +14,7 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
         $scope.model.password =  CryptoJS.MD5($scope.model.password).toString();
         console.log($scope.model);
 
-        $http.post('/login', $scope.model).then(function(httpResponse){
+        $http.post('/api/login', $scope.model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK") {
@@ -70,7 +70,7 @@ loginApp.controller('registerController', ['$http', '$window', '$scope', '$rootS
         $scope.passwordConfirm = $scope.model.password;
 
         console.log($scope.model);
-        $http.post('/register', $scope.model).then(function(httpResponse){
+        $http.post('/api/register', $scope.model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -100,7 +100,7 @@ loginApp.controller('recoveryController', ['$http','$scope','$rootScope',functio
     $scope.model = { recoveryEmail : ''};
 
     $scope.recovery = function(){
-        $http.post('/recover',$scope.model).then(function(httpResponse){
+        $http.post('/api/recover',$scope.model).then(function(httpResponse){
             var response = httpResponse.data;
             if(response.status != "OK") {
                 $scope.recovery_msg = "";

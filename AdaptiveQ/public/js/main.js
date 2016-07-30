@@ -211,7 +211,7 @@ mainApp.service('courseService', ['dbService', function(dbService){
 
 }]);
 
-mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseService', function ($scope, $http, dbService, courseService) {
+mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 'courseService', function ($scope, $http, $window, dbService, courseService) {
 
     $scope.user = dbService.getUser();
 
@@ -227,10 +227,11 @@ mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseServ
 
     $scope.logout = function(){
         console.log("Logging out");
-        $http.get('/logout')
+        $http.get('/api/logout')
             .then(function(successResponse){
                 $scope.message = "Logging out";
                 console.log(successResponse);
+                $window.location.href='/';
             }, function(error){
                 $scope.message = "Failed to log out";
             }
@@ -280,11 +281,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData'
         console.log("Date has changed to " + $scope.dt);
         var dayToCheck = new Date($scope.dt).setHours(0,0,0,0);
 
-        for (var i = 0; i < questionsHardCode.length; i++) {
-            var currentDay = new Date(questionsHardCode[i].date).setHours(0,0,0,0);
+        for (var i = 0; i < questions.length; i++) {
+            var currentDay = new Date($scope.questions[i].date).setHours(0,0,0,0);
 
             if (dayToCheck === currentDay) {
-                $scope.question = questionsHardCode[i];
+                $scope.question = $scope.questions[i];
                 console.log("Date with Question Found");
 
                 switch($scope.checkStatus($scope.question)){
@@ -310,10 +311,10 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData'
     });
 
     $scope.checkStatus = function(question){
-        for(var i = 0; i < recordsHARDCODE.length; i++) {
-            var currentRecord = recordsHARDCODE[i];
+        for(var i = 0; i < records.length; i++) {
+            var currentRecord = records[i];
 
-            if(question.id == currentRecord.questionid) {
+            if(question._id == currentRecord.questionid) {
                 if(question.answer == currentRecord.choice) {
                     return 'attemptedCorrect';
                 }
@@ -348,11 +349,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData'
         if (mode === 'day') {
             var dayToCheck = new Date(date).setHours(0,0,0,0);
 
-            for (var i = 0; i < questionsHardCode.length; i++) {
-                var currentDay = new Date(questionsHardCode[i].date).setHours(0,0,0,0);
+            for (var i = 0; i < questions.length; i++) {
+                var currentDay = new Date($scope.questions[i].date).setHours(0,0,0,0);
 
                 if (dayToCheck === currentDay) {
-                    return $scope.checkStatus(questionsHardCode[i]);
+                    return $scope.checkStatus($scope.questions[i]);
                 }
             }
         }
