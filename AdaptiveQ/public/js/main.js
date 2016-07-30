@@ -6,6 +6,11 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
         templateUrl: 'partials/dashboard',
         controller: 'dashboardController',
         resolve: {
+            conceptsData: function(dbService, courseService){
+                return dbService.getCourseConcepts(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
             questionsData: function(dbService, courseService){
                 if(!courseService.enrolled){
                     return [];
@@ -43,13 +48,17 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
                     .then(function(response){
                         return response;});
             },
+            questionsData: function(dbService, courseService){
+                return dbService.getCourseQuestions(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
             studentsData: function(dbService, courseService){
                 return dbService.getCourseStudents(courseService.currentCourse)
                     .then(function(response){
                         return response;});
             },
         },
-        reload: true,
     })
     .when('/myaccount', {
         templateUrl: 'partials/myaccount',
@@ -234,10 +243,11 @@ mainApp.controller('navController', ['$scope', '$http', 'dbService', 'courseServ
 
 }]);
 
-mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData', function($scope, dbService, questionsData){
+mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData', 'questionsData', function($scope, dbService, conceptsData, questionsData){
 
     $scope.courseExists = questionsData.length > 0;
-    console.log($scope.courseExists);
+    $scope.concepts = conceptsData;
+    $scope.questions = questionsData;
 
     // -------- Concepts Panel --------
     $scope.getConceptGreen = function(concept){
@@ -270,11 +280,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData
         console.log("Date has changed to " + $scope.dt);
         var dayToCheck = new Date($scope.dt).setHours(0,0,0,0);
 
-        for (var i = 0; i < questions.length; i++) {
-            var currentDay = new Date(questions[i].date).setHours(0,0,0,0);
+        for (var i = 0; i < questionsHardCode.length; i++) {
+            var currentDay = new Date(questionsHardCode[i].date).setHours(0,0,0,0);
 
             if (dayToCheck === currentDay) {
-                $scope.question = questions[i];
+                $scope.question = questionsHardCode[i];
                 console.log("Date with Question Found");
 
                 switch($scope.checkStatus($scope.question)){
@@ -300,8 +310,8 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData
     });
 
     $scope.checkStatus = function(question){
-        for(var i = 0; i < records.length; i++) {
-            var currentRecord = records[i];
+        for(var i = 0; i < recordsHARDCODE.length; i++) {
+            var currentRecord = recordsHARDCODE[i];
 
             if(question.id == currentRecord.questionid) {
                 if(question.answer == currentRecord.choice) {
@@ -338,11 +348,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData
         if (mode === 'day') {
             var dayToCheck = new Date(date).setHours(0,0,0,0);
 
-            for (var i = 0; i < questions.length; i++) {
-                var currentDay = new Date(questions[i].date).setHours(0,0,0,0);
+            for (var i = 0; i < questionsHardCode.length; i++) {
+                var currentDay = new Date(questionsHardCode[i].date).setHours(0,0,0,0);
 
                 if (dayToCheck === currentDay) {
-                    return $scope.checkStatus(questions[i]);
+                    return $scope.checkStatus(questionsHardCode[i]);
                 }
             }
         }
@@ -353,7 +363,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'questionsData
 
 mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService', 'orderByFilter', function($scope, questionsData, dbService, orderBy){
 
-    $scope.noQuestions = questionsData.length == 0;
+    $scope.noQuestions = questionsData.length === 0;
 
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
@@ -436,7 +446,7 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
 
                 // Direct to Question or Explanation
                 $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
-                $scope.multipleAnswers = ($scope.question.answers.length > 1) || true;
+                $scope.multipleAnswers = ($scope.question.answers.length > 1 && false);
 
                 // Retrieve Correct Choice and User Choice if Attempted
                 if($scope.recordExists) {
@@ -539,20 +549,16 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
 
 }]);
 
-mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', 'studentsData', function($scope, $route, dbService, courseService, conceptsData, studentsData){
-    $scope.course = courseService.currentCourse.name;
-    $scope.students = students;
+mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', 'questionsData', 'studentsData', function($scope, $route, dbService, courseService, conceptsData, questionsData, studentsData){
+    $scope.course = courseService.currentCourse;
+    $scope.questions = questionsData;
+    $scope.concepts = conceptsData;
+    $scope.students = studentsData;
     $scope.student = { name: 'No Student Chosen' };
 
-    $scope.concepts = conceptsData;
-
     $scope.$watch('student', function(){
-        console.dir($scope.student);
-        return true;
-    });
-
-    $scope.$watch('student.name', function(){
         console.log($scope.student.name);
+        console.dir($scope.student);
         return true;
     });
 
@@ -565,9 +571,61 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.getConceptGreen = function(concept, studentName){
         // get student from array of all students in course
         // find questions in course that include the concept
-        // iterate every record with every question, checking for correct attempts
+        // iterate every record with every question, checking for incorrect attempts
         // return correct attempts / numOfQuestionsInCourse
         return '45%';
+    };
+
+
+    $scope.getStudentConceptBar = function(concept){
+        // get student from array of all students in course
+        // find questions in course that include the concept
+        // iterate every record with every question, checking for correct attempts
+        // return correct attempts / numOfQuestionsInCourse
+        if($scope.student.name == 'No Student Chosen'){ return 0; }
+        var correct = 0;
+        var incorrect = 0;
+        var courseAttempts = [];
+        var questionCount = 0;
+        for(var i = 0; i < $scope.student.attempts.length; i++){
+            var attempt = $scope.student.attempts[i];
+            if(attempt.courseId == $scope.course._id){
+                courseAttempts.push(attempt);
+            }
+        }
+        for(var j = 0; j < $scope.questions.length; j++){
+            var question = $scope.questions[j];
+            console.dir(question);
+            console.log(concept);
+            if(question.concepts.indexOf(concept) > -1){
+                questionCount++;
+                for(var k = 0; k < courseAttempts.length; k++){
+                    var courseAttempt = courseAttempts[k];
+                    if(courseAttempt.questionId == question._id){
+                        console.log("Score: " + courseAttempt.score + "counted for " + concept);
+                        if(courseAttempt.score == 1){
+                            correct++;
+                        }else{
+                            incorrect++;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        var percentages = [
+            correct / questionCount,
+            incorrect/ questionCount,
+        ];
+        percentages.push(1 - (percentages[0] + percentages[1]));
+        console.log(concept + " : " + percentages);
+
+        return questionCount;
+    };
+
+    $scope.getConcept = function(index){
+        return $scope.concepts[index];
     };
 
     $scope.getConceptRed = function(concept){
@@ -642,6 +700,9 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 }]);
 
 mainApp.controller('accountController', ['$scope', 'dbService', function($scope, dbService){
+
+    $scope.user = dbService.getUser();
+    console.log($scope.courses);
 
     $scope.resetDialogs = function(){
         $scope.newName = '';
@@ -728,188 +789,6 @@ mainApp.controller('accountController', ['$scope', 'dbService', function($scope,
     };
 }]);
 
-/*
-questions = [
-{
-    id: 11,
-    date: new Date(2016, 5, 14),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "var bob = 6;\nvar jake = bob;\nsteve = bob + jake;",
-    options: ["Your Wrong Choice", "Correct Answer", "Option 3", "Option 4"],
-    hint: "This is a hint for 06/14/2016",
-    answer: 1,
-},
-{
-    id: 12,
-    date: new Date(2016, 5, 15),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Correct Answer", "Option 3", "Your Wrong Answer"],
-    hint: "This is a hint for 06/15/2016",
-    answer: 1,
-},
-{
-    id: 13,
-    date: new Date(2016, 5, 16),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Your Correct Answer", "Option 3", "Option 4"],
-    answer: 1,
-},
-{
-    id: 14,
-    date: new Date(2016, 5, 17),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    answer: 1,
-},
-{
-    id: 15,
-    date: new Date(2016, 5, 18),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    answer: 1,
-},
-{
-    id: 16,
-    date: new Date(2016, 5, 19),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 17,
-    date: new Date(2016, 5, 20),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 18,
-    date: new Date(2016, 5, 21),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 19,
-    date: new Date(2016, 5, 22),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 110,
-    date: new Date(2016, 5, 23),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 111,
-    date: new Date(2016, 5, 24),
-    title: "Which are valid declarations of variables?",
-    concepts: "variables, primitive types",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 112,
-    date: new Date(2016, 5, 25),
-    title: "Which is an incorrect constructor?",
-    concepts: "constructors",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 113,
-    date: new Date(2016, 5, 26),
-    title: "Which is an incorrect constructor?",
-    concepts: "constructors",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 114,
-    date: new Date(2016, 5, 27),
-    title: "Which is an incorrect constructor?",
-    concepts: "constructors",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 115,
-    date: new Date(2016, 5, 28),
-    title: "Which is an incorrect constructor?",
-    concepts: "constructors",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 116,
-    date: new Date(2016, 5, 29),
-    title: "Select all proper array instantiations",
-    concepts: "arrays",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 117,
-    date: new Date(2016, 5, 30),
-    title: "Select all proper array instantiations",
-    concepts: "arrays",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-},
-{
-    id: 118,
-    date: new Date(2016, 6, 1),
-    title: "What is the output of the following code?",
-    concepts: "methods, local variables",
-    code: "",
-    options: ["Option 1", "Option 2", "Option 3", "Option 4"],
-    hint: "This is a hint.",
-    answer: 1,
-}
-];
-*/
-
 records = [
 {
     questionId: 0,
@@ -951,70 +830,5 @@ explanations = [
     dateCreated: new Date(2016, 06, 11, 12, 0),
     text: 'Hello. I am a Alexander and this is my explanation.',
     votes: 0,
-},
-    ];
-
-validConcepts = [
-    'variables',
-    'objects',
-    'primitive types',
-    'static methods',
-    'instance variables',
-    'if-else statements',
-    'classes',
-    'switch statements',
-    'logical operators',
-    'data structures',
-];
-
-students = [
-{
-    id: 101,
-    name: 'Jeff',
-    attemptedCorrect: 9,
-    attemptedIncorrect: 3,
-    unattempted: 4,
-},
-{
-    id: 102,
-    name: 'Mary',
-    attemptedCorrect: 6,
-    attemptedIncorrect: 2,
-    unattempted: 2,
-},
-{
-    id: 103,
-    name: 'Sally',
-    attemptedCorrect: 3,
-    attemptedIncorrect: 7,
-    unattempted: 5,
-},
-{
-    id: 104,
-    name: 'David',
-    attemptedCorrect: 3,
-    attemptedIncorrect: 5,
-    unattempted: 5,
-},
-{
-    id: 105,
-    name: 'Ben',
-    attemptedCorrect: 5,
-    attemptedIncorrect: 1,
-    unattempted: 1,
-},
-{
-    id: 106,
-    name: 'Clark',
-    attemptedCorrect: 2,
-    attemptedIncorrect: 4,
-    unattempted: 7,
-},
-{
-    id: 107,
-    name: 'Mandy',
-    attemptedCorrect: 4,
-    attemptedIncorrect: 2,
-    unattempted: 4,
 },
     ];

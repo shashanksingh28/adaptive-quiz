@@ -4,10 +4,10 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
   .content-box
     h1 Account Details
     .item
-      h4 Name:
+      h4 Name: {{ user.name }}
       button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangeName=true") Change
     .item
-      h4 Email:
+      h4 Email: {{ user.email }}
       button(type="button", class="btn btn-primary btn-sm", ng-click="resetDialogs(); openChangeEmail=true") Change
     .item
       h4 Password: ********
@@ -15,20 +15,10 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
     .item
       h4 Courses:
       table.table
-        tr
-          th: h5 Java
-          th: h5 Stephen Hawking
-          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave('Java')")
-                span.glyphicon.glyphicon-remove-circle
-        tr
-          th: h5 Javascript
-          th: h5 Carl Sagan
-          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave('Javascript')")
-                span.glyphicon.glyphicon-remove-circle
-        tr
-          th: h5 Introduction to Computer Science
-          th: h5 Bill Nye
-          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave('Introduction to Computer Science')")
+        tr(ng-repeat="course in user.courses")
+          th: h5 {{ course.name }}
+          th: h5 {{ course.Instructors[0] }}
+          th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave(course.name)")
                 span.glyphicon.glyphicon-remove-circle
         tr
           th: button#enroll(type="button", class="btn btn-success btn-sm", ng-click="resetDialogs(); openAddCourse=true") Join A Course
