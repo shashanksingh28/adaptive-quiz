@@ -201,7 +201,7 @@ mainApp.service('dbService', ['$http', function($http){
 
 }]);
 
-mainApp.service('courseService', ['dbService', function(dbService){
+mainApp.service('courseService', ['$window', 'dbService', function($window, dbService){
     
     this.courses = dbService.getUser().courses;
 
@@ -261,7 +261,7 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
             .then(function(successResponse){
                 $scope.message = "Logging out";
                 console.log(successResponse);
-                $window.location.href='/';
+                $window.location.href = '/';
                 $window.location.reload(true);
             }, function(error){
                 console.log("Failed to log out");
@@ -370,6 +370,10 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         optionsSelected: [],
     };
 
+    $scope.checkStatus = function(question){
+        return statusService.checkStatus(question);
+    };
+
     // Question List Ordering
 
     $scope.order = 'Date';
@@ -390,8 +394,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     $scope.sortByStatus = function() {
         $scope.order = 'Status';
         $scope.orderVal = function(question){
-            var statusString = statusService.checkStatus(question);
-            switch (statusString){
+            switch ($scope.checkStatus(question)){
                 case 'attemptedCorrect':
                     return 0;
                 case 'attemptedIncorrect':
@@ -414,6 +417,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
 
             if ($scope.model.questionId == currentQuestion._id) {
                 $scope.question = currentQuestion;
+                console.dir($scope.question);
 
                 // Reset Fields
                 $scope.model.optionsSelected = [];
@@ -422,8 +426,8 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
                 $scope.addExplanation = false;
 
                 // Direct to Question or Explanation
-                $scope.recordExists = statusService.checkStatus($scope.question) != 'unattempted';
-                $scope.multipleAnswers = ($scope.question.multiChoice > 1);
+                $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
+                $scope.multipleAnswers = $scope.question.multiChoice;
             }
         }
     });
@@ -485,23 +489,31 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', 'conceptsDat
         }
     };
 
-    $scope.submitQuestion = function(){
-        console.log("Submitted question: ");
-        console.dir($scope.model);
-        $scope.errorMsg = "";
-        dbService.postQuestion($scope.model);
-    };
-
     $scope.loadConcepts = function(query){
         var matches = [];
         for(var i = 0; i < $scope.concepts.length; i++){
             var concept = $scope.concepts[i];
-            var match = concept.indexOf(query);
+            var match = concept.name.indexOf(query);
             if(match != -1){
-                matches.push(concept);
+                matches.push(concept.name);
             }
         }
         return matches;
+    };
+
+    var unwrapConcepts = function(conceptsObjectArray){
+        var concepts = [];
+        for(var i = 0; i < conceptsObjectArray.length; i++){
+            concepts.push(conceptsObjectArray[i].text);
+        }
+        return concepts;
+    };
+
+    $scope.submitQuestion = function(){
+        $scope.model.concepts = unwrapConcepts($scope.model.concepts);
+        console.log($scope.model.concepts);
+        console.dir($scope.model);
+        //dbService.postQuestion($scope.model);
     };
 
 }]);
@@ -514,45 +526,35 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.student = { name: 'No Student Chosen' };
 
     $scope.$watch('student', function(){
-        console.log($scope.student.name);
-        console.dir($scope.student);
+        // console.log($scope.student.name);
     });
 
-    $scope.getConceptGreen = function(concept){
-        // getConceptGreen for every student
-        // find average
-        return '45%';
+    $scope.getQuestionCount = function(concept){
+        var questionCount = 0;
+        for(var j = 0; j < $scope.questions.length; j++){
+            var question = $scope.questions[j];
+            if(question.concepts.indexOf(concept) > -1){
+                questionCount++;
+            }
+        }
+        return questionCount;
     };
-
-    $scope.getConceptGreen = function(concept, studentName){
-        // get student from array of all students in course
-        // find questions in course that include the concept
-        // iterate every record with every question, checking for incorrect attempts
-        // return correct attempts / numOfQuestionsInCourse
-        return '45%';
-    };
-
-
-    $scope.getStudentConceptBar = function(concept){
-        // get student from array of all students in course
-        // find questions in course that include the concept
-        // iterate every record with every question, checking for correct attempts
-        // return correct attempts / numOfQuestionsInCourse
+    
+    $scope.getStudentConceptBar = function(student, concept){
+        console.log(concept);
         if($scope.student.name == 'No Student Chosen'){ return 0; }
         var correct = 0;
         var incorrect = 0;
         var courseAttempts = [];
         var questionCount = 0;
-        for(var i = 0; i < $scope.student.attempts.length; i++){
-            var attempt = $scope.student.attempts[i];
+        for(var i = 0; i < attempts.length; i++){
+            var attempt = student.attempts[i];
             if(attempt.courseId == $scope.course._id){
                 courseAttempts.push(attempt);
             }
         }
         for(var j = 0; j < $scope.questions.length; j++){
             var question = $scope.questions[j];
-            console.dir(question);
-            console.log(concept);
             if(question.concepts.indexOf(concept) > -1){
                 questionCount++;
                 for(var k = 0; k < courseAttempts.length; k++){
@@ -575,13 +577,34 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
             incorrect/ questionCount,
         ];
         percentages.push(1 - (percentages[0] + percentages[1]));
-        console.log(concept + " : " + percentages);
+        console.log(concept.name + " : " + percentages);
 
-        return questionCount;
+        return percentages;
     };
 
-    $scope.getConcept = function(index){
-        return $scope.concepts[index];
+    $scope.getStudentBar = function(student){
+        var allPercentages = [];
+        for(var i = 0; i < $scope.concepts.length; i++){
+            var currentConcept = $scope.concepts[i];
+            var conceptPercentages = $scope.getStudentConceptBar(student, currentConcept);
+            allPercentages.push(conceptPercentages);
+        }
+
+        var percentages = [];
+    };
+
+    $scope.getConceptGreen = function(concept){
+        // getConceptGreen for every student
+        // find average
+        return '45%';
+    };
+
+    $scope.getConceptGreen = function(concept, studentName){
+        // get student from array of all students in course
+        // find questions in course that include the concept
+        // iterate every record with every question, checking for incorrect attempts
+        // return correct attempts / numOfQuestionsInCourse
+        return '45%';
     };
 
     $scope.getConceptRed = function(concept){
@@ -702,17 +725,19 @@ mainApp.controller('accountController', ['$scope', 'dbService', function($scope,
         $scope.errorMsg = '';
         if($scope.newPassword === ""){
             $scope.errorMsg = 'Password cannot be empty';
+            return 0;
         }
-        if($scope.newPassword != $scope.confirmPassword){
+        var newPasswordHash = CryptoJS.MD5($scope.newPassword).toString();
+        var confirmPasswordHash = CryptoJS.MD5($scope.confirmPassword).toString();
+
+        if(newPasswordHash != confirmPasswordHash){
             $scope.errorMsg = 'Passwords do not match';
             return 0;
         }
-
-        console.log('Password Changed: ' + $scope.newPassword);
-        //Hash
-        //Change Password
-        //Refresh
-        $scope.openChangePassword = false;
+        $scope.model.password = newPasswordHash;
+        dbService.postUserUpdate($scope.model);
+        console.log('Password Changed: ********');
+        $scope.resetDialogs();
     };
 
     $scope.findCourse = function(){
