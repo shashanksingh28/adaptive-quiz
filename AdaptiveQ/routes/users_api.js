@@ -221,4 +221,9 @@ router.post('/postUserUpdate', requireLogin, function(req, res){
     }
 });
 
+router.get('/logout', function(req, res){
+    req.session.reset();
+    res.send({'status': 'OK'});
+});
+
 module.exports = router;
