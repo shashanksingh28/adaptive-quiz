@@ -62,7 +62,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         .options
           ul
             li(ng-repeat="option in question.options")
-              .option(ng-class="{correct: correctChoices.indexOf($index) != -1, chosen: userChoices.indexOf($index) != -1}")
+              .option(ng-class="{correct: question.indexOf($index) != -1, chosen: attempts.indexOf($index) != -1}")
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
           button(type="button", class="btn btn-info", ng-click="showExplanations = true", ng-hide="showExplanations") View Explanations

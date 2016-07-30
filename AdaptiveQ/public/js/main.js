@@ -37,7 +37,14 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
     })
     .when('/askquestion', {
         templateUrl: 'partials/askquestion',
-        controller: 'askQuestionController'
+        controller: 'askQuestionController',
+        resolve: {
+            conceptsData: function(dbService, courseService){
+                return dbService.getCourseConcepts(courseService.currentCourse)
+                    .then(function(response){
+                        return response;});
+            },
+        },
     })
     .when('/coursedata', {
         templateUrl: 'partials/coursedata',
@@ -84,7 +91,6 @@ mainApp.service('dbService', ['$http', function($http){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Questions Retrieved in dbService");
                 return response.data;
             }
         }, function(error){
@@ -100,8 +106,6 @@ mainApp.service('dbService', ['$http', function($http){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Concepts Retrieved in dbService");
-                console.log(response.data);
                 return response.data;
             }
         }, function(error){
@@ -113,13 +117,10 @@ mainApp.service('dbService', ['$http', function($http){
     this.getCourseStudents = function(course){
         return $http.get('/api/getCourseStudents', {params: course}).then(function(httpResponse){
             var response = httpResponse.data;
-            console.log(response);
             if(response.status != "OK"){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Students Retrieved");
-                console.log(response.data);
                 return response.data;
             }
         }, function(error){
@@ -189,7 +190,6 @@ mainApp.service('dbService', ['$http', function($http){
 
 mainApp.service('courseService', ['dbService', function(dbService){
     
-    //Initialize array of course objects
     this.courses = dbService.getUser().courses;
 
     this.enrolled = this.courses.length > 0;
@@ -200,13 +200,30 @@ mainApp.service('courseService', ['dbService', function(dbService){
       for(var i = 0; i < this.courses.length; i++){
         if(this.courses[i].name == courseName){
           this.currentCourse = this.courses[i];
-          console.log("Course Changed:");
-          console.dir(this.currentCourse);
-          return 1;
+          $window.location.href = '/';
+          $window.location.reload(true);
         }
       }  
       console.log("Course not found");
-      return 0;
+    };
+
+}]);
+
+mainApp.service('statusService', ['dbService', function(dbService){
+    
+    this.checkStatus = function(question){
+        if(question.noData){
+            return 'unattempted';
+        }
+        var attempts = dbService.getUser().attempts;
+        for(var i = 0; i < attempts.length; i++){
+            var currentAttempt = attempts[i];
+            if(question._id == currentAttempt.questionId){
+                if(currentAttempt.score == 1){return 'attemptedCorrect';}
+                return 'attemptedIncorrect';
+            }
+        }
+        return 'unattempted';
     };
 
 }]);
@@ -232,8 +249,9 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
                 $scope.message = "Logging out";
                 console.log(successResponse);
                 $window.location.href='/';
+                $window.location.reload(true);
             }, function(error){
-                $scope.message = "Failed to log out";
+                console.log("Failed to log out");
             }
             );
     };
@@ -244,11 +262,12 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
 }]);
 
-mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData', 'questionsData', function($scope, dbService, conceptsData, questionsData){
+mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'conceptsData', 'questionsData', function($scope, dbService, statusService, conceptsData, questionsData){
 
     $scope.courseExists = questionsData.length > 0;
     $scope.concepts = conceptsData;
     $scope.questions = questionsData;
+    $scope.attempts = dbService.getUser().attempts;
 
     // -------- Concepts Panel --------
     $scope.getConceptGreen = function(concept){
@@ -268,67 +287,32 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData'
     };
 
 
-
     // -------- Question Panel --------
     noquestion = {
-        date: '',
-        title: "-",
         concepts: "",
-        status: 'No Question'
     };
 
     $scope.$watch('dt', function(){
-        console.log("Date has changed to " + $scope.dt);
         var dayToCheck = new Date($scope.dt).setHours(0,0,0,0);
-
-        for (var i = 0; i < questions.length; i++) {
+        for(var i = 0; i < questions.length; i++){
             var currentDay = new Date($scope.questions[i].date).setHours(0,0,0,0);
-
             if (dayToCheck === currentDay) {
                 $scope.question = $scope.questions[i];
-                console.log("Date with Question Found");
-
-                switch($scope.checkStatus($scope.question)){
-                    case 'attemptedCorrect':
-                        $scope.prettyStatus = "Attempted Correctly";
-                        break;
-                    case 'attemptedIncorrect':
-                        $scope.prettyStatus = "Attempted Incorrectly";
-                        break;
-                    case 'unattempted':
-                        $scope.prettyStatus = "Not Yet Attempted";
-                        break;
-                    default:
-                        $scope.prettyStatus = "Status Not Found";
-                }
-
                 return true;
             }
         }
         $scope.question = noquestion;
-        $scope.prettyStatus = $scope.question.status;
         console.log("Date has No Question");
     });
 
-    $scope.checkStatus = function(question){
-        for(var i = 0; i < records.length; i++) {
-            var currentRecord = records[i];
-
-            if(question._id == currentRecord.questionid) {
-                if(question.answer == currentRecord.choice) {
-                    return 'attemptedCorrect';
-                }
-                return 'attemptedIncorrect';
-            }
-        }
-        return 'unattempted';
-    };
-
-
     // TODO: Route to Question View with question data
     $scope.goToQuestion = function(){
-        console.log("Data to be Sent: ");
-        console.log($scope.question);
+        if($scope.question == noquestion){
+            console.log("No Question on that Day");
+        }else{
+            console.log("Data to be Sent: ");
+            console.log($scope.question);
+        }
     };
 
     // Set Today, Options, and Custom Classes
@@ -348,21 +332,21 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'conceptsData'
         mode = data.mode;
         if (mode === 'day') {
             var dayToCheck = new Date(date).setHours(0,0,0,0);
-
             for (var i = 0; i < questions.length; i++) {
                 var currentDay = new Date($scope.questions[i].date).setHours(0,0,0,0);
-
                 if (dayToCheck === currentDay) {
-                    return $scope.checkStatus($scope.questions[i]);
+                    return statusService.checkStatus($scope.questions[i]);
                 }
             }
         }
-
         return '';
-    } 
+    }
+
+    // TODO: Cross check attempts with questionId
+    $scope.checkStatus = function(){return 'unattempted';};
 }]);
 
-mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService', 'orderByFilter', function($scope, questionsData, dbService, orderBy){
+mainApp.controller('questionController', ['$scope', 'statusService', 'dbService', 'questionsData', 'orderByFilter', function($scope, statusService, dbService, questionsData, orderBy){
 
     $scope.noQuestions = questionsData.length === 0;
 
@@ -371,23 +355,6 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
     $scope.model = {
         questionId: $scope.questions[$scope.questions.length - 1]._id,
         optionsSelected: [],
-    };
-
-    $scope.checkStatus = function(question){
-        if(question.noData){
-            return 'unattempted';
-        }
-        for(var i = 0; i < records.length; i++) {
-            var currentRecord = records[i];
-
-            if(question._id == currentRecord.questionId) {
-                if(question.answers == currentRecord.optionsSelected) {
-                    return 'attemptedCorrect';
-                }
-                return 'attemptedIncorrect';
-            }
-        }
-        return 'unattempted';
     };
 
     // Question List Ordering
@@ -410,7 +377,7 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
     $scope.sortByStatus = function() {
         $scope.order = 'Status';
         $scope.orderVal = function(question){
-            var statusString = $scope.checkStatus(question);
+            var statusString = statusService.checkStatus(question);
             switch (statusString){
                 case 'attemptedCorrect':
                     return 0;
@@ -425,19 +392,15 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
     $scope.$watchGroup(['orderVal', 'reverse', 'expOrderVal'], function(){
         $scope.questions = orderBy($scope.questions, $scope.orderVal, $scope.reverse);
         $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
-        console.log('Order was changed');
     });
 
     // Change data whenever a new question is selected from sidebar
-
     $scope.$watch('model.questionId', function(){
         for (var i = 0; i < $scope.questions.length; i++) {
             var currentQuestion = $scope.questions[i];
 
             if ($scope.model.questionId == currentQuestion._id) {
                 $scope.question = currentQuestion;
-                console.log('Question changed to:');
-                console.dir($scope.question);
 
                 // Reset Fields
                 $scope.model.optionsSelected = [];
@@ -446,47 +409,29 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
                 $scope.addExplanation = false;
 
                 // Direct to Question or Explanation
-                $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
-                $scope.multipleAnswers = ($scope.question.answers.length > 1 && false);
-
-                // Retrieve Correct Choice and User Choice if Attempted
-                if($scope.recordExists) {
-                    for(var j = 0; j < records.length; j++) {
-                        var currentRecord = records[j];
-                        if(currentRecord.questionId == $scope.question._id){
-                            $scope.correctChoices = $scope.question.answers;
-                            $scope.userChoices = currentRecord.optionsSelected;
-                            console.log('Correct Answer: ' + $scope.correctChoices + '; User Answer: ' + $scope.userChoices);
-                        }
-                    } 
-                }
-
-                return true;
+                $scope.recordExists = statusService.checkStatus($scope.question) != 'unattempted';
+                $scope.multipleAnswers = ($scope.question.multiChoice > 1);
             }
         }
     });
 
     $scope.toggleSelection = function(answer){
         var index = $scope.model.optionsSelected.indexOf(answer);
-
         if(index > -1){
-            // Answer was selected and needs to be removed
             $scope.model.optionsSelected.splice(index, 1);
         }else{
             $scope.model.optionsSelected.push(answer);
         }
-        console.log($scope.model.optionsSelected);
     };
 
     $scope.submitAnswer = function(){
-        console.log("Options " + $scope.model.optionsSelected + " confirmed for Question ID " + $scope.question._id);
+        console.log("Sending attempt: " + $scope.model);
         dbService.postAttempt($scope.model);
     };
 
     $scope.enableHint = function(){
         $scope.showHint = true;
         // TODO: Record that user used a hint
-        return 1;
     };
 
     // Explanations
@@ -503,7 +448,9 @@ mainApp.controller('questionController', ['$scope', 'questionsData', 'dbService'
 
 }]);
 
-mainApp.controller('askQuestionController', ['$scope', 'dbService', function($scope, dbService){
+mainApp.controller('askQuestionController', ['$scope', 'dbService', 'conceptsData', function($scope, dbService, conceptsData){
+    $scope.concepts = conceptsData;
+
     $scope.model = {
         courseId: 1,
         text: "",
@@ -518,18 +465,15 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
 
     $scope.toggleSelection = function(answer){
         var index = $scope.model.answers.indexOf(answer);
-
         if(index > -1){
-            // Answer was selected and needs to be removed
             $scope.model.answers.splice(index, 1);
         }else{
             $scope.model.answers.push(answer);
         }
-        console.log($scope.model.answers);
     };
 
     $scope.submitQuestion = function(){
-        console.log("Submitted");
+        console.log("Submitted question: ");
         console.dir($scope.model);
         $scope.errorMsg = "";
         dbService.postQuestion($scope.model);
@@ -537,14 +481,13 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', function($sc
 
     $scope.loadConcepts = function(query){
         var matches = [];
-        for(var i = 0; i < validConcepts.length; i++){
-            var concept = validConcepts[i];
+        for(var i = 0; i < $scope.concepts.length; i++){
+            var concept = $scope.concepts[i];
             var match = concept.indexOf(query);
             if(match != -1){
                 matches.push(concept);
             }
         }
-        console.log("Matches: " + matches);
         return matches;
     };
 
@@ -560,7 +503,6 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.$watch('student', function(){
         console.log($scope.student.name);
         console.dir($scope.student);
-        return true;
     });
 
     $scope.getConceptGreen = function(concept){
