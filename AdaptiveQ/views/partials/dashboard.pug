@@ -47,19 +47,9 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
           #questionInfo
             form(ng-submit="goToQuestion()")
               .form-group
-                label Date Chosen:
-                input(type="date", class="form-control", ng-model="dt", readonly)
-              .form-group
-                label Question Brief:
-                input(type="text", class="form-control", ng-model="question.title", readonly)
-              .form-group
-                label Status:
-                input(type="text", class="form-control", ng-model="prettyStatus", readonly)
-              .form-group
                 label Concept(s):
                 p {{ question.concepts }}
-
-              button.centered(type="submit", class="btn btn-info btn-lg") Go to Question
+              button.centered(type="submit", class="btn btn-info btn-lg", ng-disabled="emptyDay()") Go to Question
 
       #recommendations.panel.panel-primary(ng-show="false")
         .panel-heading

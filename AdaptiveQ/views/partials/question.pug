@@ -9,8 +9,8 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         .btn-group.sortButtons
           button(data-toggle="dropdown", class="btn btn-default btn-xs dropdown-toggle") {{ order }}
           ul.dropdown-menu
-            li: a(href='#', ng-click="sortByDate()") Date
-            li: a(href='#', ng-click="sortByStatus()") Status
+            li: a(ng-click="sortByDate()") Date
+            li: a(ng-click="sortByStatus()") Status
           button(type="button", class="btn btn-default btn-xs", ng-click="switchReverse();")
             span(ng-class="reverseIcon")
       #question-list
@@ -40,8 +40,8 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
           p(ng-show="showHint") Hint: {{ question.hint }}
-          button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.option == ""') Confirm
-          button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="showHint") Need a hint?
+          button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.optionsSelected.length === 0') Confirm
+          button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="noHint || showHint") Need a hint?
       .options-unattempted(ng-show="multipleAnswers && !noQuestions")
         form(ng-submit="submitAnswer()")
           p This question requires more than one correct answer.
@@ -51,8 +51,8 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 input(type="checkbox", id="options{{$index}}", name="option", ng-click="toggleSelection($index)")
                 label.checkbox(for="options{{$index}}") {{option}}
             p(ng-show="showHint") Hint: {{ question.hint }}
-          button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.option == ""') Confirm
-          button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="showHint") Need a hint?
+          button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.optionsSelected.length === 0') Confirm
+          button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="noHint || showHint") Need a hint?
 
   .question-area(ng-show="recordExists")
       .question-box
@@ -62,35 +62,31 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         .options
           ul
             li(ng-repeat="option in question.options")
-              .option(ng-class="{correct: question.indexOf($index) != -1, chosen: attempts.indexOf($index) != -1}")
+              .option(ng-class="{correct: question.answers.indexOf($index) != -1, chosen: getOptionsSelected().indexOf($index) != -1}")
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
-          button(type="button", class="btn btn-info", ng-click="showExplanations = true", ng-hide="showExplanations") View Explanations
-          button(type="button", class="btn btn-info", ng-click="showExplanations = false", ng-show="showExplanations") Hide Explanations
-        .explanations(ng-show="showExplanations")
-          
-          .new-explanation(ng-show="addExplanation")
+          .new-explanation(ng-hide="hasOwnExplanation()")
             form#newExplanation
-              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation")
-              button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Submit
-          .explanation-buttons
-            button(type="button", class="btn btn-default", ng-click="addExplanation = true", ng-hide="addExplanation")
-              span.fa.fa-plus-circle
-              span &nbspAdd Explanation
-            button(type="button", class="btn btn-default", ng-click="addExplanation = false", ng-show="addExplanation") Cancel
-            button.right(type="button", class="btn btn-default btn-sm", ng-click="expSortDate()", title="most recent")
-              span.fa.fa-clock-o
-            button.right(type="button", class="btn btn-default btn-sm", ng-click="expSortVotes()", title="most votes")
-              span.fa.fa-check
+              label Create Explanation or Comments
+              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="")
+              button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
+              p You must post an explanation to view notes from others.
+          
+        .explanations(ng-hide="hasOwnExplanation()")
+          .btn-group.sortButtons
+            button(data-toggle="dropdown", class="btn btn-link btn-xs dropdown-toggle") order by {{ expOrder }}
+            ul.dropdown-menu
+              li: a(ng-click="expSortVotes()") votes
+              li: a(ng-click="expSortDate()") recent
           ul
             li(ng-repeat="explanation in explanations")
               .explanation
-                h5 Votes: {{ explanation.votes }}
-                button(type="button", class="btn btn-default btn-sm", ng-click="voted=true", ng-hide="voted")
+                h5 Votes: {{ explanation.votes.length }}
+                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-show="explanation.votes.indexOf(dbService.getUser()._id) != -1")
                   span.fa.fa-thumbs-o-up
-                button(type="button", class="btn btn-default btn-sm", ng-click="voted=false", ng-show="voted")
+                button(type="button", class="btn btn-default btn-sm", ng-click="downvote(explanation)", ng-hide="explanation.votes.indexOf(dbService.getUser()._id) != -1")
                   span.fa.fa-thumbs-up
                 h4 {{ explanation.user }}
-                h6 {{ explanation.dateCreated | date : 'hh:mma MMM dd, yyyy' }}
+                h6 {{ explanation.dateCreated | date : 'hh:mma MMM dd' }}
                 p.
                   {{ explanation.text }}

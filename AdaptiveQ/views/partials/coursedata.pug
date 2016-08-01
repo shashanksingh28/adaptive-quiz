@@ -16,13 +16,13 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
                 .data-bar
                   .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
                     .bar
-                    p {{ formatRoundPercentages(getConceptBar(concept))[0] }}
+                    p {{ formatRoundPercentages(getConceptBar(concept.name))[0] }}
                   .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
                     .bar
-                    p {{ formatRoundPercentages(getConceptBar(concept))[0] }}
+                    p {{ formatRoundPercentages(getConceptBar(concept.name))[1] }}
                   .unattempted(ng-style="{'width': getConceptYellow()}")
                     .bar
-                    p {{ formatRoundPercentages(getConceptBar(concept))[0] }}
+                    p {{ formatRoundPercentages(getConceptBar(concept.name))[2] }}
   .row
     .col-md-6
       .student-list-box
@@ -61,13 +61,13 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
                 .data-bar
                   .attemptedCorrect(style="width:45%;")
                     .bar
-                    p {{ formatRoundPercentages(getStudentConceptBar(student, concept))[0] }}
+                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[0] }}
                   .attemptedIncorrect(style="width:30%;")
                     .bar
-                    p {{ formatRoundPercentages(getStudentConceptBar(student, concept))[1] }}
+                    p {{ formatRoundPercentages(getStudentConceptBar(student, concept.name))[1] }}
                   .unattempted(style="width:25%;")
                     .bar
-                    p {{ formatRoundPercentages(getStudentConceptBar(student, concept))[2] }}
+                    p {{ formatRoundPercentages(getStudentConceptBar(student, concept.name))[2] }}
 
 #addConcept(ng-show="open")
   .modal-header

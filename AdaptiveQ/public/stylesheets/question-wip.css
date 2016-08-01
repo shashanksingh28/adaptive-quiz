@@ -243,18 +243,8 @@ form button[type="button"]:hover {
   border-top-color: #fff;
 }
 
-.explanation-buttons {
-  width: 100%;
-}
-
-.explanation-buttons button {
-  display: inline;
-  margin: 0 5px 20px 5px;
-  padding: 0 5px;
-}
-
-.explanation-buttons .right{
-  float: right;
+.explanations .sortButtons button {
+  color: #fff;
 }
 
 .explanation {
@@ -264,12 +254,22 @@ form button[type="button"]:hover {
   background-color: #0a5a9c;
 }
 
+.explanation h4 {
+  display: inline;
+}
+
 .explanation h5 {
   float: right;
 }
 
 .explanation h6 {
-  margin-bottom: 10px;
+  display: inline;
+  color: #ccc;
+  margin-left: 10px;
+}
+
+.explanation p {
+  margin: 20px 0 10px;
 }
 
 .explanation button {
@@ -279,13 +279,21 @@ form button[type="button"]:hover {
   float: right;
 }
 
-#newExplanation button {
-  margin: 5px;
-  padding: 0 2px;
+#newExplanation {
+  margin-top: 50px;
 }
 
 #newExplanation textarea {
   color: #000;
   resize: none;
   width: 100%;
+}
+
+#newExplanation button {
+  margin: 5px;
+  padding: 0 2px;
+}
+
+#newExplanation p {
+  float: right;
 }

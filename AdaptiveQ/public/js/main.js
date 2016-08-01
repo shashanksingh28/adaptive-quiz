@@ -1,8 +1,11 @@
 var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput']);
 var baseURL = "localhost:3000/";
 
-mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider){
+mainApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
+        .when('/redirect', {
+            template: 'redirecting...',
+        })
     .when('/dashboard', {
         templateUrl: 'partials/dashboard',
         controller: 'dashboardController',
@@ -80,14 +83,31 @@ mainApp.config(['$routeProvider', '$locationProvider', function($routeProvider, 
         },
     })
     .otherwise({
-        redirectTo: '/dashboard'
+        redirectTo: '/redirect'
     });
 
-    $locationProvider.html5Mode(true);
+}]);
+
+mainApp.run(['$rootScope', '$location', 'authService', function($rootScope, $location, authService){
+    $rootScope.$on('$routeChangeStart', function(events, next, previous){
+        console.log(next, previous, $location);
+        if($location.$$path == "/redirect"){
+            event.preventDefault();
+            if(authService.isTeacher){
+                $location.path('/coursedata');
+            }else{
+                $location.path('/dashboard');
+            }
+        }
+    });
+}]);
+
+mainApp.service('authService', [function(){
+    this.isTeacher = false;
 }]);
 
 mainApp.service('dbService', ['$http', function($http){
-    
+
     this.getUser = function(){
         return user_client;
     };
@@ -102,8 +122,8 @@ mainApp.service('dbService', ['$http', function($http){
                 return response.data;
             }
         }, function(error){
-          console.log("Problem in Connecting to Server:");
-          console.log(error);
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
         });
     };
 
@@ -117,8 +137,8 @@ mainApp.service('dbService', ['$http', function($http){
                 return response.data;
             }
         }, function(error){
-          console.log("Problem in Connecting to Server:");
-          console.log(error);
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
         });
     };
 
@@ -132,8 +152,8 @@ mainApp.service('dbService', ['$http', function($http){
                 return response.data;
             }
         }, function(error){
-          console.log("Problem in Connecting to Server:");
-          console.log(error);
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
         });
     };
 
@@ -147,8 +167,8 @@ mainApp.service('dbService', ['$http', function($http){
                 return response.data;
             }
         }, function(error){
-          console.log("Problem in Connecting to Server:");
-          console.log(error);
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
         });
     };
 
@@ -202,8 +222,36 @@ mainApp.service('dbService', ['$http', function($http){
         });
     };
 
-    this.postExplanation = function(){
-        //$http.post an explanation to a question
+    this.postExplanation = function(model){
+        $http.post('/api/postExplanation', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Explanation Added");
+                //refresh page
+            }
+        }, function(error){
+            console.log("Problem in connecting to server");
+        });
+    };
+
+    this.postVote = function(model){
+        $http.post('/api/postVote', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Vote Added");
+                //refresh page
+            }
+        }, function(error){
+            console.log("Problem in connecting to server");
+        });
     };
 
     this.postUserUpdate = function(model){
@@ -222,10 +270,31 @@ mainApp.service('dbService', ['$http', function($http){
         });
     };
 
+    this.postLog = function(eventType, eventOn){
+        var model = {
+            userId: this.getUser()._id,
+            event_type: eventType,
+            event_on: eventOn,
+            created_at: Date.now()
+        };
+        $http.post('/api/postLog', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Action Logged");
+            }
+        }, function(error){
+            console.log("Problem in connecting to server");
+        });
+    };
+
 }]);
 
 mainApp.service('courseService', ['$window', 'dbService', function($window, dbService){
-    
+
     this.courses = dbService.getUser().courses;
 
     this.enrolled = this.courses.length > 0;
@@ -233,20 +302,31 @@ mainApp.service('courseService', ['$window', 'dbService', function($window, dbSe
     this.currentCourse = this.courses[0];
 
     this.changeCourse = function(courseName){
-      for(var i = 0; i < this.courses.length; i++){
-        if(this.courses[i].name == courseName){
-          this.currentCourse = this.courses[i];
-          $window.location.href = '/';
-          $window.location.reload(true);
-        }
-      }  
-      console.log("Course not found");
+        for(var i = 0; i < this.courses.length; i++){
+            if(this.courses[i].name == courseName){
+                this.currentCourse = this.courses[i];
+                $window.location.href = '/';
+                $window.location.reload(true);
+            }
+        }  
+        console.log("Course not found");
+    };
+
+}]);
+
+mainApp.service('questionService', ['$window', function($window){
+
+    this.savedQuestionId = null;
+
+    this.save = function(questionId){
+        this.savedQuestionId = questionId;
+        $window.location.href = '/question';
     };
 
 }]);
 
 mainApp.service('statusService', ['dbService', function(dbService){
-    
+
     this.checkStatus = function(question){
         if(question.noData){
             return 'unattempted';
@@ -272,9 +352,9 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
     $scope.questionRoute = function(){
         if(courseService.enrolled){
-            return '/question';
+            return '/#/question';
         }else{
-            return '/questionsunavailable';
+            return '/#/questionsunavailable';
         }
     };
 
@@ -296,7 +376,7 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
 }]);
 
-mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'conceptsData', 'questionsData', function($scope, dbService, statusService, conceptsData, questionsData){
+mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'questionService', 'conceptsData', 'questionsData', function($scope, dbService, statusService, questionService, conceptsData, questionsData){
 
     $scope.courseExists = questionsData.length > 0;
     $scope.concepts = conceptsData;
@@ -323,7 +403,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
 
     // -------- Question Panel --------
     noquestion = {
-        concepts: "",
+        concepts: "No Question",
+    };
+
+    $scope.emptyDay = function(){
+        return $scope.question == noquestion;
     };
 
     $scope.$watch('dt', function(){
@@ -339,13 +423,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
         console.log("Date has No Question");
     });
 
-    // TODO: Route to Question View with question data
     $scope.goToQuestion = function(){
-        if($scope.question == noquestion){
+        if($scope.emptyDay){
             console.log("No Question on that Day");
         }else{
-            console.log("Data to be Sent: ");
-            console.log($scope.question);
+            questionService.save($scope.question._id);
         }
     };
 
@@ -375,21 +457,37 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
         }
         return '';
     }
-
-    // TODO: Cross check attempts with questionId
-    $scope.checkStatus = function(){return 'unattempted';};
 }]);
 
-mainApp.controller('questionController', ['$scope', 'statusService', 'dbService', 'questionsData', 'orderByFilter', function($scope, statusService, dbService, questionsData, orderBy){
+mainApp.controller('questionController', ['$scope', 'statusService', 'dbService', 'questionService', 'questionsData', 'orderByFilter', function($scope, statusService, dbService, questionService, questionsData, orderBy){
 
     $scope.noQuestions = questionsData.length === 0;
 
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
+    $scope.getOptionsSelected = function(){
+        var allAttempts = dbService.getUser().attempts;
+        for(var i = 0; i < allAttempts.length; i++){
+            var currentAttempt = allAttempts[i];
+            if(currentAttempt.questionId == $scope.question._id){
+                return currentAttempt.optionsSelected;
+            }
+        }
+        console.log('No attempt recorded...');
+    };
+
 
     $scope.model = {
         questionId: $scope.questions[$scope.questions.length - 1]._id,
         optionsSelected: [],
     };
+
+    // Retreive Question from Dashboard Calendar
+    if(questionService.savedQuestionId){
+        console.log('i came from calendar');
+        $scope.model.questionId = questionService.savedQuestionId;
+        questionService.savedQuestionId = null;
+    }
+
 
     $scope.checkStatus = function(question){
         return statusService.checkStatus(question);
@@ -443,12 +541,14 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
                 // Reset Fields
                 $scope.model.optionsSelected = [];
                 $scope.showHint = false;
+                $scope.noHint = true;
                 $scope.showExplanations = false;
                 $scope.addExplanation = false;
 
-                // Direct to Question or Explanation
+                // Set Values to Format View
                 $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
-                $scope.multipleAnswers = $scope.question.multiChoice;
+                $scope.noHint = $scope.question.hint === "";
+                $scope.multipleAnswers = $scope.question.multiOption;
             }
         }
     });
@@ -473,15 +573,49 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     };
 
     // Explanations
+    $scope.hasOwnExplanation = function(){
+        for(var i = 0; i < $scope.question.explanations.length; i++){
+            var currentExplanation = $scope.question.explanations[i];
+            if(currentExplanation.user._id == dbService.getUser()._id){
+                return true;
+            }
+        }
+        return false;
+    };
+
+    $scope.expOrder = 'votes';
     $scope.expOrderVal = 'votes';
     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
 
     $scope.expSortDate = function() {
-        $scope.expOrderVal = 'dateCreated';
+        $scope.expOrder = 'recent';
+        $scope.expOrderVal = 'created_at';
     };
 
     $scope.expSortVotes = function() {
+        $scope.expOrder = 'votes';
         $scope.expOrderVal = 'votes';
+    };
+
+    $scope.upvote = function(explanation){
+        for(var i = 0; i < $scope.question.explanations.length; i++){
+            var currentExplanation = $scope.question.explanations[i];
+            if(currentExplanation == explanation){
+                currentExplanation.votes.push(dbService.getUser()._id);
+            }
+        }
+        //TODO: Save to DB
+    };
+
+    $scope.downvoate = function(){
+        for(var i = 0; i < $scope.question.explanations.length; i++){
+            var currentExplanation = $scope.question.explanations[i];
+            if(currentExplanation == explanation){
+                var index = currentExplanation.votes.indexOf(dbService.getUser()._id);
+                currentExplanation.votes.splice(index, 1);
+            }
+        }
+        //TODO: Save to DB
     };
 
 }]);
@@ -550,12 +684,13 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', 'conceptsDat
 mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', 'questionsData', 'studentsData', function($scope, $route, dbService, courseService, conceptsData, questionsData, studentsData){
     $scope.course = courseService.currentCourse;
     $scope.questions = questionsData;
+    console.log($scope.questions);
     $scope.concepts = conceptsData;
     $scope.students = studentsData;
     $scope.student = { name: 'No Student Chosen' };
 
     $scope.$watch('student', function(){
-        // console.log($scope.student.name);
+        console.log($scope.student.name);
     });
 
     $scope.getQuestionCount = function(concept){
@@ -568,15 +703,14 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
         }
         return questionCount;
     };
-    
+
     $scope.getStudentConceptBar = function(student, concept){
-        console.log(concept);
         if($scope.student.name == 'No Student Chosen'){ return [0, 0, 1]; }
         var correct = 0;
         var incorrect = 0;
         var courseAttempts = [];
         var questionCount = 0;
-        for(var i = 0; i < attempts.length; i++){
+        for(var i = 0; i < student.attempts.length; i++){
             var attempt = student.attempts[i];
             if(attempt.courseId == $scope.course._id){
                 courseAttempts.push(attempt);
@@ -589,7 +723,6 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
                 for(var k = 0; k < courseAttempts.length; k++){
                     var courseAttempt = courseAttempts[k];
                     if(courseAttempt.questionId == question._id){
-                        console.log("Score: " + courseAttempt.score + "counted for " + concept);
                         if(courseAttempt.score == 1){
                             correct++;
                         }else{
@@ -603,10 +736,10 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
         var percentages = [
             correct / questionCount,
-            incorrect/ questionCount,
+            incorrect / questionCount,
         ];
         percentages.push(1 - (percentages[0] + percentages[1]));
-        console.log(concept.name + " : " + percentages);
+        //console.log(concept + " : " + percentages);
 
         return percentages;
     };
@@ -614,7 +747,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.getStudentBar = function(student){
         var allPercentages = [];
         for(var i = 0; i < $scope.concepts.length; i++){
-            var currentConcept = $scope.concepts[i];
+            var currentConcept = $scope.concepts[i].name;
             var conceptPercentages = $scope.getStudentConceptBar(student, currentConcept);
             allPercentages.push(conceptPercentages);
         }
@@ -638,7 +771,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
             allPercentages.push(studentPercentages);
         }
         if(allPercentages == []){ return [0, 0, 1]; }
-        
+
         var percentages = [];
         for(var j = 0; j < allPercentages.length; j++){
             for(var k = 0; k < allPercentages[j].length; k++){
