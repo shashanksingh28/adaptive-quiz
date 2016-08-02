@@ -90,7 +90,6 @@ mainApp.config(['$routeProvider', function($routeProvider){
 
 mainApp.run(['$rootScope', '$location', 'authService', function($rootScope, $location, authService){
     $rootScope.$on('$routeChangeStart', function(events, next, previous){
-        console.log(next, previous, $location);
         if($location.$$path == "/redirect"){
             event.preventDefault();
             if(authService.isTeacher){
@@ -109,7 +108,20 @@ mainApp.service('authService', [function(){
 mainApp.service('dbService', ['$http', function($http){
 
     this.getUser = function(){
-        return user_client;
+        var user = user_client; 
+        var allCourses = allCourses_client;
+        var courseObjects = [];
+        for(var i = 0; i < user.courses.length; i++){
+            for(var j = 0; j < allCourses.length; j++){
+                if(user.courses[i] == allCourses[j]._id){
+                    courseObjects.push(allCourses[j]);
+                    break;
+                }
+            }
+        }
+        console.log(courseObjects);
+        user.courses = courseObjects;
+        return user;
     };
 
     this.getCourseQuestions = function(course){
@@ -164,6 +176,7 @@ mainApp.service('dbService', ['$http', function($http){
                 console.log(response.eMessage);
             }
             else{
+                console.log(response.data);
                 return response.data;
             }
         }, function(error){
@@ -294,8 +307,8 @@ mainApp.service('dbService', ['$http', function($http){
 }]);
 
 mainApp.service('courseService', ['$window', 'dbService', function($window, dbService){
-
-    this.courses = dbService.getUser().courses;
+        
+    this.courses = this.getUser().courses;
 
     this.enrolled = this.courses.length > 0;
 
@@ -885,9 +898,10 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
 mainApp.controller('accountController', ['$scope', 'dbService', 'coursesData', function($scope, dbService, coursesData){
     $scope.allCourses = coursesData;
+    console.log($scope.allCourses);
 
     $scope.model = dbService.getUser();
-    console.log($scope.courses);
+    console.log($scope.model);
 
     $scope.resetDialogs = function(){
         $scope.newName = '';
