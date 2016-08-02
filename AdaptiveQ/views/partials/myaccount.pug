@@ -64,6 +64,10 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
           h6 {{ errorMsg }}
           button(type="submit", class="btn btn-success") Find Course
           button(type="button", class="btn btn-warning", ng-click="resetDialogs()") Cancel
+      .findCourse(ng-hide="courseFound")
+        ul
+          li(ng-repeat="course in allCourses")
+            button(type="button", class="btn btn-link", ng-click="findCourse") {{ course.name }}
       .courseFound(ng-show="courseFound")
         h6 Course Name:
         h5 Sample Course Name

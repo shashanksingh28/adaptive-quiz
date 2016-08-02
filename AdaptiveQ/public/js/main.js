@@ -109,6 +109,7 @@ mainApp.service('dbService', ['$http', function($http){
 
     this.getUser = function(){
         var user = user_client; 
+        console.log(user);
         var allCourses = allCourses_client;
         var courseObjects = [];
         for(var i = 0; i < user.courses.length; i++){
@@ -308,7 +309,7 @@ mainApp.service('dbService', ['$http', function($http){
 
 mainApp.service('courseService', ['$window', 'dbService', function($window, dbService){
         
-    this.courses = this.getUser().courses;
+    this.courses = dbService.getUser().courses;
 
     this.enrolled = this.courses.length > 0;
 
