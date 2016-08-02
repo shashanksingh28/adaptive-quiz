@@ -67,7 +67,7 @@ router.post('/login', function(req, res, next){
             }
             if(user.email){
                 if(user.password == pass){
-                    req.session.user = user;
+                    req.session.user = user.toObject();
                     delete req.session.user.records;
                     delete req.session.user.password;
                     req.session.startTime = Date.now();
