@@ -165,7 +165,7 @@ router.post('/recover', function(req, res){
 
 router.post('/postUserUpdate', requireLogin, function(req, res){
     var updatedUser = req.body;
-    if(!updatedUser._id) { res.send(new respError('UserId cannot be empty'));}
+    if(updatedUser._id === null) { res.send(new respError('UserId cannot be empty'));}
     else{
         Users.getUserById(updatedUser._id)
         .then(function(user){

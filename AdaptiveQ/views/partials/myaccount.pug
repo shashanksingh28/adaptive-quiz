@@ -15,9 +15,8 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
     .item
       h4 Courses:
       table.table
-        tr(ng-repeat="course in model.courses")
+        tr(ng-repeat="course in courses")
           th: h5 {{ course.name }}
-          th: h5 {{ course.Instructors[0] }}
           th: button(type="button", class="btn btn-danger btn-sm", ng-click="chooseCourseToLeave(course)")
                 span.glyphicon.glyphicon-remove-circle
         tr
@@ -57,24 +56,12 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
 
     .dialog-box.addCourse(ng-show="openAddCourse")
       h3 Find a Course
-      form(ng-submit="findCourse()", ng-hide="courseFound")
-        .form-group
-          label Enter Course Code
-          input(type="password", class="form-control", ng-model="courseCode", placeholder="XXXXXX", minlength="6", maxlength="6", required)
-          h6 {{ errorMsg }}
-          button(type="submit", class="btn btn-success") Find Course
-          button(type="button", class="btn btn-warning", ng-click="resetDialogs()") Cancel
       .findCourse(ng-hide="courseFound")
         ul
           li(ng-repeat="course in allCourses")
-            button(type="button", class="btn btn-link", ng-click="findCourse") {{ course.name }}
-      .courseFound(ng-show="courseFound")
-        h6 Course Name:
-        h5 Sample Course Name
-        h6 Instructor:
-        h5 Sample Instructor
-        button(type="button", class="btn btn-success", ng-click="joinCourse()") Join Course
-        button(type="button", class="btn btn-warning", ng-click="courseFound=false") Cancel
+            button(type="button", class="btn btn-primary btn-block", ng-click="joinCourse(course)") {{ course.name }}
+        h6 {{ errorMsg }}
+        button(type="button", class="btn btn-warning", ng-click="openAddCourse=false") Cancel
 
     .dialog-box.deleteCourse(ng-show="openDeleteCourse")
       h3 Leave Course

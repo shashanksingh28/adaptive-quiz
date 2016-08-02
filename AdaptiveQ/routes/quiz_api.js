@@ -68,7 +68,7 @@ router.post('/addQuestion', requireLogin, function(req, res){
     if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
         res.send(new respError('Empty question or not enough answers provided'));
     }
-    else if(!q.courseId || q.concepts.length == 0){
+    else if(q.courseId === null || q.concepts.length == 0){
         res.send(new respError('Question must belong to a course and have at least one concept'));
     }
 
@@ -137,7 +137,7 @@ router.post('/addConcept', requireLogin, function(req, res){
     if(isEmpty(concept.name)){
         res.send(new respError('Cannot be empty'));
     }
-    else if(!concept.courseId){
+    else if(concept.courseId === null){
         res.send(new respError('No course specified'));
     }
     else{

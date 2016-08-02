@@ -32,7 +32,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
       .question
         h1 {{ question.text }}
         pre {{ question.code }}
-      .options-unattempted(ng-hide="multipleAnswers && !noQuestions")
+      #single.options-unattempted(ng-hide="multipleAnswers || noQuestions")
         form(ng-submit="submitAnswer()")
           ul
             li(ng-repeat="option in question.options")
@@ -42,7 +42,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
           p(ng-show="showHint") Hint: {{ question.hint }}
           button(type="submit", class="btn btn-success btn-lg", ng-disabled='model.optionsSelected.length === 0') Confirm
           button(type="button", class="btn btn-link btn-sm", ng-click="enableHint()", ng-hide="noHint || showHint") Need a hint?
-      .options-unattempted(ng-show="multipleAnswers && !noQuestions")
+      #multi.options-unattempted(ng-show="multipleAnswers && !noQuestions")
         form(ng-submit="submitAnswer()")
           p This question requires more than one correct answer.
           ul

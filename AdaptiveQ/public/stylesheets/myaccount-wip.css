@@ -83,6 +83,15 @@ th button {
   padding: 10px;
 }
 
+.dialog-box li button {
+  margin-top: 5px;
+}
+
+.dialog-box ul {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
 .dialog-box .btn-success, .btn-danger {
   margin-right: 25px;
 }

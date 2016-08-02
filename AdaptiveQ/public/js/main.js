@@ -105,24 +105,10 @@ mainApp.service('authService', [function(){
     this.isTeacher = false;
 }]);
 
-mainApp.service('dbService', ['$http', function($http){
+mainApp.service('dbService', ['$http', '$window', function($http, $window){
 
     this.getUser = function(){
-        var user = user_client; 
-        console.log(user);
-        var allCourses = allCourses_client;
-        var courseObjects = [];
-        for(var i = 0; i < user.courses.length; i++){
-            for(var j = 0; j < allCourses.length; j++){
-                if(user.courses[i] == allCourses[j]._id){
-                    courseObjects.push(allCourses[j]);
-                    break;
-                }
-            }
-        }
-        console.log(courseObjects);
-        user.courses = courseObjects;
-        return user;
+        return user_client;
     };
 
     this.getCourseQuestions = function(course){
@@ -177,7 +163,6 @@ mainApp.service('dbService', ['$http', function($http){
                 console.log(response.eMessage);
             }
             else{
-                console.log(response.data);
                 return response.data;
             }
         }, function(error){
@@ -204,7 +189,7 @@ mainApp.service('dbService', ['$http', function($http){
     };
 
     this.postQuestion = function(model){
-        $http.post('/api/addquestion', model).then(function(httpResponse){
+        $http.post('/api/addQuestion', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -221,7 +206,7 @@ mainApp.service('dbService', ['$http', function($http){
     };
 
     this.postConcept = function(model){
-        $http.post('/api/addconcept', model).then(function(httpResponse){
+        $http.post('/api/addConcept', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -229,7 +214,7 @@ mainApp.service('dbService', ['$http', function($http){
             }
             else{
                 console.log("Concept Added");
-                //refresh page
+                $window.location.reload();
             }
         }, function(error){
             console.log("Problem in connecting to server");
@@ -309,16 +294,29 @@ mainApp.service('dbService', ['$http', function($http){
 
 mainApp.service('courseService', ['$window', 'dbService', function($window, dbService){
         
-    this.courses = dbService.getUser().courses;
+    this.courses = function(){
+        var courseIds = dbService.getUser().courses; 
+        var allCourses = allCourses_client;
+        var courseObjects = [];
+        for(var i = 0; i < courseIds.length; i++){
+            for(var j = 0; j < allCourses.length; j++){
+                if(courseIds[i] == allCourses[j]._id){
+                    courseObjects.push(allCourses[j]);
+                    break;
+                }
+            }
+        }
+        return courseObjects;
+    };
 
-    this.enrolled = this.courses.length > 0;
+    this.enrolled = this.courses().length > 0;
 
-    this.currentCourse = this.courses[0];
+    this.currentCourse = this.courses()[0];
 
-    this.changeCourse = function(courseName){
-        for(var i = 0; i < this.courses.length; i++){
-            if(this.courses[i].name == courseName){
-                this.currentCourse = this.courses[i];
+    this.changeCourse = function(course){
+        for(var i = 0; i < this.courses().length; i++){
+            if(this.courses()[i]._id == course._id){
+                this.currentCourse = this.courses()[i];
                 $window.location.href = '/';
                 $window.location.reload(true);
             }
@@ -362,7 +360,7 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
     $scope.user = dbService.getUser();
 
-    $scope.courses = (courseService.enrolled) ? $scope.user.courses : [{name: "No Courses"}];
+    $scope.courses = (courseService.enrolled) ? courseService.courses() : [{name: "No Courses"}];
 
     $scope.questionRoute = function(){
         if(courseService.enrolled){
@@ -634,11 +632,11 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
 
 }]);
 
-mainApp.controller('askQuestionController', ['$scope', 'dbService', 'conceptsData', function($scope, dbService, conceptsData){
+mainApp.controller('askQuestionController', ['$scope', 'dbService', 'courseService', 'conceptsData', function($scope, dbService, courseService, conceptsData){
     $scope.concepts = conceptsData;
 
     $scope.model = {
-        courseId: 1,
+        courseId: courseService.currentCourse._id,
         text: "",
         code: "",
         options: [],
@@ -698,7 +696,6 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', 'conceptsDat
 mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', 'questionsData', 'studentsData', function($scope, $route, dbService, courseService, conceptsData, questionsData, studentsData){
     $scope.course = courseService.currentCourse;
     $scope.questions = questionsData;
-    console.log($scope.questions);
     $scope.concepts = conceptsData;
     $scope.students = studentsData;
     $scope.student = { name: 'No Student Chosen' };
@@ -897,12 +894,12 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
 }]);
 
-mainApp.controller('accountController', ['$scope', 'dbService', 'coursesData', function($scope, dbService, coursesData){
+mainApp.controller('accountController', ['$scope', 'dbService', 'courseService', 'coursesData', function($scope, dbService, courseService, coursesData){
     $scope.allCourses = coursesData;
-    console.log($scope.allCourses);
 
     $scope.model = dbService.getUser();
-    console.log($scope.model);
+
+    $scope.courses = courseService.courses();
 
     $scope.resetDialogs = function(){
         $scope.newName = '';
@@ -961,30 +958,19 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'coursesData', f
         $scope.resetDialogs();
     };
 
-    $scope.findCourse = function(){
+    $scope.joinCourse = function(course){
         $scope.errorMsg = '';
-        //Find Course that matches $scope.courseCode
-        var courseExists = true;
-        var alreadyJoined = false;
-        if(!courseExists){
-            $scope.errorMsg = 'No Course Found';
-            return 0;
-        }else if(alreadyJoined){
-            $scope.errorMsg = 'Already Joined';
+        if($scope.model.courses.indexOf(course._id) != -1){
+            $scope.errorMsg = 'Already Enrolled';
             return 0;
         }else{
-            $scope.courseName = 'Sample Course Name';
-            $scope.courseInstructors = 'Sample Instructor';
-            $scope.courseFound = true;
-            return 1;
+            $scope.model.courses.push(course._id);
+            courseService.courses().push(course);
+            console.log("Added course: " + course.name);
+            $scope.openAddCourse = false;
+            dbService.postUserUpdate($scope.model);
+            $scope.resetDialogs();
         }
-    };
-
-    $scope.joinCourse = function(){
-        //Add Course to user.courses
-        //Refresh
-        $scope.openAddCourse = false;
-        return 1;
     };
 
     $scope.chooseCourseToLeave = function(courseName){
@@ -996,12 +982,13 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'coursesData', f
 
     $scope.leaveCourse = function(course){
         $scope.errorMsg = '';
-        var index = $scope.model.courses.indexOf(course);
+        var index = $scope.courses.indexOf(course);
         if(index == -1){
             console.log("Not enrolled in Course");
             return false;
         }
         $scope.model.courses.splice(index, 1);
+        courseService.courses().splice(index, 1);
         dbService.postUserUpdate($scope.model);
         console.log('Left Course: ' + course.name);
         $scope.resetDialogs();
