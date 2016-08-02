@@ -21,6 +21,7 @@ router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
         Users.getUserById(req.session.user._id)
         .then(function(user){
+            user = user.toObject();
             delete user.password;
             Courses.getAllCourses()
             .then(function (allCourses){
