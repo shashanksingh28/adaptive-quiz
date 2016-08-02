@@ -1,16 +1,36 @@
 var express = require('express');
 var router = express.Router();
-var Concepts = require('../models/concept');
+
 var Users = require('../models/user');
+var Courses = require('../models/course');
+var Concepts = require('../models/concept');
+var Questions = require('../models/question');
+
+var respOK = function(data){
+    this.status = "OK";
+    this.data = data;
+}
+
+var respError = function(error){
+    console.log(error);
+    this.status = "ERROR";
+    this.eMessage = error;
+}
 
 router.get('/', function(req, res, next) {
     if(req.session && req.session.user){
         Users.getUserById(req.session.user._id)
-            .then(function(user){
-                res.render('layout', { user_server : user } );
+        .then(function(user){
+            delete user.password;
+            Courses.getAllCourses()
+            .then(function (allCourses){
+                res.render('layout', { user_server : user, allCourses_server : allCourses });
             }, function (error){
-                res.send({'status': 'ERROR', 'eMessage': error });
+                res.render('error', error);
             });
+        }, function (error){
+            res.render('error', error);
+        });
     }
     else
     {

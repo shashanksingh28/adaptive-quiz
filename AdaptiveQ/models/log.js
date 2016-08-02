@@ -5,26 +5,26 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongo.connection);
 
 var logSchema = new Schema({
-  userId: Number,
-  category: String,
-  action: String,
-  content: String,
-  time: Date
+    user_id : Number,
+    event_type : String,
+    object_type : String,
+    object_value : String,
+    created_at : Date
 });
 
-logSchema.plugin(autoIncrement.plugin, 'myLogger');
+logSchema.plugin(autoIncrement.plugin, 'Logs');
 
-var myLogger = mongo.model('Log', logSchema);
+var Logger = mongo.model('Logs', logSchema);
 
-myLogger.logAction = function(userId, category, action, content){
-  var newlog = myLogger({
+Logger.logAction = function(userId, event_type, object_type, object_value){
+  var newlog = Logger({
     userId : userId,
-    category : category,
-    action : action,
-    content: content,
-    time : Date.now()
+    event_type : event_type,
+    object_type : object_type,
+    object_value : object_value,
+    created_at : Date.now()
   });
   return newlog.save();
 }
 
-module.exports = myLogger;
+module.exports = Logger;

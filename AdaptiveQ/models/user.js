@@ -9,9 +9,9 @@ var userSchema = new Schema({
   name: String,
   courses : Array,
   attempts: Array,
-  created_at: Date,
   hintsLeft: Number,
-  resetPasswordToken: String
+  resetPasswordToken: String,
+  created_at: Date
 });
 
 userSchema.plugin(autoIncrement.plugin, 'Users');

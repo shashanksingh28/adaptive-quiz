@@ -48,7 +48,6 @@ function checkIfInstructor(course, userId){
 var respOK = function(data){
     this.status = "OK";
     this.data = data;
-    // console.log(data);
 }
 
 var respError = function(error){
@@ -64,42 +63,29 @@ router.post('/login', function(req, res, next){
     Users.getUserByEmail(email)
         .then(function (user){
             if(!user){
-                console.log("Email not found");
-                res.send({'status' : 'ERROR', 'eMessage' : 'Email Not Found!'});
+                res.send( new respError('Email not found!'));
             }
             if(user.email){
-
                 if(user.password == pass){
                     req.session.user = user;
                     delete req.session.user.records;
+                    delete req.session.user.password;
                     req.session.startTime = Date.now();
-
-                    response = {'status':'OK'};
-                    response.data = {};
-                    response.data.user = {'id': user._id, 'email' : user.email, 'name': user.name, 'courses': user.courses};
-                    if(user.email == "adaptq@gmail.com"){
-                        req.session.isTeacher = true;
-                        response.data.user.isInstructor = true;
+                    data = {};
+                    data.user = {'id': user._id, 'email' : user.email, 'name': user.name, 'courses': user.courses};
+                    if(req.session.redirect_to != null){
+                        var url = req.session.redirect_to;
+                        req.session.redirect_to = null;
+                        data.url = url;
                     }
-                    else{
-                        response.data.user.isInstructor = false;
-                        if(req.session.redirect_to != null){
-                            var url = req.session.redirect_to;
-                            req.session.redirect_to = null;
-                            console.log("redirecting to :"+url);
-                            response.data.url = url;
-                        }
-                    }
-                    res.send(response);
+                    res.send(new respOK(data));
                 }
                 else {
-                    console.log("Password mismatch");
-                    res.send({'status' : 'ERROR', 'eMessage' : 'Incorrect password!'});
+                    res.send(new respError('Incorrect Password!'));
                 }
             }
         },function(error){
-			console.log("Database connectivity issue");
-			res.send({'status' : 'ERROR', 'eMessage' : 'Incorrect password!'});
+			res.send(new respError('Database connectivity issue'));
         });
 });
 
@@ -107,27 +93,21 @@ router.post('/register', function(req, res){
     Users.getUserByEmail(req.body.email)
         .then(function (user){
             if(user && user.email){
-                console.log("Found an existing user : " + user);
-                res.send("Found an existing user with same email. Please use reset password link");
+                res.send(new respError("Found an existing user with same email. Please use reset password link"));
             }
             else{
                 Users.createUser(req.body.email, req.body.password, req.body.name)
                     .then(function(savedUser){
+                        delete savedUser.password;
                         req.session.user = savedUser;
-                        if(savedUser.email != "adaptq@gmail.com"){
-                            req.session.isTeacher = false;
-                        }
-                        else{
-                            req.session.isTeacher = true;
-                        }
                         req.session.startTime = Date.now();
-                        res.send({status : 'OK'});
+                        res.send(new respOK(savedUser));
                     }, function (err){
-                        console.log("Error in saving" + newUsers +"\n"+err);
+                        res.send(new respError(error));
                 });
             }
         }, function(error){
-        	console.log('Failed to search ' + error);
+        	res.send(new respError(error));
         });
 });
 
@@ -136,7 +116,7 @@ router.post('/resetPassword', function(req, res){
     var password = req.body.password;
     var token = req.body.token;
     if(!token || !userEmail || !password){
-        res.send({status: 'ERROR', eMessage: 'Required Parameters not provided'});
+        res.send(new respError('Required Parameters not provided : token, email or new password'));
     }
     Users.getUserForToken(token)
         .then(function(user){
@@ -144,15 +124,15 @@ router.post('/resetPassword', function(req, res){
                 user.password = password;
                 user.resetPasswordToken = "";
                 user.save()
-                    .then(function(user){
-                        res.send({status: 'OK', message: 'Password succesfuly reset', url : '/'});
-                    });
+                .then(function(user){
+                    res.send(new respOK('Password succesfuly reset'));
+                });
             }
             else{
-                res.send({status: 'ERROR', eMessage: 'Invalid Token for emailId'});
+                res.send(new respError('Invalid Token for emailId'));
             }
         }, function(error){
-            console.log(error);
+            res.send(new respError(error));
         });
 });
 
@@ -169,19 +149,17 @@ router.post('/recover', function(req, res){
                     var url = localhost + "resetPaswword?token=" + savedUser.resetPasswordToken;
                     emailer.sendResetPasswordLink(sysAccount,user.email,url,function(error, message){
                         if(error){
-                            console.log(error);
-                            res.send({status : 'ERROR', eMessage : 'Error sending email'});
+                            res.send(new respError('Error sending email'));
                         }
                         else{
-                            console.log(message);
-                            res.send({status : 'OK', message : 'Check registered email for link to reset'});
+                            res.send(new respOK('Check registered email for link to reset'));
                         }
                     });
 
                 });
             }
         }, function(err){
-            console.log("No such email found");
+            res.send(new respError(err));
         });
 });
 
@@ -212,8 +190,6 @@ router.post('/postUserUpdate', requireLogin, function(req, res){
                     delete user.courses[j];
                 }
             }
-            console.log(user);
-            // Since user is a model object, check if mongoose can automatically dettect the updates
             user.save(function(savedUser){
                 res.send(new respOK(savedUser));
             }, function (error){
