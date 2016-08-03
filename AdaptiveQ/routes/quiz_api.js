@@ -126,7 +126,6 @@ router.get('/getCourseConcepts', requireLogin, function(req, res){
     {
         Concepts.getCourseConcepts(courseId)
         .then( function(concepts){
-            console.log(concepts);
             res.send(new respOK(concepts));
             }, function (error) { res.send(new respError(error)); });
     }

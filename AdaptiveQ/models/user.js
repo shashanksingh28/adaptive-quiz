@@ -31,7 +31,6 @@ Users.getAllUsers = function(){
 };
 
 Users.createUser = function(email, password, name){
-  console.log(email+password+name);
   var newUser = Users({
     email: email,
     password: password,
@@ -58,7 +57,7 @@ Users.getUserForToken = function(token){
 }
 
 Users.getCourseUsers = function(courseId){
-    return Users.find({ courses: { $elemMatch : { _id : courseId } } }).exec();
+    return Users.find({ courses: { $in : [courseId] }}).exec();
 }
 
 module.exports = Users;
