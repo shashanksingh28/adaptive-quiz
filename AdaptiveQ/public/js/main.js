@@ -536,9 +536,8 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         };
     };
 
-    $scope.$watchGroup(['orderVal', 'reverse', 'expOrderVal'], function(){
+    $scope.$watchGroup(['orderVal', 'reverse'], function(){
         $scope.questions = orderBy($scope.questions, $scope.orderVal, $scope.reverse);
-        $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
     });
 
     // Change data whenever a new question is selected from sidebar
@@ -598,6 +597,10 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     $scope.expOrder = 'votes';
     $scope.expOrderVal = 'votes';
     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
+
+    $scope.$watch('expOrderVal', function(){
+        $scope.explanations = orderBy($scope.explanations, $scope.expOrderVal, true);      
+    });
 
     $scope.expSortDate = function() {
         $scope.expOrder = 'recent';
