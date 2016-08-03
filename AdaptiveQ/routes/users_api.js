@@ -26,7 +26,7 @@ function isEmpty(str){
 function checkIfEnrolled(user, courseId){
     var isEnrolled = false;
     for(var i = 0; i < user.courses.length; ++i){
-        if(user.courses[i]._id == courseId){
+        if(user.courses[i] == courseId){
             isEnrolled = true;
             break;
         }
