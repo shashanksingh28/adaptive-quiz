@@ -7,7 +7,7 @@ link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
     form#newQuestion(ng-submit="submitQuestion()")
       .question
         label Question Text
-        textarea(rows="2", placeholder="Enter Question", form="newQuestion", ng-model="model.text", required) 
+        textarea(rows="3", placeholder="Enter Question", form="newQuestion", ng-model="model.text", required) 
         .code
           button(type="button", class="btn btn-link btn-sm", ng-click="addCode=true", ng-hide="addCode")
             span.fa.fa-plus-circle
@@ -47,7 +47,7 @@ link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
           input(type="text", placeholder="Enter Hint", ng-model="model.hint", ng-show="addHint")
         .concepts
           label Concepts
-          tags-input(ng-model="model.concepts", placeholder="Add a concept...", add-from-autocomplete-only="true", item-is-object="false")
+          tags-input(ng-model="model.concepts", placeholder="Add one or more concepts..........", add-from-autocomplete-only="true", item-is-object="false")
             auto-complete(source="loadConcepts($query)", min-length="1", max-results-to-show="5")
         .question-footer
           h5 {{ errorMsg }} 

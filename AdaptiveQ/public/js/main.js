@@ -476,11 +476,13 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     $scope.noQuestions = questionsData.length === 0;
 
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
+
     $scope.getOptionsSelected = function(){
         var allAttempts = dbService.getUser().attempts;
         for(var i = 0; i < allAttempts.length; i++){
             var currentAttempt = allAttempts[i];
             if(currentAttempt.questionId == $scope.question._id){
+                console.log(currentAttempt.optionsSelected);
                 return currentAttempt.optionsSelected;
             }
         }
@@ -574,7 +576,11 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     };
 
     $scope.submitAnswer = function(){
-        console.log("Sending attempt: " + $scope.model);
+        var stringToNum = [];
+        for(var i = 0; i < $scope.model.optionsSelected.length; i++){
+          stringToNum = Number($scope.model.optionsSelected[i]);
+        }
+        $scope.model.optionsSelected = stringToNum;
         dbService.postAttempt($scope.model);
     };
 
