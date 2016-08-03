@@ -100,7 +100,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                         for(var i = 0; i < questions.length; ++i){
                             var attempted = false;
                             for(var j = 0; j < user.attempts.length; ++j){
-                                if(user.attempts[j].qId == questions[i]._id){
+                                if(user.attempts[j].questionId == questions[i]._id){
                                     attempted = true;
                                     break;
                                 }
