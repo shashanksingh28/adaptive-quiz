@@ -738,6 +738,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
         }
         for(var j = 0; j < $scope.questions.length; j++){
             var question = $scope.questions[j];
+            console.log(concept);
             if(question.concepts.indexOf(concept) > -1){
                 questionCount++;
                 for(var k = 0; k < courseAttempts.length; k++){

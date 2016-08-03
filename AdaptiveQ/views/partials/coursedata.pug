@@ -37,7 +37,6 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
                   input(type="radio", id="student{{$index}}", name="students", ng-value="{{ student }}", ng-model="$parent.student")
                   label.radio(for="student{{$index}}")
                     h5 {{ student.name }}
-                    h6 More Info
                     .data-bar
                       .attemptedCorrect(ng-style="{'width': getStudentGreen()}")
                         .bar
