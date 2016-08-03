@@ -22,7 +22,7 @@ function isEmpty(str){
 function checkIfEnrolled(user, courseId){
     var isEnrolled = false;
     for(var i = 0; i < user.courses.length; ++i){
-        if(user.courses[i]._id == courseId){
+        if(user.courses[i] == courseId){
             isEnrolled = true;
             break;
         }
@@ -63,7 +63,7 @@ router.get('/getAllCourses', requireLogin, function(req, res){
     });
 });
 
-router.post('/addQuestion', requireLogin, function(req, res){
+router.post('/postQuestion', requireLogin, function(req, res){
     var q = req.body;
     if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
         res.send(new respError('Empty question or not enough answers provided'));

@@ -31,7 +31,7 @@ mainApp.config(['$routeProvider', function($routeProvider){
         resolve: {
             questionsData: function(dbService, courseService){
                 return dbService.getCourseQuestions(courseService.currentCourse)
-                    .then(function(response){ 
+                    .then(function(response){
                         return response;});
             },
         },
@@ -189,7 +189,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postQuestion = function(model){
-        $http.post('/api/addQuestion', model).then(function(httpResponse){
+        $http.post('/api/postQuestion', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -202,7 +202,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         }, function(error){
             console.log("Problem in Connecting to Server:");
             console.log(error);
-        });  
+        });
     };
 
     this.postConcept = function(model){
@@ -293,9 +293,9 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
 }]);
 
 mainApp.service('courseService', ['$window', 'dbService', function($window, dbService){
-        
+
     this.courses = function(){
-        var courseIds = dbService.getUser().courses; 
+        var courseIds = dbService.getUser().courses;
         var allCourses = allCourses_client;
         var courseObjects = [];
         for(var i = 0; i < courseIds.length; i++){
@@ -320,7 +320,7 @@ mainApp.service('courseService', ['$window', 'dbService', function($window, dbSe
                 $window.location.href = '/';
                 $window.location.reload(true);
             }
-        }  
+        }
         console.log("Course not found");
     };
 
