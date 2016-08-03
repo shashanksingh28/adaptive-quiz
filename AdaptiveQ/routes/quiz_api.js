@@ -217,7 +217,7 @@ router.post('/postAttempt', requireLogin, function(req, res){
 
 router.get('/getCourseStudents', requireLogin, function(req, res){
     var courseId = req.query._id;
-    if(!courseId){ res.send(new respError('CourseID required')); }
+    if(courseId === null){ res.send(new respError('CourseID required')); }
     else{
         Courses.getCourseById(courseId)
         .then(function (course){

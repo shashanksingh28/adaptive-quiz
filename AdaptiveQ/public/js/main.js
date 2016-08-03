@@ -476,11 +476,13 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     $scope.noQuestions = questionsData.length === 0;
 
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
+
     $scope.getOptionsSelected = function(){
         var allAttempts = dbService.getUser().attempts;
         for(var i = 0; i < allAttempts.length; i++){
             var currentAttempt = allAttempts[i];
             if(currentAttempt.questionId == $scope.question._id){
+                console.log(currentAttempt.optionsSelected);
                 return currentAttempt.optionsSelected;
             }
         }
@@ -536,9 +538,8 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         };
     };
 
-    $scope.$watchGroup(['orderVal', 'reverse', 'expOrderVal'], function(){
+    $scope.$watchGroup(['orderVal', 'reverse'], function(){
         $scope.questions = orderBy($scope.questions, $scope.orderVal, $scope.reverse);
-        $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
     });
 
     // Change data whenever a new question is selected from sidebar
@@ -575,7 +576,11 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     };
 
     $scope.submitAnswer = function(){
-        console.log("Sending attempt: " + $scope.model);
+        var stringToNum = [];
+        for(var i = 0; i < $scope.model.optionsSelected.length; i++){
+          stringToNum = Number($scope.model.optionsSelected[i]);
+        }
+        $scope.model.optionsSelected = stringToNum;
         dbService.postAttempt($scope.model);
     };
 
@@ -598,6 +603,10 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     $scope.expOrder = 'votes';
     $scope.expOrderVal = 'votes';
     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
+
+    $scope.$watch('expOrderVal', function(){
+        $scope.explanations = orderBy($scope.explanations, $scope.expOrderVal, true);      
+    });
 
     $scope.expSortDate = function() {
         $scope.expOrder = 'recent';
