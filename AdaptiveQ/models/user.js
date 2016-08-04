@@ -7,7 +7,7 @@ var userSchema = new Schema({
   email: { type : String, required: true},
   password: String,
   name: String,
-  courses : Array,
+  courses : [Number],
   attempts: Array,
   hintsLeft: Number,
   resetPasswordToken: String,

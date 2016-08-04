@@ -165,37 +165,38 @@ router.post('/recover', function(req, res){
 
 router.post('/postUserUpdate', requireLogin, function(req, res){
     var updatedUser = req.body;
+    console.log(updatedUser);
     if(updatedUser._id === null) { res.send(new respError('UserId cannot be empty'));}
     else{
         Users.getUserById(updatedUser._id)
         .then(function(user){
             if(updatedUser.name != user.name) { user.name = updatedUser.name; }
             if(updatedUser.email != user.email) { user.email = updatedUser.email; }
-            if(updatedUser.password != user.password) { user.password = updatedUser.password; }
-            enrolled_courseIds = [];
-            // these loops add newer courses that user might have enrolled to
+            if(updatedUser.password && updatedUser.password != user.password) { user.password = updatedUser.password; }
+            // this loop adds newer courses that user might have enrolled to
             for(var i = 0; i < updatedUser.courses.length; ++i){
-                var enrolled = false;
-                for(var j = 0; j < user.courses.length; ++j){
-                    if (user.courses[j]._id == updatedUser.courses[i]._id){
-                        enrolled = true;
-                        enrolled_courseIds.push(user.courses[j]._id);
-                        break;
-                    }
+                if(!checkIfEnrolled(user, updatedUser.courses[i])){
+                    user.courses.push(updatedUser.courses[i]);
                 }
             }
             // this loop removes courses that user might have un-enrolled to
-            for(var j = 0; j < user.courses.length; ++j){
-                if (enrolled_courseIds.indexOf(user.courses[j]._id) == -1){
-                    delete user.courses[j];
+            for(var i = 0; i < user.courses.length; ++i){
+                if (!checkIfEnrolled(updatedUser, user.courses[i])){
+                    delete user.courses[i];
                 }
             }
-            user.save(function(savedUser){
-                res.send(new respOK(savedUser));
-            }, function (error){
-                res.send(new respError(error));
+            user.markModified('courses');
+            user.save(function(error, savedUser){
+                if(error){
+                    res.send(new respError(error));
+                }
+                else{
+                    savedUser = savedUser.toObject();
+                    delete savedUser.password;
+                    res.send(new respOK(savedUser));
+                }
             });
-        })
+        });
     }
 });
 
