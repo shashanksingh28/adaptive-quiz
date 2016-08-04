@@ -172,6 +172,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postAttempt = function(model){
+        console.log(model);
+        return false;
         $http.post('/api/postAttempt', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -222,6 +224,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postExplanation = function(model){
+        console.log(model);
+        return false;
         $http.post('/api/postExplanation', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -254,6 +258,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postUserUpdate = function(model){
+        console.log(model);
         $http.post('/api/postUserUpdate', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -262,6 +267,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             }
             else{
                 console.log("User Updated");
+                console.log(response);
                 //refresh page
             }
         }, function(error){
@@ -269,13 +275,16 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postLog = function(eventType, eventOn){
+    this.postLog = function(eventType, objectType, objectId){
         var model = {
             userId: this.getUser()._id,
             event_type: eventType,
-            event_on: eventOn,
+            object_type: objectType,
+            object_id: objectId,
             created_at: Date.now()
         };
+        console.log(model);
+        return false;
         $http.post('/api/postLog', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -332,7 +341,7 @@ mainApp.service('questionService', ['$window', function($window){
 
     this.save = function(questionId){
         this.savedQuestionId = questionId;
-        $window.location.href = '/question';
+        $window.location.href = '/#/question';
     };
 
 }]);
@@ -393,8 +402,8 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     $scope.courseExists = questionsData.length > 0;
     $scope.concepts = conceptsData;
     $scope.questions = questionsData;
-    console.log(questionsData);
-    $scope.attempts = dbService.getUser().attempts;
+    $scope.student = dbService.getUser();
+    $scope.attempts = $scope.student.attempts;
 
     $scope.getQuestionCount = function(concept){
         concept = concept.replace(/\s+/g, '-');
@@ -449,49 +458,60 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
         return percentages;
     };
 
-    $scope.getConceptGreen = function(concept){
-        // getConceptGreen for every student
-        // find average
-        return '45%';
-    };
-    $scope.getConceptRed = function(concept){
-        //getConceptRed for every student
-        //find average
-        return '30%';
-    };
-    $scope.getConceptYellow = function(concept){
-        //getConceptYellow for every student
-        //find average
-        return '25%';
+    $scope.formatPercentages = function(percentages, index){
+        var formattedPercentages = [];
+        for(var i = 0; i < percentages.length; i++){
+            formattedPercentages.push((percentages[i] * 100) + "%");
+        }
+        return formattedPercentages;
     };
 
+    $scope.formatRoundPercentages = function(percentages, index){
+        var formattedPercentages = [];
+        for(var i = 0; i < percentages.length; i++){
+            formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
+        }
+        return formattedPercentages;
+    };
 
     // -------- Question Panel --------
-    noquestion = {
-        concepts: "No Question",
+    $scope.noquestion = {
+        concepts: ["No Question"],
     };
 
-    $scope.emptyDay = function(){
-        return $scope.question == noquestion;
+    $scope.question = $scope.noquestion;
+
+    $scope.formatConcepts = function(){
+      var concepts = "";
+      for(var i = 0; i < $scope.question.concepts.length; i++){
+        var currentConcept = $scope.question.concepts[i].replace(/-/g, ' ');
+        if(concepts === ""){
+          concepts = currentConcept;
+        }else{
+          concepts = concepts.concat(", ", currentConcept);
+        }
+      }
+      return concepts;
     };
 
     $scope.$watch('dt', function(){
         var dayToCheck = new Date($scope.dt).setHours(0,0,0,0);
-        for(var i = 0; i < questions.length; i++){
-            var currentDay = new Date($scope.questions[i].date).setHours(0,0,0,0);
+        for(var i = 0; i < $scope.questions.length; i++){
+            var currentDay = new Date($scope.questions[i].created_at).setHours(0,0,0,0);
             if (dayToCheck === currentDay) {
                 $scope.question = $scope.questions[i];
+                dbService.postLog("click", "calendarQuesiton", $scope.question._id);
                 return true;
             }
         }
-        $scope.question = noquestion;
-        console.log("Date has No Question");
+        $scope.question = $scope.noquestion;
     });
 
     $scope.goToQuestion = function(){
-        if($scope.emptyDay){
+        if($scope.question == $scope.noquestion){
             console.log("No Question on that Day");
         }else{
+            dbService.postLog("click", "calendarToQuestion", $scope.question._id);
             questionService.save($scope.question._id);
         }
     };
@@ -513,8 +533,8 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
         mode = data.mode;
         if (mode === 'day') {
             var dayToCheck = new Date(date).setHours(0,0,0,0);
-            for (var i = 0; i < questions.length; i++) {
-                var currentDay = new Date($scope.questions[i].date).setHours(0,0,0,0);
+            for (var i = 0; i < $scope.questions.length; i++) {
+                var currentDay = new Date($scope.questions[i].created_at).setHours(0,0,0,0);
                 if (dayToCheck === currentDay) {
                     return statusService.checkStatus($scope.questions[i]);
                 }
@@ -525,6 +545,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
 }]);
 
 mainApp.controller('questionController', ['$scope', 'statusService', 'dbService', 'questionService', 'questionsData', 'orderByFilter', function($scope, statusService, dbService, questionService, questionsData, orderBy){
+    $scope.user = dbService.getUser();
 
     $scope.noQuestions = questionsData.length === 0;
 
@@ -548,6 +569,10 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
 
     $scope.checkStatus = function(question){
         return statusService.checkStatus(question);
+    };
+
+    $scope.logSidebarClick = function(){
+      dbService.postLog("click", "questionSidebar", $scope.model.questionId);
     };
 
     // Retreive Question from Dashboard Calendar
@@ -611,6 +636,11 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
                 $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
+                if($scope.recordExist){
+                  dbService.postLog("view", "attemptedQuestion", $scope.question._id);
+                }else{
+                  dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
+                }
             }
         }
     });
@@ -622,12 +652,14 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         }else{
             $scope.model.optionsSelected.push(answer);
         }
+        console.log($scope.model.optionsSelected);
     };
 
     $scope.submitAnswer = function(){
         var stringToNum = [];
         for(var i = 0; i < $scope.model.optionsSelected.length; i++){
-          stringToNum = Number($scope.model.optionsSelected[i]);
+          stringToNum.push(Number($scope.model.optionsSelected[i]));
+          console.log(stringToNum);
         }
         $scope.model.optionsSelected = stringToNum;
         dbService.postAttempt($scope.model);
@@ -635,6 +667,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
 
     $scope.enableHint = function(){
         $scope.showHint = true;
+        dbService.postLog("click", "enableHint", $scope.model.questionId);
         // TODO: Record that user used a hint
     };
 
@@ -647,6 +680,18 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
             }
         }
         return false;
+    };
+
+    $scope.expModel = {
+      user_id: $scope.user._id,
+      text: "",
+      votes: 0,
+      posted_at: 0,
+    };
+
+    $scope.postExplanation = function(){
+      $scope.expModel.created_at = new Date.now();
+      dbService.postExplanation($scope.expModel);
     };
 
     $scope.expOrder = 'votes';
@@ -899,6 +944,7 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
     $scope.allCourses = coursesData;
 
     $scope.model = dbService.getUser();
+    console.log($scope.model);
 
     $scope.courses = courseService.courses();
 

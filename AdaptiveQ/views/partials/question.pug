@@ -17,7 +17,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         ul
           li(ng-repeat="question in questions")
             .question-item
-              input(type="radio", id="question{{ question._id }}", name="question", value="{{ question._id }}", ng-model="model.questionId")
+              input(type="radio", id="question{{ question._id }}", name="question", value="{{ question._id }}", ng-model="model.questionId", ng-click="logSidebarClick()")
               label.radio(for="question{{ question._id }}")
                 h4 {{ question.text }}
                 .attemptindicator(ng-switch="checkStatus(question)")
@@ -35,7 +35,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
       #single.options-unattempted(ng-hide="multipleAnswers || noQuestions")
         form(ng-submit="submitAnswer()")
           ul
-            li(ng-repeat="option in question.options")
+            li(ng-repeat="option in question.options track by $index")
               .option
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
@@ -46,7 +46,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         form(ng-submit="submitAnswer()")
           p This question requires more than one correct answer.
           ul
-            li(ng-repeat="option in question.options")
+            li(ng-repeat="option in question.options track by $index")
               .option
                 input(type="checkbox", id="options{{$index}}", name="option", ng-click="toggleSelection($index)")
                 label.checkbox(for="options{{$index}}") {{option}}
@@ -61,14 +61,14 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
           pre {{ question.code }}
         .options
           ul
-            li(ng-repeat="option in question.options")
+            li(ng-repeat="option in question.options track by $index")
               .option(ng-class="{correct: question.answers.indexOf($index) != -1, chosen: getOptionsSelected().indexOf($index) != -1}")
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
           .new-explanation(ng-hide="hasOwnExplanation()")
-            form#newExplanation
+            form#newExplanation(ng-submit="postExplanation")
               label Create Explanation or Comments
-              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="expModel")
+              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="expModel.text")
               button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
               p You must post an explanation to view notes from others.
           

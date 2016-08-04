@@ -96,6 +96,11 @@ ul {
   border-radius: 20px;
 }
 
+#questionCal .btn-info.active{
+  color: #000;
+  background-color: #ebebeb;
+}
+
 .text-info {
   color: #000;
   font-weight: bold;
@@ -106,16 +111,16 @@ ul {
 }
 
 .attemptedCorrect button{
-  background-color: #009400;
+  background-color: #009400 !important;
   color: #fff;
 }
 
 .attemptedIncorrect button {
-  background-color: #ad2a1a;
+  background-color: #ad2a1a !important;
   color: #fff;
 }
 
 .unattempted button {
-  background-color: #bcb000;
+  background-color: #bcb000 !important;
   color: #fff;
 }

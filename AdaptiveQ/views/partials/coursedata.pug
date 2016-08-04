@@ -12,7 +12,7 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
             li(ng-repeat="concept in concepts")
               .item
                 h5 {{ concept.name }} 
-                h6 {{ getQuestionCount(concept) }} Questions
+                h6 {{ getQuestionCount(concept.name) }} Questions
                 .data-bar
                   .attemptedCorrect(ng-style="{'width': formatPercentages(getConceptBar(concept.name))[0]}")
                     .bar
@@ -56,7 +56,7 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
             li(ng-repeat="concept in concepts")
               .item
                 h5 {{ concept.name }} 
-                h6 {{ getQuestionCount(concept) }}
+                h6 {{ getQuestionCount(concept.name) }}
                 .data-bar
                   .attemptedCorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[0]}")
                     .bar

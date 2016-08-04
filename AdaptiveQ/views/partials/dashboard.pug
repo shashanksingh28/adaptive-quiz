@@ -12,15 +12,15 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
                 h5 {{ concept.name }}
                 h6 {{ getQuestionCount(concept.name) }} Questions
                 .data-bar
-                  .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
+                  .attemptedCorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[0]}")
                     .bar
-                    p {{ getConceptGreen() }}
-                  .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
+                    p(ng-hide="getStudentConceptBar($parent.student, concept.name)[0] < 0.05") {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[0] }}
+                  .attemptedIncorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[1]}")
                     .bar
-                    p {{ getConceptYellow() }}
-                  .unattempted(ng-style="{'width': getConceptYellow()}")
+                    p(ng-hide="getStudentConceptBar($parent.student, concept.name)[1] < 0.05") {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[1] }}
+                  .unattempted(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[2]}")
                     .bar
-                    p {{ getConceptRed() }}
+                    p(ng-hide="getStudentConceptBar($parent.student, concept.name)[2] < 0.05") {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[2] }}
         .panel-body(ng-hide="courseExists")
           h4 Course currently has no concepts.
           h4 To enroll, go to My Account
@@ -47,8 +47,8 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
             form(ng-submit="goToQuestion()")
               .form-group
                 label Concept(s):
-                p {{ question.concepts }}
-              button.centered(type="submit", class="btn btn-info btn-lg", ng-disabled="emptyDay()") Go to Question
+                p {{ formatConcepts() }}
+              button.centered(type="submit", class="btn btn-info btn-lg", ng-disabled="question == noquestion") Go to Question
 
       #recommendations.panel.panel-primary(ng-show="false")
         .panel-heading
