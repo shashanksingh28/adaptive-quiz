@@ -66,9 +66,9 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 input(type="radio", id="option{{$index}}", name="option", value="{{$index}}", ng-model="model.optionsSelected[0]")
                 label.radio(for="option{{$index}}") {{option}}
           .new-explanation(ng-hide="hasOwnExplanation()")
-            form#newExplanation(ng-submit="postExplanation")
+            form#newExplanation(ng-submit="postExplanation()")
               label Create Explanation or Comments
-              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="expModel.text")
+              textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="expModel.text", required)
               button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
               p You must post an explanation to view notes from others.
           

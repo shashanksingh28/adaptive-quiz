@@ -234,7 +234,6 @@ form button[type="button"]:hover {
 }
 
 .correct {
-  outline-style: none;
   background-color: green;
   color: #fff;
 }

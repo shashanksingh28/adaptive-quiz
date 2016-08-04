@@ -697,7 +697,7 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
 
     $scope.postExplanation = function(){
-        $scope.expModel.created_at = new Date.now();
+        $scope.expModel.created_at = Date.now();
         dbService.postExplanation($scope.expModel);
     };
 
