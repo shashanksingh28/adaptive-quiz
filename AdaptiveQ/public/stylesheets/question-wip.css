@@ -151,7 +151,8 @@ ul {
 
 .question-box {
   margin: 20px auto;
-  width: 870px;
+  width: 72.5%;
+  min-width: 870px;
   background-color: #428bca;
   box-shadow: 0px 10px 30px rgba(0,0,0,1);
 }

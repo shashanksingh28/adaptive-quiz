@@ -2,6 +2,7 @@ var loginApp = angular.module('loginApp', ['ngAnimate']);
 
 loginApp.run(function($rootScope){
     $rootScope.form = 1;
+    $rootScope.baseURL = '';
 });
 
 loginApp.controller('loginController',['$http','$window','$scope','$rootScope', function($http, $window, $scope, $rootScope){

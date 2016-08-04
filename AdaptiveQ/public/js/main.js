@@ -111,6 +111,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         return user_client;
     };
 
+    this.baseURL = 'localhost:3000';
+
     this.getCourseQuestions = function(course){
         return $http.get('/api/getCourseQuestions', {params: course}).then(function(httpResponse){
             var response = httpResponse.data;
@@ -172,8 +174,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postAttempt = function(model){
-        console.log(model);
-        return false;
         $http.post('/api/postAttempt', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -226,6 +226,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     this.postExplanation = function(model){
         console.log(model);
         return false;
+        // Put on standby until postExplanation API is ready
         $http.post('/api/postExplanation', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -283,8 +284,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             object_id: objectId,
             created_at: Date.now()
         };
-        console.log(model);
-        return false;
         $http.post('/api/postLog', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -482,16 +481,16 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     $scope.question = $scope.noquestion;
 
     $scope.formatConcepts = function(){
-      var concepts = "";
-      for(var i = 0; i < $scope.question.concepts.length; i++){
-        var currentConcept = $scope.question.concepts[i].replace(/-/g, ' ');
-        if(concepts === ""){
-          concepts = currentConcept;
-        }else{
-          concepts = concepts.concat(", ", currentConcept);
+        var concepts = "";
+        for(var i = 0; i < $scope.question.concepts.length; i++){
+            var currentConcept = $scope.question.concepts[i].replace(/-/g, ' ');
+            if(concepts === ""){
+                concepts = currentConcept;
+            }else{
+                concepts = concepts.concat(", ", currentConcept);
+            }
         }
-      }
-      return concepts;
+        return concepts;
     };
 
     $scope.$watch('dt', function(){
@@ -572,7 +571,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     };
 
     $scope.logSidebarClick = function(){
-      dbService.postLog("click", "questionSidebar", $scope.model.questionId);
+        dbService.postLog("click", "questionSidebar", $scope.model.questionId);
     };
 
     // Retreive Question from Dashboard Calendar
@@ -637,9 +636,9 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
                 if($scope.recordExist){
-                  dbService.postLog("view", "attemptedQuestion", $scope.question._id);
+                    dbService.postLog("view", "attemptedQuestion", $scope.question._id);
                 }else{
-                  dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
+                    dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
                 }
             }
         }
@@ -658,8 +657,8 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     $scope.submitAnswer = function(){
         var stringToNum = [];
         for(var i = 0; i < $scope.model.optionsSelected.length; i++){
-          stringToNum.push(Number($scope.model.optionsSelected[i]));
-          console.log(stringToNum);
+            stringToNum.push(Number($scope.model.optionsSelected[i]));
+            console.log(stringToNum);
         }
         $scope.model.optionsSelected = stringToNum;
         dbService.postAttempt($scope.model);
@@ -683,15 +682,15 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
     };
 
     $scope.expModel = {
-      user_id: $scope.user._id,
-      text: "",
-      votes: 0,
-      posted_at: 0,
+        user_id: $scope.user._id,
+        text: "",
+        votes: 0,
+        posted_at: 0,
     };
 
     $scope.postExplanation = function(){
-      $scope.expModel.created_at = new Date.now();
-      dbService.postExplanation($scope.expModel);
+        $scope.expModel.created_at = new Date.now();
+        dbService.postExplanation($scope.expModel);
     };
 
     $scope.expOrder = 'votes';
@@ -808,6 +807,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     });
 
     $scope.getQuestionCount = function(concept){
+        concept = concept.replace(/\s+/g, '-');
         var questionCount = 0;
         for(var j = 0; j < $scope.questions.length; j++){
             var question = $scope.questions[j];
@@ -944,7 +944,6 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
     $scope.allCourses = coursesData;
 
     $scope.model = dbService.getUser();
-    console.log($scope.model);
 
     $scope.courses = courseService.courses();
 
@@ -1013,9 +1012,9 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
         }else{
             $scope.model.courses.push(course._id);
             courseService.courses().push(course);
-            console.log("Added course: " + course.name);
             $scope.openAddCourse = false;
             dbService.postUserUpdate($scope.model);
+            console.log($scope.model);
             $scope.resetDialogs();
         }
     };
@@ -1029,7 +1028,8 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
 
     $scope.leaveCourse = function(course){
         $scope.errorMsg = '';
-        var index = $scope.courses.indexOf(course);
+        console.log(course);
+        var index = $scope.model.courses.indexOf(course._id);
         if(index == -1){
             console.log("Not enrolled in Course");
             return false;
@@ -1037,7 +1037,7 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
         $scope.model.courses.splice(index, 1);
         courseService.courses().splice(index, 1);
         dbService.postUserUpdate($scope.model);
-        console.log('Left Course: ' + course.name);
+        console.log($scope.model);
         $scope.resetDialogs();
     };
 }]);

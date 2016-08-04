@@ -66,7 +66,7 @@ link(rel="stylesheet", href="/stylesheets/myaccount-wip.css")
     .dialog-box.deleteCourse(ng-show="openDeleteCourse")
       h3 Leave Course
       h6 Are you sure you want to leave this course?
-      h6 {{ courseToLeave }}
-      button(type="button", class="btn btn-danger", ng-click="leaveCourse()") Confirm
+      h6 {{ courseToLeave.name }}
+      button(type="button", class="btn btn-danger", ng-click="leaveCourse(courseToLeave)") Confirm
       button(type="button", class="btn btn-warning", ng-click="openDeleteCourse=false") Cancel
 
