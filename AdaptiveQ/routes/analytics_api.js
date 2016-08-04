@@ -1,9 +1,6 @@
 var express = require('express');
 var router = express.Router();
 
-var localhost = "http://localhost:3000/";
-var sysAccount = 'adaptq@gmail.com';
-
 var Users = require('../models/user');
 var Courses = require('../models/course');
 var Concepts = require('../models/concept');

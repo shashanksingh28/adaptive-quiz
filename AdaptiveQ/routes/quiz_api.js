@@ -230,13 +230,15 @@ router.get('/getCourseStudents', requireLogin, function(req, res){
                     // remove user records not pertaining to the course
                     var students = [];
                     for(var i = 0; i < users.length; ++i){
-                        var student = { id : users[i]._id, name : users[i].name, attempts: []};
+                        var student = { _id : users[i]._id, name : users[i].name, attempts: []};
                         for(var j = 0; j < users[i].attempts.length; ++j){
                             if(users[i].attempts[j].courseId == courseId){
                                 student.attempts.push(users[i].attempts[j]);
                             }
                         }
-                        students.push(student);
+                        if(!checkIfInstructor(course, student._id)){
+                            students.push(student);
+                        }
                     }
                     res.send(new respOK(students));
                 }, function(error)
