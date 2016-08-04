@@ -47,9 +47,8 @@ html(ng-app=ngapp)
           .collapse.navbar-collapse(id="navbar-collapse")
             ul.nav.navbar-nav
               li: a(href="{{ questionRoute() }}") Questions
-              - if(true)
-                li: a(href="/#/askquestion") Ask Question
-                li: a(href="/#/coursedata") Course Data
+              li(ng-show="isTeacher"): a(href="/#/askquestion") Ask Question
+              li(ng-show="false"): a(href="/#/coursedata") Course Data
             ul.nav.navbar-nav.navbar-right
               li: p.navbar-text Signed In as {{ user.name }} 
               li.dropdown

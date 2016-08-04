@@ -90,9 +90,9 @@ mainApp.config(['$routeProvider', function($routeProvider){
 
 mainApp.run(['$rootScope', '$location', 'authService', function($rootScope, $location, authService){
     $rootScope.$on('$routeChangeStart', function(events, next, previous){
-        if($location.$$path == "/redirect"){
+        if($location.$$path == "/redirect" || $location.$$path == "/dashboard" || $location.$$path == "/coursedata"){
             event.preventDefault();
-            if(authService.isTeacher){
+            if(authService.isTeacher()){
                 $location.path('/coursedata');
             }else{
                 $location.path('/dashboard');
@@ -101,8 +101,15 @@ mainApp.run(['$rootScope', '$location', 'authService', function($rootScope, $loc
     });
 }]);
 
-mainApp.service('authService', [function(){
-    this.isTeacher = false;
+mainApp.service('authService', ['dbService', 'courseService', function(dbService, courseService){
+
+    this.isTeacher = function(){
+        if(courseService.currentCourse.instructorIds.indexOf(dbService.getUser()._id) != -1){
+            return true;
+        }
+        return false;
+    };
+
 }]);
 
 mainApp.service('dbService', ['$http', '$window', function($http, $window){
@@ -182,7 +189,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             }
             else{
                 console.log("Attempt Posted");
-                //refresh page
+                $window.location.reload();
             }
         }, function(error){
             console.log("Problem in Connecting to Server:");
@@ -199,7 +206,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             }
             else{
                 console.log("Question Created");
-                //refresh page
+                $window.location.reload();
             }
         }, function(error){
             console.log("Problem in Connecting to Server:");
@@ -269,7 +276,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             else{
                 console.log("User Updated");
                 console.log(response);
-                //refresh page
+                $window.location.reload();
             }
         }, function(error){
             console.log("Problem in connecting to server");
@@ -325,8 +332,6 @@ mainApp.service('courseService', ['$window', 'dbService', function($window, dbSe
         for(var i = 0; i < this.courses().length; i++){
             if(this.courses()[i]._id == course._id){
                 this.currentCourse = this.courses()[i];
-                $window.location.href = '/';
-                $window.location.reload(true);
             }
         }
         console.log("Course not found");
@@ -364,7 +369,8 @@ mainApp.service('statusService', ['dbService', function(dbService){
 
 }]);
 
-mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 'courseService', function ($scope, $http, $window, dbService, courseService) {
+mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 'courseService', 'authService', function ($scope, $http, $window, dbService, courseService, authService) {
+    $scope.isTeacher = authService.isTeacher();
 
     $scope.user = dbService.getUser();
 
@@ -396,13 +402,14 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
 }]);
 
-mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'questionService', 'conceptsData', 'questionsData', function($scope, dbService, statusService, questionService, conceptsData, questionsData){
+mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'questionService', 'courseService', 'conceptsData', 'questionsData', function($scope, dbService, statusService, questionService, courseService, conceptsData, questionsData){
 
     $scope.courseExists = questionsData.length > 0;
     $scope.concepts = conceptsData;
     $scope.questions = questionsData;
     $scope.student = dbService.getUser();
     $scope.attempts = $scope.student.attempts;
+    $scope.course = courseService.currentCourse;
 
     $scope.getQuestionCount = function(concept){
         concept = concept.replace(/\s+/g, '-');
@@ -543,7 +550,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     }
 }]);
 
-mainApp.controller('questionController', ['$scope', 'statusService', 'dbService', 'questionService', 'questionsData', 'orderByFilter', function($scope, statusService, dbService, questionService, questionsData, orderBy){
+mainApp.controller('questionController', ['$scope', '$route', 'statusService', 'dbService', 'questionService', 'questionsData', 'orderByFilter', function($scope, $route, statusService, dbService, questionService, questionsData, orderBy){
     $scope.user = dbService.getUser();
 
     $scope.noQuestions = questionsData.length === 0;
@@ -662,6 +669,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         }
         $scope.model.optionsSelected = stringToNum;
         dbService.postAttempt($scope.model);
+        $route.reload();
     };
 
     $scope.enableHint = function(){
@@ -721,7 +729,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         //TODO: Save to DB
     };
 
-    $scope.downvoate = function(){
+    $scope.downvote = function(){
         for(var i = 0; i < $scope.question.explanations.length; i++){
             var currentExplanation = $scope.question.explanations[i];
             if(currentExplanation == explanation){
@@ -734,7 +742,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
 
 }]);
 
-mainApp.controller('askQuestionController', ['$scope', 'dbService', 'courseService', 'conceptsData', function($scope, dbService, courseService, conceptsData){
+mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', function($scope, $route, dbService, courseService, conceptsData){
     $scope.concepts = conceptsData;
 
     $scope.model = {
@@ -791,6 +799,7 @@ mainApp.controller('askQuestionController', ['$scope', 'dbService', 'courseServi
         console.log($scope.model.concepts);
         console.dir($scope.model);
         dbService.postQuestion($scope.model);
+        $route.reload();
     };
 
 }]);
@@ -848,6 +857,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
                 }
             }
         }
+        if(questionCount === 0){ return [0, 0, 1]; }
 
         var percentages = [
             correct / questionCount,
