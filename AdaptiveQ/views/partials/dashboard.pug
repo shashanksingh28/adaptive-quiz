@@ -7,21 +7,20 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
           h2 Concepts
         .panel-body(ng-show="courseExists")
           ul
-            - for(var i = 0; i < 5; i ++)
-              li
-                .item
-                  h5 variables
-                  h6 10 Questions
-                  .data-bar
-                    .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
-                      .bar
-                      p {{ getConceptGreen() }}
-                    .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
-                      .bar
-                      p {{ getConceptYellow() }}
-                    .unattempted(ng-style="{'width': getConceptYellow()}")
-                      .bar
-                      p {{ getConceptRed() }}
+            li(ng-repeat="concept in concepts")
+              .item
+                h5 {{ concept.name }}
+                h6 {{ getQuestionCount(concept.name) }} Questions
+                .data-bar
+                  .attemptedCorrect(ng-style="{'width': getConceptGreen()}")
+                    .bar
+                    p {{ getConceptGreen() }}
+                  .attemptedIncorrect(ng-style="{'width': getConceptRed()}")
+                    .bar
+                    p {{ getConceptYellow() }}
+                  .unattempted(ng-style="{'width': getConceptYellow()}")
+                    .bar
+                    p {{ getConceptRed() }}
         .panel-body(ng-hide="courseExists")
           h4 Course currently has no concepts.
           h4 To enroll, go to My Account

@@ -72,7 +72,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
               button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
               p You must post an explanation to view notes from others.
           
-        .explanations(ng-hide="hasOwnExplanation()")
+        .explanations(ng-show="hasOwnExplanation()")
           .btn-group.sortButtons
             button(data-toggle="dropdown", class="btn btn-link btn-xs dropdown-toggle") order by {{ expOrder }}
             ul.dropdown-menu

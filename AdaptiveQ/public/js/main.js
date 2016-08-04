@@ -393,9 +393,62 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     $scope.courseExists = questionsData.length > 0;
     $scope.concepts = conceptsData;
     $scope.questions = questionsData;
+    console.log(questionsData);
     $scope.attempts = dbService.getUser().attempts;
 
+    $scope.getQuestionCount = function(concept){
+        concept = concept.replace(/\s+/g, '-');
+        var questionCount = 0;
+        for(var j = 0; j < $scope.questions.length; j++){
+            var question = $scope.questions[j];
+            if(question.concepts.indexOf(concept) > -1){
+                questionCount++;
+            }
+        }
+        return questionCount;
+    };
+
     // -------- Concepts Panel --------
+    $scope.getStudentConceptBar = function(student, concept){
+        if($scope.student.name == 'No Student Chosen'){ return [0, 0, 1]; }
+        concept = concept.replace(/\s+/g, '-');
+        var correct = 0;
+        var incorrect = 0;
+        var courseAttempts = [];
+        var questionCount = 0;
+        for(var i = 0; i < student.attempts.length; i++){
+            var attempt = student.attempts[i];
+            if(attempt.courseId == $scope.course._id){
+                courseAttempts.push(attempt);
+            }
+        }
+        for(var j = 0; j < $scope.questions.length; j++){
+            var question = $scope.questions[j];
+            if(question.concepts.indexOf(concept) > -1){
+                questionCount++;
+                for(var k = 0; k < courseAttempts.length; k++){
+                    var courseAttempt = courseAttempts[k];
+                    if(courseAttempt.questionId == question._id){
+                        if(courseAttempt.score == 1){
+                            correct++;
+                        }else{
+                            incorrect++;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+
+        var percentages = [
+            correct / questionCount,
+            incorrect / questionCount,
+        ];
+        percentages.push(1 - (percentages[0] + percentages[1]));
+
+        return percentages;
+    };
+
     $scope.getConceptGreen = function(concept){
         // getConceptGreen for every student
         // find average
@@ -486,13 +539,15 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
                 return currentAttempt.optionsSelected;
             }
         }
-        console.log('No attempt recorded...');
     };
-
 
     $scope.model = {
         questionId: $scope.questions[$scope.questions.length - 1]._id,
         optionsSelected: [],
+    };
+
+    $scope.checkStatus = function(question){
+        return statusService.checkStatus(question);
     };
 
     // Retreive Question from Dashboard Calendar
@@ -502,13 +557,7 @@ mainApp.controller('questionController', ['$scope', 'statusService', 'dbService'
         questionService.savedQuestionId = null;
     }
 
-
-    $scope.checkStatus = function(question){
-        return statusService.checkStatus(question);
-    };
-
     // Question List Ordering
-
     $scope.order = 'Date';
     $scope.orderVal = 'date';
     $scope.reverse = true;
@@ -707,7 +756,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.questions = questionsData;
     $scope.concepts = conceptsData;
     $scope.students = studentsData;
-    $scope.student = { name: 'No Student Chosen' };
+    $scope.student = ($scope.students[0]) ? $scope.students[0] : { name: 'No Student Chosen' };
 
     $scope.$watch('student', function(){
         console.log($scope.student.name);
@@ -726,6 +775,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
     $scope.getStudentConceptBar = function(student, concept){
         if($scope.student.name == 'No Student Chosen'){ return [0, 0, 1]; }
+        concept = concept.replace(/\s+/g, '-');
         var correct = 0;
         var incorrect = 0;
         var courseAttempts = [];
@@ -738,7 +788,6 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
         }
         for(var j = 0; j < $scope.questions.length; j++){
             var question = $scope.questions[j];
-            console.log(concept);
             if(question.concepts.indexOf(concept) > -1){
                 questionCount++;
                 for(var k = 0; k < courseAttempts.length; k++){
@@ -760,7 +809,6 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
             incorrect / questionCount,
         ];
         percentages.push(1 - (percentages[0] + percentages[1]));
-        //console.log(concept + " : " + percentages);
 
         return percentages;
     };
@@ -774,10 +822,10 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
         }
         if(allPercentages == []){ return [0, 0, 1]; }
 
-        var percentages = [];
-        for(var j = 0; j < allPercentages.length; j++){
-            for(var k = 0; k < allPercentages[j].length; k++){
-                percentages[j] += allPercentages[j][k];
+        var percentages = [0, 0, 0];
+        for(var j = 0; j < allPercentages[0].length; j++){
+            for(var k = 0; k < allPercentages.length; k++){
+                percentages[j] += allPercentages[k][j];
             }
             percentages[j] /= $scope.concepts.length;
         }
@@ -793,10 +841,10 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
         }
         if(allPercentages == []){ return [0, 0, 1]; }
 
-        var percentages = [];
-        for(var j = 0; j < allPercentages.length; j++){
-            for(var k = 0; k < allPercentages[j].length; k++){
-                percentages[j] += allPercentages[j][k];
+        var percentages = [0, 0, 0];
+        for(var j = 0; j < allPercentages[0].length; j++){
+            for(var k = 0; k < allPercentages.length; k++){
+                percentages[j] += allPercentages[k][j];
             }
             percentages[j] /= $scope.students.length;
         }
@@ -817,63 +865,6 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
             formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
         }
         return formattedPercentages;
-    };
-
-    $scope.getConceptGreen = function(concept){
-        // getConceptGreen for every student
-        // find average
-        return '45%';
-    };
-
-    $scope.getConceptGreen = function(concept, studentName){
-        // get student from array of all students in course
-        // find questions in course that include the concept
-        // iterate every record with every question, checking for incorrect attempts
-        // return correct attempts / numOfQuestionsInCourse
-        return '45%';
-    };
-
-    $scope.getConceptRed = function(concept){
-        //getConceptRed for every student
-        //find average
-        return '30%';
-    };
-
-    $scope.getConceptRed = function(concept, studentName){
-        // get student from array of all students in course
-        // find questions in course that include the concept
-        // iterate every record with every question, checking for incorrect attempts
-        // return correct attempts / numOfQuestionsInCourse
-        return '30%';
-    };
-
-    $scope.getConceptYellow = function(concept){
-        //getConceptYellow for every student
-        //find average
-        return '25%';
-    };
-
-    $scope.getConceptYellow = function(concept, studentName){
-        // return 1 - (getConceptGreen() + getconceptRed())
-        return '25%';
-    };
-
-    $scope.getStudentGreen = function(studentName){
-        // for every concept, getConceptGreen(concept, studentName)
-        // return average
-        return '45%';
-    };
-
-    $scope.getStudentRed = function(){
-        // for every concept, getConceptRed(concept, studentName)
-        // return average
-        return '30%';
-    };
-
-    $scope.getStudentYellow = function(){
-        // for every concept, getConceptYellow(concept, studentName)
-        // return average
-        return '25%';
     };
 
     $scope.checkStatus = function(question){
