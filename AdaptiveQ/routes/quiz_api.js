@@ -1,6 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
+var emailer = require('../helpers/emailer');
+//var localhost = "http://52.40.100.41";
+var localhost = "http://localhost:3000";
+var sysAccount = 'adaptq@gmail.com';
+
 var Users = require('../models/user');
 var Courses = require('../models/course');
 var Concepts = require('../models/concept');
@@ -71,7 +76,6 @@ router.post('/postQuestion', requireLogin, function(req, res){
     else if(q.courseId === null || q.concepts.length == 0){
         res.send(new respError('Question must belong to a course and have at least one concept'));
     }
-
     var course = Courses.getCourseById(q.courseId)
         .then(function (course){
             if(!checkIfInstructor(course, req.session.user._id)){
@@ -80,8 +84,20 @@ router.post('/postQuestion', requireLogin, function(req, res){
             else{
                 Questions.addQuestion(q)
                 .then(function (savedQuestion){
-                    // TODO : Send email to students
-                    res.send(new respOK(savedQuestion));
+                    Users.getCourseUsers(course._id)
+                    .then(function(users){
+                        userEmails = [];
+                        for(var i = 0; i < users.length; ++i){
+                            userEmails.push(users[i].email);
+                        }
+                        emailer.sendQuestion(localhost,sysAccount,null,userEmails,savedQuestion._id, savedQuestion.concepts,function(error, response){
+                            if(error)
+                            {
+                    		    res.send(new respError("Error sending emails : " + error));
+                    		}
+            				res.send(new respOK(savedQuestion));
+                    	});
+                    });
                 }, function (error){ res.send(new respError(error)); });
             }
         }, function (error){ res.send(new respError(error)); });
@@ -93,29 +109,32 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
     else
     {
         Questions.getAllCourseQuestions(courseId)
-            .then(function (questions){
-                // Get user records. Delete answers if user has not attempted
-                Users.getUserById(req.session.user._id)
-                    .then(function (user){
-                        for(var i = 0; i < questions.length; ++i){
-                            var attempted = false;
-                            for(var j = 0; j < user.attempts.length; ++j){
-                                if(user.attempts[j].questionId == questions[i]._id){
-                                    attempted = true;
-                                    break;
-                                }
-                            }
-                            if (!attempted){
-                                questions[i].answers = [];
+        .then(function (questions){
+            Users.getUserById(req.session.user._id)
+            .then(function (user){
+                Courses.getCourseById(courseId)
+                .then(function(course){
+                    // If not an instructor and not attempted question, do not give answers
+                    for(var i = 0; i < questions.length; ++i){
+                        var attempted = false;
+                        for(var j = 0; j < user.attempts.length; ++j){
+                            if(user.attempts[j].questionId == questions[i]._id){
+                                attempted = true;
+                                break;
                             }
                         }
-                        res.send(new respOK(questions));
-                    }, function (error) {
-                        res.send(new respError(error));
-                    });
+                        if (!attempted && !checkIfInstructor(course, req.session.user._id)){
+                            questions[i].answers = [];
+                        }
+                    }
+                    res.send(new respOK(questions));
+                });
             }, function (error) {
                 res.send(new respError(error));
             });
+        }, function (error) {
+            res.send(new respError(error));
+        });
     }
 });
 

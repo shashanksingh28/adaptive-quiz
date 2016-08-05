@@ -18,7 +18,7 @@ var Logger = mongo.model('Logs', logSchema);
 
 Logger.logAction = function(userId, event_type, object_type, object_value){
   var newlog = Logger({
-    userId : userId,
+    user_id : userId,
     event_type : event_type,
     object_type : object_type,
     object_value : object_value,
