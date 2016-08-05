@@ -291,7 +291,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             object_id: objectId,
             created_at: Date.now()
         };
-        $http.post('/api/postLog', model).then(function(httpResponse){
+        $http.post('/api/log', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
