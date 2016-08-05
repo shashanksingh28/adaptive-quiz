@@ -104,7 +104,7 @@ mainApp.run(['$rootScope', '$location', 'authService', function($rootScope, $loc
 mainApp.service('authService', ['dbService', 'courseService', function(dbService, courseService){
 
     this.isTeacher = function(){
-        if(courseService.currentCourse.instructorIds.indexOf(dbService.getUser()._id) != -1){
+        if(courseService.enrolled && courseService.currentCourse.instructorIds.indexOf(dbService.getUser()._id) != -1){
             return true;
         }
         return false;
@@ -116,6 +116,10 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
 
     this.getUser = function(){
         return user_client;
+    };
+
+    this.initQuestion = function(){
+        return question_client;
     };
 
     this.baseURL = 'localhost:3000';
@@ -283,12 +287,11 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postLog = function(eventType, objectType, objectId){
+    this.postLog = function(eventType, objectType, objectValue){
         var model = {
             userId: this.getUser()._id,
             event_type: eventType,
-            object_type: objectType,
-            object_id: objectId,
+            object_value: objectValue,
             created_at: Date.now()
         };
         $http.post('/api/log', model).then(function(httpResponse){
@@ -373,6 +376,8 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
     $scope.isTeacher = authService.isTeacher();
 
     $scope.user = dbService.getUser();
+
+    $scope.course = (courseService.enrolled) ? courseService.currentCourse : {name: "None"};
 
     $scope.courses = (courseService.enrolled) ? courseService.courses() : [{name: "No Courses"}];
 
@@ -506,7 +511,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
             var currentDay = new Date($scope.questions[i].created_at).setHours(0,0,0,0);
             if (dayToCheck === currentDay) {
                 $scope.question = $scope.questions[i];
-                dbService.postLog("click", "calendarQuesiton", $scope.question._id);
+                dbService.postLog("click", "calendarQuesiton", currentDay);
                 return true;
             }
         }
@@ -521,6 +526,12 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
             questionService.save($scope.question._id);
         }
     };
+
+    // Go to Question if Loaded from Email Link
+    if(dbService.initQuestion() !== ""){
+        dbService.postLog("click", "emailToQuestion", dbService.initQuestion());
+        questionService.save(dbService.initQuestion());
+    }
 
     // Set Today, Options, and Custom Classes
     $scope.today = function() {
@@ -550,7 +561,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     }
 }]);
 
-mainApp.controller('questionController', ['$scope', '$route', 'statusService', 'dbService', 'questionService', 'questionsData', 'orderByFilter', function($scope, $route, statusService, dbService, questionService, questionsData, orderBy){
+mainApp.controller('questionController', ['$scope', '$route', 'statusService', 'dbService', 'questionService', 'authService', 'questionsData', 'orderByFilter', function($scope, $route, statusService, dbService, questionService, authService, questionsData, orderBy){
     $scope.user = dbService.getUser();
 
     $scope.noQuestions = questionsData.length === 0;
@@ -558,6 +569,7 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
     $scope.getOptionsSelected = function(){
+        if(authService.isTeacher){ return []; }
         var allAttempts = dbService.getUser().attempts;
         for(var i = 0; i < allAttempts.length; i++){
             var currentAttempt = allAttempts[i];
@@ -578,7 +590,9 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
 
     $scope.logSidebarClick = function(){
-        dbService.postLog("click", "questionSidebar", $scope.model.questionId);
+        if(!authService.isTeacher){
+            dbService.postLog("click", "questionSidebar", $scope.model.questionId);
+        }
     };
 
     // Retreive Question from Dashboard Calendar
@@ -639,13 +653,15 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                 $scope.addExplanation = false;
 
                 // Set Values to Format View
-                $scope.recordExists = $scope.checkStatus($scope.question) != 'unattempted';
+                $scope.recordExists = authService.isTeacher() || $scope.checkStatus($scope.question) != 'unattempted';
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
-                if($scope.recordExist){
-                    dbService.postLog("view", "attemptedQuestion", $scope.question._id);
-                }else{
-                    dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
+                if(!authService.isTeacher()){
+                    if($scope.recordExist){
+                        dbService.postLog("view", "attemptedQuestion", $scope.question._id);
+                    }else{
+                        dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
+                    }
                 }
             }
         }
@@ -813,6 +829,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
     $scope.$watch('student', function(){
         console.log($scope.student.name);
+        dbService.postLog('click', 'studentReport', $scope.student._id);
     });
 
     $scope.getQuestionCount = function(concept){

@@ -27,6 +27,7 @@ html(ng-app=ngapp)
         //Receive User from res.render
         var user_client = !{ JSON.stringify(user_server) }
         var allCourses_client = !{ JSON.stringify(allCourses_server) }
+        var question_client = !{ JSON.stringify(question_server) }
 
   body
     block startscripts
@@ -51,6 +52,7 @@ html(ng-app=ngapp)
               li(ng-show="false"): a(href="/#/coursedata") Course Data
             ul.nav.navbar-nav.navbar-right
               li: p.navbar-text Signed In as {{ user.name }} 
+              li: p.navbar-text Course: {{ course.name }}
               li.dropdown
                 a(data-toggle="dropdown", class="dropdown-toggle") Courses
                   span.caret
