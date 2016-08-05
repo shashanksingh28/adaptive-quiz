@@ -31,7 +31,7 @@ router.get('/', function(req, res) {
                     res.render('layout', { user_server : user, allCourses_server : allCourses, question_server : questionId });
                 }
                 else{
-                    res.render('layout', { user_server : user, allCourses_server : allCourses });
+                    res.render('layout', { user_server : user, allCourses_server : allCourses, question_server : '' });
                 }
             }, function (error){
                 res.render('error', error);
@@ -60,7 +60,7 @@ router.get('/question', function(req, res) {
             delete user.password;
             Courses.getAllCourses()
             .then(function (allCourses){
-                res.render('layout', { user_server : user, allCourses_server : allCourses });
+                res.render('layout', { user_server : user, allCourses_server : allCourses, question_server : questionId });
             }, function (error){
                 res.render('error', error);
             });
