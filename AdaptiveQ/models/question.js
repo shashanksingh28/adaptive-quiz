@@ -12,7 +12,6 @@ var questionSchema = new Schema({
 	concepts: Array, // Array of strings
 	created_at: Date,
 	hint: String,
-  	explanations: Array,
 	multiOption : Boolean
 });
 
@@ -30,7 +29,6 @@ Questions.addQuestion = function(question){
         concepts : question.concepts,
         hint : question.hint,
         created_at : Date.now(),
-        explanations : [],
 		multiOption : question.answers.length > 1
     });
 

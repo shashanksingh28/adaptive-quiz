@@ -10,6 +10,7 @@ var Users = require('../models/user');
 var Courses = require('../models/course');
 var Concepts = require('../models/concept');
 var Questions = require('../models/question');
+var Explanations = require('../models/explanation');
 
 //------- Helper Functions --------//
 function requireLogin (req, res, next) {
@@ -58,7 +59,7 @@ var respError = function(error){
     this.eMessage = error;
 }
 
-//------- API functions --------//
+//------- Courses Section--------//
 router.get('/getAllCourses', requireLogin, function(req, res){
     Courses.getAllCourses()
     .then(function (courses){
@@ -68,76 +69,44 @@ router.get('/getAllCourses', requireLogin, function(req, res){
     });
 });
 
-router.post('/postQuestion', requireLogin, function(req, res){
-    var q = req.body;
-    if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
-        res.send(new respError('Empty question or not enough answers provided'));
-    }
-    else if(q.courseId === null || q.concepts.length == 0){
-        res.send(new respError('Question must belong to a course and have at least one concept'));
-    }
-    var course = Courses.getCourseById(q.courseId)
+router.get('/getCourseStudents', requireLogin, function(req, res){
+    var courseId = req.query._id;
+    if(courseId === null){ res.send(new respError('CourseID required')); }
+    else{
+        Courses.getCourseById(courseId)
         .then(function (course){
             if(!checkIfInstructor(course, req.session.user._id)){
-                res.send(new respError('User not instructor for course.'));
+                res.send(new respError('Not an instructor'));
             }
             else{
-                Questions.addQuestion(q)
-                .then(function (savedQuestion){
-                    Users.getCourseUsers(course._id)
-                    .then(function(users){
-                        userEmails = [];
-                        for(var i = 0; i < users.length; ++i){
-                            userEmails.push(users[i].email);
-                        }
-                        emailer.sendQuestion(localhost,sysAccount,null,userEmails,savedQuestion._id, savedQuestion.concepts,function(error, response){
-                            if(error)
-                            {
-                    		    res.send(new respError("Error sending emails : " + error));
-                    		}
-            				res.send(new respOK(savedQuestion));
-                    	});
-                    });
-                }, function (error){ res.send(new respError(error)); });
-            }
-        }, function (error){ res.send(new respError(error)); });
-});
-
-router.get('/getCourseQuestions', requireLogin, function(req, res){
-    var courseId = req.query._id;
-    if (!courseId) { res.send(new respError('No CourseId given.')); }
-    else
-    {
-        Questions.getAllCourseQuestions(courseId)
-        .then(function (questions){
-            Users.getUserById(req.session.user._id)
-            .then(function (user){
-                Courses.getCourseById(courseId)
-                .then(function(course){
-                    // If not an instructor and not attempted question, do not give answers
-                    for(var i = 0; i < questions.length; ++i){
-                        var attempted = false;
-                        for(var j = 0; j < user.attempts.length; ++j){
-                            if(user.attempts[j].questionId == questions[i]._id){
-                                attempted = true;
-                                break;
+                Users.getCourseUsers(course._id)
+                .then(function (users){
+                    // remove user records not pertaining to the course
+                    var students = [];
+                    for(var i = 0; i < users.length; ++i){
+                        var student = { _id : users[i]._id, name : users[i].name, attempts: []};
+                        for(var j = 0; j < users[i].attempts.length; ++j){
+                            if(users[i].attempts[j].courseId == courseId){
+                                student.attempts.push(users[i].attempts[j]);
                             }
                         }
-                        if (!attempted && !checkIfInstructor(course, req.session.user._id)){
-                            questions[i].answers = [];
+                        if(!checkIfInstructor(course, student._id)){
+                            students.push(student);
                         }
                     }
-                    res.send(new respOK(questions));
+                    res.send(new respOK(students));
+                }, function(error)
+                {
+                    res.send(new respError(error));
                 });
-            }, function (error) {
-                res.send(new respError(error));
-            });
-        }, function (error) {
+            }
+        }, function(error){
             res.send(new respError(error));
         });
-    }
+     }
 });
 
+// ------ Concepts Section -----//
 router.get('/getCourseConcepts', requireLogin, function(req, res){
     var courseId = req.query._id;
     if (!courseId) { res.send(new respError('No CourseId given.'));}
@@ -180,6 +149,42 @@ router.post('/addConcept', requireLogin, function(req, res){
             }
         }, function (error) { res.send(new respError(error)); });
     }
+});
+
+// ------- Question Section ------ //
+router.post('/postQuestion', requireLogin, function(req, res){
+    var q = req.body;
+    if( (isEmpty(q.text) && isEmpty(q.code)) || isEmpty(q.options) || isEmpty(q.answers) ){
+        res.send(new respError('Empty question or not enough answers provided'));
+    }
+    else if(q.courseId === null || q.concepts.length == 0){
+        res.send(new respError('Question must belong to a course and have at least one concept'));
+    }
+    var course = Courses.getCourseById(q.courseId)
+        .then(function (course){
+            if(!checkIfInstructor(course, req.session.user._id)){
+                res.send(new respError('User not instructor for course.'));
+            }
+            else{
+                Questions.addQuestion(q)
+                .then(function (savedQuestion){
+                    Users.getCourseUsers(course._id)
+                    .then(function(users){
+                        userEmails = [];
+                        for(var i = 0; i < users.length; ++i){
+                            userEmails.push(users[i].email);
+                        }
+                        emailer.sendQuestion(localhost,sysAccount,null,userEmails,savedQuestion._id, savedQuestion.concepts,function(error, response){
+                            if(error)
+                            {
+                    		    res.send(new respError("Error sending emails : " + error));
+                    		}
+            				res.send(new respOK(savedQuestion));
+                    	});
+                    });
+                }, function (error){ res.send(new respError(error)); });
+            }
+        }, function (error){ res.send(new respError(error)); });
 });
 
 router.post('/postAttempt', requireLogin, function(req, res){
@@ -234,41 +239,134 @@ router.post('/postAttempt', requireLogin, function(req, res){
 
 });
 
-router.get('/getCourseStudents', requireLogin, function(req, res){
+router.get('/getCourseQuestions', requireLogin, function(req, res){
     var courseId = req.query._id;
-    if(courseId === null){ res.send(new respError('CourseID required')); }
-    else{
-        Courses.getCourseById(courseId)
-        .then(function (course){
-            if(!checkIfInstructor(course, req.session.user._id)){
-                res.send(new respError('Not an instructor'));
-            }
-            else{
-                Users.getCourseUsers(course._id)
-                .then(function (users){
-                    // remove user records not pertaining to the course
-                    var students = [];
-                    for(var i = 0; i < users.length; ++i){
-                        var student = { _id : users[i]._id, name : users[i].name, attempts: []};
-                        for(var j = 0; j < users[i].attempts.length; ++j){
-                            if(users[i].attempts[j].courseId == courseId){
-                                student.attempts.push(users[i].attempts[j]);
+    if (!courseId) { res.send(new respError('No CourseId given.')); }
+    else
+    {
+        Questions.getAllCourseQuestions(courseId)
+        .then(function (questions){
+            Users.getUserById(req.session.user._id)
+            .then(function (user){
+                Courses.getCourseById(courseId)
+                .then(function(course){
+                    // If not an instructor and not attempted question, do not give answers
+                    for(var i = 0; i < questions.length; ++i){
+                        var attempted = false;
+                        for(var j = 0; j < user.attempts.length; ++j){
+                            if(user.attempts[j].questionId == questions[i]._id){
+                                attempted = true;
+                                break;
                             }
                         }
-                        if(!checkIfInstructor(course, student._id)){
-                            students.push(student);
+                        if (!attempted && !checkIfInstructor(course, req.session.user._id)){
+                            questions[i].answers = [];
                         }
                     }
-                    res.send(new respOK(students));
-                }, function(error)
-                {
-                    res.send(new respError(error));
+                    res.send(new respOK(questions));
                 });
-            }
-        }, function(error){
+            }, function (error) {
+                res.send(new respError(error));
+            });
+        }, function (error) {
             res.send(new respError(error));
         });
-     }
+    }
+});
+
+// ------------ Explanations Section -------------- //
+router.get('/getExplanations', requireLogin, function(req, res){
+    var qId = req.query._id;
+    if (!qId){
+        res.send(new respError("No Question Id provided"));
+        return;
+    }
+    Explanations.getExplanations(qId)
+    .then(function(explanations){
+        res.send(new respOK(explanations));
+    }, function (error){
+        res.send(new respError(error));
+    });
+});
+
+router.post('/postExplanation', requireLogin, function(req, res){
+    var qId = req.body._id;
+    if (!expId){
+        res.send(new respError("No Question Id provided"));
+        return;
+    }
+    if(isEmpty(req.body.text)){
+        res.send(new respError("No Question Id provided"));
+        return;
+    }
+    Explanations.addExplanation(qId, req.session.user._id, req.body.text)
+    .then(function(savedExplanation){
+        res.send(new respOK(savedExplanation));
+    }, function (error){
+        res.send(new respError(error));
+    });
+});
+
+router.post('/postUpvote', requireLogin, function(req, res){
+    var expId = req.body._id;
+    if(!expId){
+        res.send(new respError("Explanation Id not given!"));
+        return;
+    }
+    Explanations.getExplanationById(expId)
+    .then(function(explanation){
+        alreadyUpvoted = false;
+        for(var i = 0; i < explanation.votes.length; ++i){
+            if(explanation.votes[i] == req.session.user._id){
+                alreadyUpvoted = true;
+                break;
+            }
+        }
+        if (!alreadyUpvoted){
+            explanation.votes.push(req.session.user._id);
+        }
+        explanation.markModified('votes');
+        explanation.save(function(error, savedExplanation){
+            if(error){
+                res.send(new respError(error));
+                return;
+            }
+            res.send(new respOK(savedExplanation));
+        });
+    }, function(error){
+        res.send(new respError(error));
+    });
+});
+
+router.post('/postUnVote', requireLogin, function(req, res){
+    var expId = req.body._id;
+    if(!expId){
+        res.send(new respError("Explanation Id not given!"));
+        return;
+    }
+    Explanations.getExplanationById(expId)
+    .then(function(explanation){
+        index = -1;
+        for(var i = 0; i < explanation.votes.length; ++i){
+            if(explanation.votes[i] == req.session.user._id){
+                index == i;
+                break;
+            }
+        }
+        if (index != -1){
+            explanation.votes.splice(index, 1);
+        }
+        explanation.markModified('votes');
+        explanation.save(function(error, savedExplanation){
+            if(error){
+                res.send(new respError(error));
+                return;
+            }
+            res.send(new respOK(savedExplanation));
+        });
+    }, function(error){
+        res.send(new respError(error));
+    });
 });
 
 module.exports = router;
