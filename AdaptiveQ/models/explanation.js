@@ -7,6 +7,7 @@ autoIncrement.initialize(mongo.connection);
 var explanationSchema = new Schema({
 	questionId : Number, // list of instructor's  user Id's
     userId : Number,
+    userName : String,
     text : String,
     votes : [Number],
     created_at : Date
@@ -16,11 +17,12 @@ explanationSchema.plugin(autoIncrement.plugin, 'Explanations');
 
 var Explanations = mongo.model('Explanations', explanationSchema);
 
-Explanations.addExplanation = function(qId, userId, text){
+Explanations.addExplanation = function(qId, userId, userName, text){
     var explanation = Explanations({
         questionId : qId,
         userId : userId,
-        test : text,
+        userName : userName,
+        text : text,
         votes : [],
         created_at : Date.now()
     });

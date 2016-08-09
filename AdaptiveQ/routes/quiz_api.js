@@ -276,7 +276,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
 
 // ------------ Explanations Section -------------- //
 router.get('/getExplanations', requireLogin, function(req, res){
-    var qId = req.query._id;
+    var qId = req.query.questionId;
     if (!qId){
         res.send(new respError("No Question Id provided"));
         return;
@@ -290,8 +290,8 @@ router.get('/getExplanations', requireLogin, function(req, res){
 });
 
 router.post('/postExplanation', requireLogin, function(req, res){
-    var qId = req.body._id;
-    if (!expId){
+    var qId = req.body.questionId;
+    if (!qId){
         res.send(new respError("No Question Id provided"));
         return;
     }
@@ -299,10 +299,15 @@ router.post('/postExplanation', requireLogin, function(req, res){
         res.send(new respError("No Question Id provided"));
         return;
     }
-    Explanations.addExplanation(qId, req.session.user._id, req.body.text)
-    .then(function(savedExplanation){
-        res.send(new respOK(savedExplanation));
-    }, function (error){
+    Users.getUserById(req.session.user._id)
+    .then(function (user){
+        Explanations.addExplanation(qId, user._id, user.name, req.body.text)
+        .then(function(savedExplanation){
+            res.send(new respOK(savedExplanation));
+        }, function (error){
+            res.send(new respError(error));
+        })
+    }, function(error){
         res.send(new respError(error));
     });
 });
