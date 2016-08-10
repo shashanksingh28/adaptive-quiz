@@ -323,7 +323,7 @@ router.post('/postExplanation', requireLogin, function(req, res){
     });
 });
 
-router.post('/postUpvote', requireLogin, function(req, res){
+router.post('/postUpVote', requireLogin, function(req, res){ 
     var expId = req.body._id;
     if(!expId){
         res.send(new respError("Explanation Id not given!"));
@@ -371,11 +371,11 @@ router.post('/postUnVote', requireLogin, function(req, res){
             res.send(new respError("No explanation with given Id"));
             return;
         }
-
+        
         index = -1;
-        for(var i = 0; i < explanation.votes.length; ++i){
+        for(var i = 0; i < explanation.votes.length; ++i){            
             if(explanation.votes[i] == req.session.user._id){
-                index == i;
+                index = i;
                 break;
             }
         }
