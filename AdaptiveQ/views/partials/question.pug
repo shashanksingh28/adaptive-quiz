@@ -67,10 +67,10 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 label.radio(for="option{{$index}}") {{option}}
           .new-explanation(ng-hide="hasOwnExplanation()")
             form#newExplanation(ng-submit="postExplanation()")
-              label Create Explanation or Comments
+              label Post Explanation/Comments
               textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="expModel.text", required)
               button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
-              p You must post an explanation to view notes from others.
+              p Write an explanation to express your thought process and help others to understand.
           
         .explanations(ng-show="true")
           .btn-group.sortButtons
@@ -84,7 +84,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 h5 Votes: {{ explanation.votes.length }}
                 button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-hide="explanation.votes.indexOf(dbService.getUser()._id) != -1")
                   span.fa.fa-thumbs-o-up
-                button(type="button", class="btn btn-default btn-sm", ng-click="downvote(explanation)", ng-show="explanation.votes.indexOf(dbService.getUser()._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="unvote(explanation)", ng-show="explanation.votes.indexOf(dbService.getUser()._id) != -1")
                   span.fa.fa-thumbs-up
                 h4 {{ explanation.userName }}
                 h6 {{ explanation.created_at | date : 'hh:mma MMM dd' }}

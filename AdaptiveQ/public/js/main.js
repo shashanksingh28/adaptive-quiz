@@ -191,8 +191,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Response in dbService.getExplanations");
-                console.log(response.data);
                 callback(response.data);
             }
         }, function(error){
@@ -251,7 +249,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postExplanation = function(model){
+    this.postExplanation = function(model, callback){
         $http.post('/api/postExplanation', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -261,14 +259,15 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             else{
                 console.log("Explanation Added:");
                 console.log(response);
+                callback();
             }
         }, function(error){
             console.log("Problem in connecting to server");
         });
     };
 
-    this.postVote = function(model){
-        $http.post('/api/postVote', model).then(function(httpResponse){
+    this.postUpvote = function(model, callback){
+        $http.post('/api/postUpVote', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -276,7 +275,23 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             }
             else{
                 console.log("Vote Added");
-                //refresh page
+                callback();
+            }
+        }, function(error){
+            console.log("Problem in connecting to server");
+        });
+    };
+
+    this.postUnvote = function(model, callback){
+        $http.post('/api/postUnVote', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Vote Removed");
+                callback();
             }
         }, function(error){
             console.log("Problem in connecting to server");
@@ -292,8 +307,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("User Updated");
-                console.log(response);
                 $window.location.reload();
             }
         }, function(error){
@@ -584,7 +597,7 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
 
     $scope.getOptionsSelected = function(){
         if(authService.isTeacher()){ 
-          return []; }
+            return []; }
         var allAttempts = dbService.getUser().attempts;
         for(var i = 0; i < allAttempts.length; i++){
             var currentAttempt = allAttempts[i];
@@ -671,8 +684,6 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                    console.log("Response in $watch");
-                    console.log(explanations);
                     $scope.explanations = explanations;
                 });
                 if(!authService.isTeacher()){
@@ -682,6 +693,7 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                         dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
                     }
                 }
+                break;
             }
         }
     });
@@ -723,8 +735,12 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
 
     $scope.postExplanation = function(){
         $scope.expModel.questionId = $scope.model.questionId;
-        dbService.postExplanation($scope.expModel);
-        $route.reload();
+        dbService.postExplanation($scope.expModel, function(){
+            $scope.expModel.text = "";
+            $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
+                $scope.explanations = explanations;
+            });
+        });
     };
 
     $scope.expOrder = 'votes';
@@ -745,24 +761,19 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
 
     $scope.upvote = function(explanation){
-        for(var i = 0; i < $scope.explanations.length; i++){
-            var currentExplanation = $scope.explanations[i];
-            if(currentExplanation == explanation){
-                currentExplanation.votes.push(dbService.getUser()._id);
-            }
-        }
-        //TODO: Save to DB
+        dbService.postUpvote(explanation._id, function(){
+            $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
+                $scope.explanations = explanations;
+            });
+        });
     };
 
-    $scope.downvote = function(){
-        for(var i = 0; i < $scope.explanations.length; i++){
-            var currentExplanation = $scope.explanations[i];
-            if(currentExplanation == explanation){
-                var index = currentExplanation.votes.indexOf(dbService.getUser()._id);
-                currentExplanation.votes.splice(index, 1);
-            }
-        }
-        //TODO: Save to DB
+    $scope.unvote = function(){
+        dbService.postUnvote(explanation._id, function(){
+            $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
+                $scope.explanations = explanations;
+            });
+        });
     };
 
 }]);
