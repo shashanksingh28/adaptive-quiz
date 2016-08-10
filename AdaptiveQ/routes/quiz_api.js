@@ -276,7 +276,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
 
 // ------------ Explanations Section -------------- //
 router.get('/getExplanations', requireLogin, function(req, res){
-    console.log(req.query);
+    // console.log(req.query);
     var qId = req.query.questionId;
     if (!qId){
         res.send(new respError("No Question Id provided"));

@@ -191,8 +191,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Response in dbService.getExplanations");
-                console.log(response.data);
                 callback(response.data);
             }
         }, function(error){
@@ -305,12 +303,11 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         var model = {
             userId: this.getUser()._id,
             event_type: eventType,
-            object_value: objectValue,
-            created_at: Date.now()
+            object_type: objectType,
+            object_value: objectValue
         };
         $http.post('/api/log', model).then(function(httpResponse){
             var response = httpResponse.data;
-            console.log(response);
             if(response.status != "OK"){
                 console.log(response.eMessage);
             }
@@ -671,8 +668,6 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                    console.log("Response in $watch");
-                    console.log(explanations);
                     $scope.explanations = explanations;
                 });
                 if(!authService.isTeacher()){
