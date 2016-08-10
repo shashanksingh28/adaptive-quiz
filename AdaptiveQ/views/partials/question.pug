@@ -72,7 +72,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
               button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
               p You must post an explanation to view notes from others.
           
-        .explanations(ng-show="hasOwnExplanation()")
+        .explanations(ng-show="true")
           .btn-group.sortButtons
             button(data-toggle="dropdown", class="btn btn-link btn-xs dropdown-toggle") order by {{ expOrder }}
             ul.dropdown-menu
@@ -82,11 +82,11 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
             li(ng-repeat="explanation in explanations")
               .explanation
                 h5 Votes: {{ explanation.votes.length }}
-                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-show="explanation.votes.indexOf(dbService.getUser()._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-hide="explanation.votes.indexOf(dbService.getUser()._id) != -1")
                   span.fa.fa-thumbs-o-up
-                button(type="button", class="btn btn-default btn-sm", ng-click="downvote(explanation)", ng-hide="explanation.votes.indexOf(dbService.getUser()._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="downvote(explanation)", ng-show="explanation.votes.indexOf(dbService.getUser()._id) != -1")
                   span.fa.fa-thumbs-up
-                h4 {{ explanation.user }}
-                h6 {{ explanation.dateCreated | date : 'hh:mma MMM dd' }}
+                h4 {{ explanation.userName }}
+                h6 {{ explanation.created_at | date : 'hh:mma MMM dd' }}
                 p.
                   {{ explanation.text }}

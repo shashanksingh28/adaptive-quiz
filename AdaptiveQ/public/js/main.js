@@ -184,6 +184,22 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
+    this.getExplanations = function(questionId){
+        $http.get('/api/getExplanations', {params: questionId}).then(function(httpResponse){
+            var response = httpResponse.data;
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log(response.data);
+                return response.data;
+            }
+        }, function(error){
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
+        });
+    };
+
     this.postAttempt = function(model){
         $http.post('/api/postAttempt', model).then(function(httpResponse){
             var response = httpResponse.data;
@@ -235,9 +251,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postExplanation = function(model){
-        console.log(model);
-        return false;
-        // Put on standby until postExplanation API is ready
         $http.post('/api/postExplanation', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -245,8 +258,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Explanation Added");
-                //refresh page
+                console.log("Explanation Added:");
+                console.log(response);
             }
         }, function(error){
             console.log("Problem in connecting to server");
@@ -569,12 +582,12 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
     $scope.getOptionsSelected = function(){
-        if(authService.isTeacher){ return []; }
+        if(authService.isTeacher()){ 
+          return []; }
         var allAttempts = dbService.getUser().attempts;
         for(var i = 0; i < allAttempts.length; i++){
             var currentAttempt = allAttempts[i];
             if(currentAttempt.questionId == $scope.question._id){
-                console.log(currentAttempt.optionsSelected);
                 return currentAttempt.optionsSelected;
             }
         }
@@ -643,7 +656,6 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
 
             if ($scope.model.questionId == currentQuestion._id) {
                 $scope.question = currentQuestion;
-                console.dir($scope.question);
 
                 // Reset Fields
                 $scope.model.optionsSelected = [];
@@ -651,11 +663,14 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                 $scope.noHint = true;
                 $scope.showExplanations = false;
                 $scope.addExplanation = false;
+                $scope.expModel.text = "";
 
                 // Set Values to Format View
                 $scope.recordExists = authService.isTeacher() || $scope.checkStatus($scope.question) != 'unattempted';
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
+                $scope.explanations = dbService.getExplanations($scope.model);
+                console.log($scope.explanations);
                 if(!authService.isTeacher()){
                     if($scope.recordExist){
                         dbService.postLog("view", "attemptedQuestion", $scope.question._id);
@@ -681,7 +696,6 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
         var stringToNum = [];
         for(var i = 0; i < $scope.model.optionsSelected.length; i++){
             stringToNum.push(Number($scope.model.optionsSelected[i]));
-            console.log(stringToNum);
         }
         $scope.model.optionsSelected = stringToNum;
         dbService.postAttempt($scope.model);
@@ -695,31 +709,22 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
 
     // Explanations
-    $scope.hasOwnExplanation = function(){
-        for(var i = 0; i < $scope.question.explanations.length; i++){
-            var currentExplanation = $scope.question.explanations[i];
-            if(currentExplanation.user._id == dbService.getUser()._id){
-                return true;
-            }
-        }
-        return false;
-    };
-
     $scope.expModel = {
-        user_id: $scope.user._id,
+        userId: $scope.user._id,
+        userName: $scope.user.name,
+        questionId: $scope.model.questionId,
         text: "",
-        votes: 0,
-        posted_at: 0,
+        votes: [],
     };
 
     $scope.postExplanation = function(){
-        $scope.expModel.created_at = Date.now();
+        $scope.expModel.questionId = $scope.model.questionId;
         dbService.postExplanation($scope.expModel);
+        $route.reload();
     };
 
     $scope.expOrder = 'votes';
-    $scope.expOrderVal = 'votes';
-    $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
+    $scope.expOrderVal = 'votes.length';
 
     $scope.$watch('expOrderVal', function(){
         $scope.explanations = orderBy($scope.explanations, $scope.expOrderVal, true);      
@@ -736,8 +741,8 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
 
     $scope.upvote = function(explanation){
-        for(var i = 0; i < $scope.question.explanations.length; i++){
-            var currentExplanation = $scope.question.explanations[i];
+        for(var i = 0; i < $scope.explanations.length; i++){
+            var currentExplanation = $scope.explanations[i];
             if(currentExplanation == explanation){
                 currentExplanation.votes.push(dbService.getUser()._id);
             }
@@ -746,8 +751,8 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
 
     $scope.downvote = function(){
-        for(var i = 0; i < $scope.question.explanations.length; i++){
-            var currentExplanation = $scope.question.explanations[i];
+        for(var i = 0; i < $scope.explanations.length; i++){
+            var currentExplanation = $scope.explanations[i];
             if(currentExplanation == explanation){
                 var index = currentExplanation.votes.indexOf(dbService.getUser()._id);
                 currentExplanation.votes.splice(index, 1);
@@ -966,6 +971,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     };
 
 }]);
+
 
 mainApp.controller('accountController', ['$scope', 'dbService', 'courseService', 'coursesData', function($scope, dbService, courseService, coursesData){
     $scope.allCourses = coursesData;
