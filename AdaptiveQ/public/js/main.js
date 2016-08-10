@@ -266,8 +266,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postUpvote = function(model, callback){
-        $http.post('/api/postUpvote', model).then(function(httpResponse){
+    this.postUpvote = function(explanationId, callback){
+        $http.post('/api/postUpvote', {_id: explanationId}).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -282,8 +282,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postUnvote = function(model, callback){
-        $http.post('/api/postUnVote', model).then(function(httpResponse){
+    this.postUnVote = function(explanationId, callback){
+        $http.post('/api/postUnVote', {_id: explanationId}).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -683,7 +683,7 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                    $scope.explanations = explanations;
+                    $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
                 });
                 if(!authService.isTeacher()){
                     if($scope.recordExist){
@@ -737,7 +737,7 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
         dbService.postExplanation($scope.expModel, function(){
             $scope.expModel.text = "";
             $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                $scope.explanations = explanations;
+                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
             });
         });
     };
@@ -762,15 +762,15 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     $scope.upvote = function(explanation){
         dbService.postUpvote(explanation._id, function(){
             $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                $scope.explanations = explanations;
+                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
             });
         });
     };
 
-    $scope.unvote = function(){
-        dbService.postUnvote(explanation._id, function(){
+    $scope.unvote = function(explanation){
+        dbService.postUnVote(explanation._id, function(){
             $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                $scope.explanations = explanations;
+                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
             });
         });
     };

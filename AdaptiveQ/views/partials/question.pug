@@ -82,9 +82,9 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
             li(ng-repeat="explanation in explanations")
               .explanation
                 h5 Votes: {{ explanation.votes.length }}
-                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-hide="explanation.votes.indexOf(dbService.getUser()._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-hide="explanation.votes.indexOf(user._id) != -1")
                   span.fa.fa-thumbs-o-up
-                button(type="button", class="btn btn-default btn-sm", ng-click="unvote(explanation)", ng-show="explanation.votes.indexOf(dbService.getUser()._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="unvote(explanation)", ng-show="explanation.votes.indexOf(user._id) != -1")
                   span.fa.fa-thumbs-up
                 h4 {{ explanation.userName }}
                 h6 {{ explanation.created_at | date : 'hh:mma MMM dd' }}
