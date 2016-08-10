@@ -11,6 +11,7 @@ var Courses = require('../models/course');
 var Concepts = require('../models/concept');
 var Questions = require('../models/question');
 var Explanations = require('../models/explanation');
+var Notes = require('../models/note');
 
 //------- Helper Functions --------//
 function requireLogin (req, res, next) {
@@ -190,53 +191,52 @@ router.post('/postQuestion', requireLogin, function(req, res){
 router.post('/postAttempt', requireLogin, function(req, res){
     var questionId = req.body.questionId;
     var optionsSelected = req.body.optionsSelected;
-    if (!questionId || !optionsSelected || optionsSelected.length == 0) { res.send(new respError("No questionId or no options provided")); }
-    else{
-        Users.getUserById(req.session.user._id)
-        .then(function (user){
-            Questions.getQuestionById(questionId)
-            .then(function (question){
-                if(!checkIfEnrolled(user, question.courseId)){
-                    res.send(new respError("User not enrolled in course"));
+    if (!questionId || !optionsSelected || optionsSelected.length == 0) {
+        res.send(new respError("No questionId or no options provided")); 
+        return;
+    }
+    
+    Users.getUserById(req.session.user._id)
+    .then(function (user){
+        Questions.getQuestionById(questionId)
+        .then(function (question){
+            if(!checkIfEnrolled(user, question.courseId)){
+                res.send(new respError("User not enrolled in course"));
+            }
+            Courses.getCourseById(question.courseId)
+            .then(function (course){
+                if(checkIfInstructor(course, user._id)){
+                    res.send(new respError("Instructor should not attempt"));
                 }
-                Courses.getCourseById(question.courseId)
-                .then(function (course){
-                    if(checkIfInstructor(course, user._id)){
-                        res.send(new respError("Instructor should not attempt"));
-                    }
-                    else{
-                        // Score = No of correct answers given / (No of total correct + No of total incorrect)
-                        var correctOptions = question.answers;
-                        var correctCount = 0;
-                        var incorrectCount = 0;
-                        for(var i = 0; i < question.options.length; ++i){
-                            if(correctOptions.indexOf(i) > -1){
-                                // Check if user has given a correct answer
-                                if(optionsSelected.indexOf(i) > -1){
-                                    correctCount++;
-                                }
-                            }
-                            else if(optionsSelected.indexOf(i) > -1){
-                                incorrectCount++;
+                else{
+                    // Score = No of correct answers given / (No of total correct + No of total incorrect)
+                    var correctOptions = question.answers;
+                    var correctCount = 0;
+                    var incorrectCount = 0;
+                    for(var i = 0; i < question.options.length; ++i){
+                        if(correctOptions.indexOf(i) > -1){
+                            // Check if user has given a correct answer
+                            if(optionsSelected.indexOf(i) > -1){
+                                correctCount++;
                             }
                         }
-                        score = correctCount / (correctOptions.length + incorrectCount);
-                        var attempt = {questionId : questionId, courseId : question.courseId, optionsSelected : optionsSelected, score: score, attempted_at: Date.now()};
-                        Users.addAttemptToUserId(user._id,attempt)
-                        .then(function (attempt){
-                            // Append correct answers to object for client to show
-                            attempt.answers = question.answers;
-                            res.send(new respOK(attempt));
-                            }, function(error){ res.send(new respError(error)); }
-                        );
+                        else if(optionsSelected.indexOf(i) > -1){
+                            incorrectCount++;
+                        }
                     }
-                });
-
-            })
-
+                    score = correctCount / (correctOptions.length + incorrectCount);
+                    var attempt = {questionId : questionId, courseId : question.courseId, optionsSelected : optionsSelected, score: score, attempted_at: Date.now()};
+                    Users.addAttemptToUserId(user._id,attempt)
+                    .then(function (attempt){
+                        // Append correct answers to object for client to show
+                        attempt.answers = question.answers;
+                        res.send(new respOK(attempt));
+                        }, function(error){ res.send(new respError(error)); }
+                    );
+                }
+            });
         });
-    }
-
+    });
 });
 
 router.get('/getCourseQuestions', requireLogin, function(req, res){
@@ -300,14 +300,24 @@ router.post('/postExplanation', requireLogin, function(req, res){
         res.send(new respError("No Question Id provided"));
         return;
     }
-    Users.getUserById(req.session.user._id)
-    .then(function (user){
-        Explanations.addExplanation(qId, user._id, user.name, req.body.text)
-        .then(function(savedExplanation){
-            res.send(new respOK(savedExplanation));
-        }, function (error){
+    Questions.getQuestionById(qId)
+    .then(function (question){
+        if(!question){
+            res.send(new respError("No question with given questionId"));
+            return;
+        }
+        
+        Users.getUserById(req.session.user._id)
+        .then(function (user){
+            Explanations.addExplanation(question._id, user._id, user.name, req.body.text)
+            .then(function(savedExplanation){
+                res.send(new respOK(savedExplanation));
+            }, function (error){
+                res.send(new respError(error));
+            })
+        }, function(error){
             res.send(new respError(error));
-        })
+        });
     }, function(error){
         res.send(new respError(error));
     });
@@ -321,6 +331,11 @@ router.post('/postUpvote', requireLogin, function(req, res){
     }
     Explanations.getExplanationById(expId)
     .then(function(explanation){
+        if (!explanation){
+            res.send(new respError("No explanation with given Id"));
+            return;
+        }
+        
         alreadyUpvoted = false;
         for(var i = 0; i < explanation.votes.length; ++i){
             if(explanation.votes[i] == req.session.user._id){
@@ -352,6 +367,11 @@ router.post('/postUnVote', requireLogin, function(req, res){
     }
     Explanations.getExplanationById(expId)
     .then(function(explanation){
+        if (!explanation){
+            res.send(new respError("No explanation with given Id"));
+            return;
+        }
+
         index = -1;
         for(var i = 0; i < explanation.votes.length; ++i){
             if(explanation.votes[i] == req.session.user._id){
