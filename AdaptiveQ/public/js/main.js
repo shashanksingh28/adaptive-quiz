@@ -267,7 +267,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postUpvote = function(model, callback){
-        $http.post('/api/postUpVote', model).then(function(httpResponse){
+        $http.post('/api/postUpvote', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
