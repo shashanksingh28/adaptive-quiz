@@ -184,15 +184,16 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.getExplanations = function(questionId){
+    this.getExplanations = function(questionId, callback){
         $http.get('/api/getExplanations', {params: questionId}).then(function(httpResponse){
             var response = httpResponse.data;
             if(response.status != "OK"){
                 console.log(response.eMessage);
             }
             else{
+                console.log("Response in dbService.getExplanations");
                 console.log(response.data);
-                return response.data;
+                callback(response.data);
             }
         }, function(error){
             console.log("Problem in Connecting to Server:");
@@ -669,8 +670,11 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
                 $scope.recordExists = authService.isTeacher() || $scope.checkStatus($scope.question) != 'unattempted';
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
-                $scope.explanations = dbService.getExplanations($scope.model);
-                console.log($scope.explanations);
+                $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
+                    console.log("Response in $watch");
+                    console.log(explanations);
+                    $scope.explanations = explanations;
+                });
                 if(!authService.isTeacher()){
                     if($scope.recordExist){
                         dbService.postLog("view", "attemptedQuestion", $scope.question._id);
