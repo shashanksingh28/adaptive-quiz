@@ -59,7 +59,7 @@ router.post('/log', requireLogin, function(req, res, next){
     var event_type = req.body.event_type;
     var object_type = req.body.object_type;
     var object_value = req.body.object_value;
-
+    // console.log(req.body);
     if(!event_type || !object_type){
         res.send(new respError("Event Type and Object Type needed"));
     }
