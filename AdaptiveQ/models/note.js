@@ -33,4 +33,8 @@ Notes.getAllUserNotes = function(userId){
     return Notes.find({ userId : userId }).exec();
 }
 
+Notes.getAllQuestionNotes = function(qId){
+    return Notes.find({ questionId : qId }).exec();
+}
+
 module.exports = Notes;

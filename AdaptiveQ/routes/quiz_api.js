@@ -297,7 +297,7 @@ router.post('/postExplanation', requireLogin, function(req, res){
         return;
     }
     if(isEmpty(req.body.text)){
-        res.send(new respError("No Question Id provided"));
+        res.send(new respError("Empty text field"));
         return;
     }
     Questions.getQuestionById(qId)
@@ -390,6 +390,50 @@ router.post('/postUnVote', requireLogin, function(req, res){
             }
             res.send(new respOK(savedExplanation));
         });
+    }, function(error){
+        res.send(new respError(error));
+    });
+});
+
+// --------------- Notes Section ------------ //
+router.get('/getQuestionNotes', requireLogin, function(req, res){
+    var qId = req.query.questionId;
+    if(!qId){
+        res.send("No questionId provided in request");
+        return;
+    }
+    
+    Notes.getUserQuestionNotes(req.session.user._id, qId)
+    .then(function (userNotes){
+        if(!userNotes || isEmpty(userNotes)){
+            res.send(new respError(req.session.user._id+" did not create a note first"));
+            return;
+        }
+        
+        Notes.getAllQuestionNotes(qId)
+        .then(function(notes){
+            res.send(new respOK(notes));
+        });
+    }, function(error){
+        res.send(new respError(error));
+    });
+
+});
+
+router.post('/postNote', requireLogin, function(req, res){
+    var qId = req.body.questionId;
+    if (!qId){
+        res.send(new respError("No Question Id provided"));
+        return;
+    }
+    if(isEmpty(req.body.text)){
+        res.send(new respError("Empty text field"));
+        return;
+    }
+
+    Notes.addNote(qId, req.session.user._id, req.body.text)
+    .then(function(addedNote){
+        res.send(new respOK(addedNote));
     }, function(error){
         res.send(new respError(error));
     });
