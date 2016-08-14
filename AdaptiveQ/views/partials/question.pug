@@ -1,7 +1,7 @@
 link(rel="stylesheet", href="/stylesheets/question-wip.css")
 #content-container
 
-  #sidebar
+  #questions-sidebar
     #sidebar-content
       #sidebar-header
         h3 Questions
@@ -67,9 +67,9 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 label.radio(for="option{{$index}}") {{option}}
           .new-explanation(ng-hide="hasOwnExplanation()")
             form#newExplanation(ng-submit="postExplanation()")
-              label Post Explanation/Comments
+              label Post Explanation
               textarea(rows="4", placeholder="Enter Explanation", form="newExplanation", ng-model="expModel.text", required)
-              button(type="submit", class="btn btn-default", ng-disabled='newExplanation.text == ""') Post
+              button(type="submit", class="btn btn-default", ng-disabled='expModel.text == ""') Post
               p Write an explanation to express your thought process and help others to understand.
           
         .explanations(ng-show="true")
@@ -82,11 +82,31 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
             li(ng-repeat="explanation in explanations")
               .explanation
                 h5 Votes: {{ explanation.votes.length }}
-                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-hide="explanation.votes.indexOf(user._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="upvote(explanation)", ng-hide="explanation.userId == user._id || explanation.votes.indexOf(user._id) != -1")
                   span.fa.fa-thumbs-o-up
-                button(type="button", class="btn btn-default btn-sm", ng-click="unvote(explanation)", ng-show="explanation.votes.indexOf(user._id) != -1")
+                button(type="button", class="btn btn-default btn-sm", ng-click="unvote(explanation)", ng-show="explanation.userId != user._id && explanation.votes.indexOf(user._id) != -1")
                   span.fa.fa-thumbs-up
                 h4 {{ explanation.userName }}
                 h6 {{ explanation.created_at | date : 'hh:mma MMM dd' }}
                 p.
                   {{ explanation.text }}
+  
+  #notes-sidebar
+    #sidebar-content
+      #sidebar-header
+        h3 Notes 
+      #notes-list
+        #add-note(ng-hide="hasOwnNote")
+          form#newNote(ng-submit="postNote()")
+            label Create Note
+            textarea(rows="4", placeholder="New Note", form="newNote", ng-model="noteModel.text", required)
+            button(type="submit", class"btn btn-info", ng-disabled='noteModel.text == ""') Post
+            p Notes are anonymous and can be viewed by your peers. You must post your own note to see notes from others.
+        ul(ng-show="hasOwnNote")
+          li
+            p {[ ownNote.text ]}
+          li(ng-repeat="note in filteredNotes")
+            p {{ note.text }}
+            
+      #sidebar-footer
+

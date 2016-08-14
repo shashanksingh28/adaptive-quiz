@@ -199,6 +199,21 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
+    this.getQuestionNotes = function(questionId, callback){
+        $http.get('/api/getQuestionNotes', {params: questionId}).then(function(httpResponse){
+            var response = httpResponse.data;
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                callback(response.data);
+            }
+        }, function(error){
+            console.log("Problem in Connecting to Server:");
+            console.log(error);
+        });
+    };
+
     this.postAttempt = function(model){
         $http.post('/api/postAttempt', model).then(function(httpResponse){
             var response = httpResponse.data;
@@ -258,6 +273,23 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             }
             else{
                 console.log("Explanation Added:");
+                console.log(response);
+                callback();
+            }
+        }, function(error){
+            console.log("Problem in connecting to server");
+        });
+    };
+
+    this.postNote = function(model, callback){
+        $http.post('/api/postNote', model).then(function(httpResponse){
+            var response = httpResponse.data;
+            console.log(response);
+            if(response.status != "OK"){
+                console.log(response.eMessage);
+            }
+            else{
+                console.log("Note Added:");
                 console.log(response);
                 callback();
             }
@@ -762,7 +794,6 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     $scope.upvote = function(explanation){
         dbService.postUpvote(explanation._id, function(){
             $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
             });
         });
     };
@@ -770,7 +801,44 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     $scope.unvote = function(explanation){
         dbService.postUnVote(explanation._id, function(){
             $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
+            });
+        });
+    };
+    
+    //Notes
+    $scope.notes = dbService.getQuestionNotes($scope.model.questionId, function(notes){
+        $scope.notes = notes;
+
+        $scope.hasOwnNote = false;
+        if($scope.notes === null){
+            $scope.ownNote = {};
+            $scope.filteredNotes = [];
+        }else{
+            for(var i = 0; i < $scope.notes.length; i++){
+                if($scope.notes[i].userId == $scope.user._id){
+                    $scope.hasOwnNote = true;
+                    $scope.ownNote = $scope.notes[i];
+                    $scope.filteredNotes = $scope.notes;
+                    $scope.filteredNotes.splice(i, 1);
+                    break;
+                }
+            }
+        }
+    });
+
+    $scope.noteModel = {
+        userId: $scope.user._id,
+        questionId: $scope.model.questionId,
+        text: "",
+    };
+
+    $scope.postNote = function(){
+        $scope.noteModel.questionId = $scope.model.questionId;
+        dbService.postNote($scope.noteModel, function(){
+            $scope.noteModel.text = "";
+            $scope.notes = dbService.getQuestionNotes($scope.model.questionId, function(notes){
+                $scope.notes = notes;
+                $scope.hasOwnNote();
             });
         });
     };
