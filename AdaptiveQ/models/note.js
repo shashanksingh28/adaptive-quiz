@@ -37,4 +37,8 @@ Notes.getAllQuestionNotes = function(qId){
     return Notes.find({ questionId : qId }).exec();
 }
 
+Notes.getNoteById = function(noteId){
+    return notes.findById(noteId).exec();
+}
+
 module.exports = Notes;

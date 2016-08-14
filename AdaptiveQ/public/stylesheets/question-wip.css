@@ -344,6 +344,10 @@ form button[type="button"]:hover {
   float: right;
 }
 
+textarea{
+    padding: 5px;
+}
+
 #newExplanation {
   margin-top: 50px;
 }

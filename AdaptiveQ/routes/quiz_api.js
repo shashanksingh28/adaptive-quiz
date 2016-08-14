@@ -423,8 +423,31 @@ router.get('/getQuestionNotes', requireLogin, function(req, res){
 router.post('/postNote', requireLogin, function(req, res){
     var qId = req.body.questionId;
     if (!qId){
-        res.send(new respError("No Question Id provided"));
-        return;
+        if(!req.body._id){
+            res.send(new respError("No Question Id provided"));
+            return;
+        }
+        else{
+            Notes.getNoteById(req.body._id)
+            .then(function(note){
+                if(!note){
+                    res.send(new respError("No Note exists with _id : "+ req.body._id));
+                    return;
+                }
+
+                note.text = req.body.text;
+                note.save(function(error, savedNote){
+                    if(error){
+                        res.send(new respError(error));
+                    }
+                    else{
+                        res.send(new respOK(savedNote));
+                    }
+                });
+            }, function(error){
+                res.send(new respError(error));
+            });            
+        }
     }
     if(isEmpty(req.body.text)){
         res.send(new respError("Empty text field"));
