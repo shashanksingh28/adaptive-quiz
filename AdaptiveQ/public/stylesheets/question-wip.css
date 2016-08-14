@@ -15,10 +15,11 @@ ul {
 }
 
 /* Sidebar */
-#sidebar {
+#questions-sidebar {
   position: absolute;
   top: 50px;
   bottom: 25px;
+  left: 0px;
   width: 320px;
 }
 
@@ -100,6 +101,11 @@ ul {
 .question-item label h4 {
   white-space: nowrap;
   overflow: hidden;
+  font-size: 16px;
+}
+
+.question-item label h6 {
+  font-size: 10px;
 }
 
 .attemptindicator {
@@ -144,15 +150,16 @@ ul {
   top: 50px;
   bottom: 25px;
   left: 320px;
-  right: 0;
-  min-width: 870px;
+  right: 320px;
+  min-width: 520px;
   overflow-x: auto;
+  z-index: 99;
 }
 
 .question-box {
   margin: 20px auto;
-  width: 72.5%;
-  min-width: 870px;
+  width: 95%;
+  min-width: 500px;
   background-color: #428bca;
   box-shadow: 0px 10px 30px rgba(0,0,0,1);
 }
@@ -165,9 +172,6 @@ ul {
 .question {
   border-bottom-style: solid;
   border-bottom-color: #fff;
-}
-
-.question h1 {
 }
 
 .question pre {
@@ -226,6 +230,67 @@ form button[type="button"] {
 form button[type="button"]:hover {
   color: #fff;
 }
+
+/* Notes Sidebar */
+#notes-sidebar {
+  position: absolute;
+  top: 50px;
+  bottom: 25px;
+  right: 0px;
+  width: 320px;
+}
+
+#notes-sidebar #sidebar-header {
+  height: 40px;
+}
+
+#notes-sidebar #sidebar-header h3 {
+  float: left;
+}
+
+#notes-list {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  left: 0;
+  bottom: 15px;
+  background-color: #ccc;
+  overflow-y: auto;
+}
+
+#add-note {
+  padding: 5px;
+  color: #1E6498;
+  background-color: #eee;
+}
+
+#newNote textarea {
+  color: #000;
+  resize: none;
+  width: 100%;
+}
+
+#newNote button {
+  color: #000;
+}
+
+#newNote p {
+  font-size: 12px;
+  margin-top: 30px;
+}
+
+.note-item {
+  background-color: #eee;
+  padding: 5px;
+  border-bottom-style: solid;
+  border-color: #ccc;
+  color: #1E6498;
+}
+
+.note-item p {
+  font-size: 12px;
+}
+
 
 /* Explanation */
 .chosen {
@@ -300,4 +365,5 @@ textarea{
 
 #newExplanation p {
   float: right;
+  font-size: 10px;
 }

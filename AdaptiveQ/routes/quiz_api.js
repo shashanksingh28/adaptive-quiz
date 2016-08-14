@@ -406,7 +406,7 @@ router.post('/postUnVote', requireLogin, function(req, res){
 router.get('/getQuestionNotes', requireLogin, function(req, res){
     var qId = req.query.questionId;
     if(!qId){
-        res.send("No questionId provided in request");
+        res.send(new respError("No questionId provided in request"));
         return;
     }
     
