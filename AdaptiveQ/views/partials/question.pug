@@ -88,5 +88,5 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                   span.fa.fa-thumbs-up
                 h4 {{ explanation.userName }}
                 h6 {{ explanation.created_at | date : 'hh:mma MMM dd' }}
-                p.
-                  {{ explanation.text }}
+                p(ng-bind-html="explanation.text").
+                   {{ explanation.text }}

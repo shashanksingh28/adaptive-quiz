@@ -1,4 +1,10 @@
 var express = require('express');
+
+// This is to convert links in explanations and notes
+var linkify = require('linkifyjs');
+require('linkifyjs/plugins/hashtag')(linkify); // optional 
+var linkifyHtml = require('linkifyjs/html');
+
 var router = express.Router();
 
 var emailer = require('../helpers/emailer');
@@ -309,7 +315,8 @@ router.post('/postExplanation', requireLogin, function(req, res){
         
         Users.getUserById(req.session.user._id)
         .then(function (user){
-            Explanations.addExplanation(question._id, user._id, user.name, req.body.text)
+            var expText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
+            Explanations.addExplanation(question._id, user._id, user.name, expText)
             .then(function(savedExplanation){
                 res.send(new respOK(savedExplanation));
             }, function (error){
@@ -434,8 +441,9 @@ router.post('/postNote', requireLogin, function(req, res){
                     res.send(new respError("No Note exists with _id : "+ req.body._id));
                     return;
                 }
-
-                note.text = req.body.text;
+                
+                var noteText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
+                note.text = noteText;
                 note.save(function(error, savedNote){
                     if(error){
                         res.send(new respError(error));
@@ -453,8 +461,9 @@ router.post('/postNote', requireLogin, function(req, res){
         res.send(new respError("Empty text field"));
         return;
     }
-
-    Notes.addNote(qId, req.session.user._id, req.body.text)
+    
+    var noteText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
+    Notes.addNote(qId, req.session.user._id, noteText)
     .then(function(addedNote){
         res.send(new respOK(addedNote));
     }, function(error){
