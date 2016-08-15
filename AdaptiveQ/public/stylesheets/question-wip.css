@@ -222,15 +222,6 @@ form button[type="submit"] {
   border: 3px solid #fff;
 }
 
-form button[type="button"] {
-  color: #fff;
-  float: right;
-}
-
-form button[type="button"]:hover {
-  color: #fff;
-}
-
 /* Notes Sidebar */
 #notes-sidebar {
   position: absolute;
@@ -264,16 +255,6 @@ form button[type="button"]:hover {
   background-color: #eee;
 }
 
-#newNote textarea {
-  color: #000;
-  resize: none;
-  width: 100%;
-}
-
-#newNote button {
-  color: #000;
-}
-
 #newNote p {
   font-size: 12px;
   margin-top: 30px;
@@ -293,6 +274,10 @@ form button[type="button"]:hover {
 
 .own-note {
   border-color: #166498;
+}
+
+#editNotes .btn-default {
+  float: right;
 }
 
 
@@ -349,17 +334,14 @@ form button[type="button"]:hover {
 }
 
 textarea{
-    padding: 5px;
+  padding: 5px;
+  color: #000;
+  resize: none;
+  width: 100%;
 }
 
 #newExplanation {
   margin-top: 50px;
-}
-
-#newExplanation textarea {
-  color: #000;
-  resize: none;
-  width: 100%;
 }
 
 #newExplanation button {

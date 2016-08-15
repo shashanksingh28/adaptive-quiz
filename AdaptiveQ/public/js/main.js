@@ -715,7 +715,9 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.noHint = true;
                 $scope.showExplanations = false;
                 $scope.addExplanation = false;
+                $scope.editingNote = false;
                 $scope.expModel.text = "";
+                $scope.noteModel.text = "";
 
                 // Set Values to Format View
                 $scope.recordExists = authService.isTeacher() || $scope.checkStatus($scope.question) != 'unattempted';
@@ -856,6 +858,12 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.loadNotes();
             });
         });
+    };
+
+    $scope.startEdit = function(){
+        $scope.editingNote = true;
+        $scope.noteModel.text = $scope.ownNote.text;
+        $scope.noteModel._id = $scope.ownNote._id;
     };
 
 }]);
