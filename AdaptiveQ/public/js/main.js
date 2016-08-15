@@ -850,6 +850,9 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
     };
 
     $scope.postNote = function(){
+        if($scope.editingNote){
+            $scope.editingNote = false;
+        }
         $scope.noteModel.questionId = $scope.model.questionId;
         dbService.postNote($scope.noteModel, function(){
             $scope.noteModel.text = "";
