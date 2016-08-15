@@ -808,15 +808,16 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
 
     $scope.upvote = function(explanation){
         dbService.postUpvote(explanation._id, function(){
-            $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-            });
+            var indexExp = $scope.explanations.indexOf(explanation);
+            $scope.explanations[indexExp].votes.push($scope.user._id);
         });
     };
 
     $scope.unvote = function(explanation){
         dbService.postUnVote(explanation._id, function(){
-            $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-            });
+            var indexExp = $scope.explanations.indexOf(explanation);
+            var indexUID = $scope.explanations[indexExp].votes.indexOf($scope.user._id);
+            $scope.explanations[indexExp].votes.splice(indexUID, 1);
         });
     };
     
