@@ -413,7 +413,8 @@ router.get('/getQuestionNotes', requireLogin, function(req, res){
     Notes.getUserQuestionNotes(req.session.user._id, qId)
     .then(function (userNotes){
         if(!userNotes || isEmpty(userNotes)){
-            res.send(new respError(req.session.user._id+" did not create a note first"));
+            // Send an empty array in case user has not posted a note
+            res.send(new respOK([]));
             return;
         }
         
