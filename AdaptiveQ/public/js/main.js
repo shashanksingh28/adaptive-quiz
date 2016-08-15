@@ -204,6 +204,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             var response = httpResponse.data;
             if(response.status != "OK"){
                 console.log(response.eMessage);
+                callback(null);
             }
             else{
                 callback(response.data);
@@ -723,6 +724,10 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
                     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
                 });
+                $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
+                    $scope.notes = notes;
+                    $scope.loadNotes();
+                });
                 if(!authService.isTeacher()){
                     if($scope.recordExist){
                         dbService.postLog("view", "attemptedQuestion", $scope.question._id);
@@ -823,13 +828,15 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         $scope.hasOwnNote = false;
         $scope.ownNote = {};
         $scope.filteredNotes = [];
-        for(var i = 0; i < $scope.notes.length; i++){
-            if($scope.notes[i].userId == $scope.user._id){
-                $scope.hasOwnNote = true;
-                $scope.ownNote = $scope.notes[i];
-                $scope.filteredNotes = $scope.notes;
-                $scope.filteredNotes.splice(i,1);
-                break;
+        if($scope.notes != null){
+            for(var i = 0; i < $scope.notes.length; i++){
+                if($scope.notes[i].userId == $scope.user._id){
+                    $scope.hasOwnNote = true;
+                    $scope.ownNote = $scope.notes[i];
+                    $scope.filteredNotes = $scope.notes;
+                    $scope.filteredNotes.splice(i,1);
+                    break;
+                }
             }
         }
     };
