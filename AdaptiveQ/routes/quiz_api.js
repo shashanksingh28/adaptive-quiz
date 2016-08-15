@@ -430,46 +430,48 @@ router.get('/getQuestionNotes', requireLogin, function(req, res){
 
 router.post('/postNote', requireLogin, function(req, res){
     var qId = req.body.questionId;
-    if (!qId){
-        if(!req.body._id){
+    var _id = req.body._id;
+    if(_id){
+        // Update an already existing note
+        Notes.getNoteById(req.body._id)
+        .then(function(note){
+            if(!note){
+                res.send(new respError("No Note exists with _id : "+ req.body._id));
+                return;
+            }
+            
+            var noteText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
+            note.text = noteText;
+            note.save(function(error, savedNote){
+                if(error){
+                    res.send(new respError(error));
+                }
+                else{
+                    res.send(new respOK(savedNote));
+                }
+            });
+        }, function(error){
+            res.send(new respError(error));
+        });            
+    }
+    else { 
+        if (!qId){
             res.send(new respError("No Question Id provided"));
             return;
         }
-        else{
-            Notes.getNoteById(req.body._id)
-            .then(function(note){
-                if(!note){
-                    res.send(new respError("No Note exists with _id : "+ req.body._id));
-                    return;
-                }
-                
-                var noteText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
-                note.text = noteText;
-                note.save(function(error, savedNote){
-                    if(error){
-                        res.send(new respError(error));
-                    }
-                    else{
-                        res.send(new respOK(savedNote));
-                    }
-                });
-            }, function(error){
-                res.send(new respError(error));
-            });            
+        if(isEmpty(req.body.text)){
+            res.send(new respError("Empty text field"));
+            return;
         }
+        
+        var noteText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
+        Notes.addNote(qId, req.session.user._id, noteText)
+        .then(function(addedNote){
+            res.send(new respOK(addedNote));
+        }, function(error){
+            res.send(new respError(error));
+        });
     }
-    if(isEmpty(req.body.text)){
-        res.send(new respError("Empty text field"));
-        return;
-    }
-    
-    var noteText = linkifyHtml(req.body.text, {defaultProtocol : 'https'});
-    Notes.addNote(qId, req.session.user._id, noteText)
-    .then(function(addedNote){
-        res.send(new respOK(addedNote));
-    }, function(error){
-        res.send(new respError(error));
-    });
 });
 
 module.exports = router;
