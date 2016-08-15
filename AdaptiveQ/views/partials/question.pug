@@ -103,9 +103,9 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
             button(type="submit", class"btn btn-info", ng-disabled='noteModel.text == ""') Post
             p Notes are anonymous and can be viewed by your peers. You must post your own note to see notes from others.
         ul(ng-show="hasOwnNote")
-          li
-            p {[ ownNote.text ]}
-          li(ng-repeat="note in filteredNotes")
+          li.note-item.own-note
+            p {{ ownNote.text }}
+          li.note-item(ng-repeat="note in filteredNotes")
             p {{ note.text }}
             
       #sidebar-footer

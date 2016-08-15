@@ -291,6 +291,10 @@ form button[type="button"]:hover {
   font-size: 12px;
 }
 
+.own-note {
+  border-color: #166498;
+}
+
 
 /* Explanation */
 .chosen {

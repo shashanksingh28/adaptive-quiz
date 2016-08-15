@@ -1,4 +1,4 @@
-var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput']);
+var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput', 'ngCookies']);
 var baseURL = "localhost:3000/";
 
 mainApp.config(['$routeProvider', function($routeProvider){
@@ -214,7 +214,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postAttempt = function(model){
+    this.postAttempt = function(model, callback){
         $http.post('/api/postAttempt', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -223,7 +223,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
             }
             else{
                 console.log("Attempt Posted");
-                $window.location.reload();
+                callback();
             }
         }, function(error){
             console.log("Problem in Connecting to Server:");
@@ -619,7 +619,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     }
 }]);
 
-mainApp.controller('questionController', ['$scope', '$route', 'statusService', 'dbService', 'questionService', 'authService', 'questionsData', 'orderByFilter', function($scope, $route, statusService, dbService, questionService, authService, questionsData, orderBy){
+mainApp.controller('questionController', ['$scope', '$route', '$window', 'statusService', 'dbService', 'questionService', 'authService', 'questionsData', 'orderByFilter', '$cookies', function($scope, $route, $window, statusService, dbService, questionService, authService, questionsData, orderBy, $cookies){
     $scope.user = dbService.getUser();
 
     $scope.noQuestions = questionsData.length === 0;
@@ -658,6 +658,12 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
         console.log('i came from calendar');
         $scope.model.questionId = questionService.savedQuestionId;
         questionService.savedQuestionId = null;
+    }
+    
+    // Retreive Question from Cookies
+    if($cookies.get("savedQuestionId") != null){
+        $scope.model.questionId = $cookies.get("savedQuestionId");
+        $cookies.remove("savedQuestionId");
     }
 
     // Question List Ordering
@@ -745,8 +751,10 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
             stringToNum.push(Number($scope.model.optionsSelected[i]));
         }
         $scope.model.optionsSelected = stringToNum;
-        dbService.postAttempt($scope.model);
-        $route.reload();
+        dbService.postAttempt($scope.model, function(){
+            $cookies.put("savedQuestionId", $scope.model.questionId);
+            $window.location.reload();
+        });
     };
 
     $scope.enableHint = function(){
@@ -806,25 +814,25 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
     };
     
     //Notes
-    $scope.notes = dbService.getQuestionNotes($scope.model.questionId, function(notes){
+    $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
         $scope.notes = notes;
+        $scope.loadNotes();
+    });
 
+    $scope.loadNotes = function(){
         $scope.hasOwnNote = false;
-        if($scope.notes === null){
-            $scope.ownNote = {};
-            $scope.filteredNotes = [];
-        }else{
-            for(var i = 0; i < $scope.notes.length; i++){
-                if($scope.notes[i].userId == $scope.user._id){
-                    $scope.hasOwnNote = true;
-                    $scope.ownNote = $scope.notes[i];
-                    $scope.filteredNotes = $scope.notes;
-                    $scope.filteredNotes.splice(i, 1);
-                    break;
-                }
+        $scope.ownNote = {};
+        $scope.filteredNotes = [];
+        for(var i = 0; i < $scope.notes.length; i++){
+            if($scope.notes[i].userId == $scope.user._id){
+                $scope.hasOwnNote = true;
+                $scope.ownNote = $scope.notes[i];
+                $scope.filteredNotes = $scope.notes;
+                $scope.filteredNotes.splice(i,1);
+                break;
             }
         }
-    });
+    };
 
     $scope.noteModel = {
         userId: $scope.user._id,
@@ -836,9 +844,9 @@ mainApp.controller('questionController', ['$scope', '$route', 'statusService', '
         $scope.noteModel.questionId = $scope.model.questionId;
         dbService.postNote($scope.noteModel, function(){
             $scope.noteModel.text = "";
-            $scope.notes = dbService.getQuestionNotes($scope.model.questionId, function(notes){
+            $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
                 $scope.notes = notes;
-                $scope.hasOwnNote();
+                $scope.loadNotes();
             });
         });
     };
