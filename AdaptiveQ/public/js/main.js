@@ -1,4 +1,4 @@
-var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput', 'ngCookies']);
+var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput','ngSanitize', 'ngCookies']);
 var baseURL = "localhost:3000/";
 
 mainApp.config(['$routeProvider', function($routeProvider){
