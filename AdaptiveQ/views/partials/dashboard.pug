@@ -14,13 +14,13 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
                 .data-bar
                   .attemptedCorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[0]}")
                     .bar
-                    p(ng-hide="getStudentConceptBar($parent.student, concept.name)[0] < 0.05") {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[0] }}
+                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[0] }}
                   .attemptedIncorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[1]}")
                     .bar
-                    p(ng-hide="getStudentConceptBar($parent.student, concept.name)[1] < 0.05") {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[1] }}
+                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[1] }}
                   .unattempted(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[2]}")
                     .bar
-                    p(ng-hide="getStudentConceptBar($parent.student, concept.name)[2] < 0.05") {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[2] }}
+                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[2] }}
         .panel-body(ng-hide="courseExists")
           h4 Course currently has no concepts.
           h4 To enroll, go to My Account

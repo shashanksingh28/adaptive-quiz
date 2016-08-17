@@ -17,7 +17,7 @@ resetApp.controller('resetController', ['$http', '$window', '$scope', function($
         $scope.passwordConfirm = $scope.model.password;
 
         console.log($scope.model);
-        $http.post('/resetPassword', $scope.model).then(function(httpResponse){
+        $http.post('/api/resetPassword', $scope.model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){

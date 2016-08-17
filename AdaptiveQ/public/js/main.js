@@ -1,5 +1,4 @@
 var mainApp = angular.module('mainApp', ['ngRoute', 'ngAnimate', 'ui.bootstrap', 'ngTagsInput','ngSanitize', 'ngCookies']);
-var baseURL = "localhost:3000/";
 
 mainApp.config(['$routeProvider', function($routeProvider){
     $routeProvider
@@ -122,8 +121,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         return question_client;
     };
 
-    this.baseURL = 'localhost:3000';
-
     this.getCourseQuestions = function(course){
         return $http.get('/api/getCourseQuestions', {params: course}).then(function(httpResponse){
             var response = httpResponse.data;
@@ -203,7 +200,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         $http.get('/api/getQuestionNotes', {params: questionId}).then(function(httpResponse){
             var response = httpResponse.data;
             if(response.status != "OK"){
-                console.log(response.eMessage);
                 callback(null);
             }
             else{
@@ -223,7 +219,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Attempt Posted");
+                //console.log("Attempt Posted");
                 callback();
             }
         }, function(error){
@@ -240,7 +236,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Question Created");
+                //console.log("Question Created");
                 $window.location.reload();
             }
         }, function(error){
@@ -249,7 +245,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postConcept = function(model){
+    this.postConcept = function(model, callback){
         $http.post('/api/addConcept', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -257,8 +253,8 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Concept Added");
-                $window.location.reload();
+                //console.log("Concept Added");
+                callback();
             }
         }, function(error){
             console.log("Problem in connecting to server");
@@ -273,8 +269,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Explanation Added:");
-                console.log(response);
                 callback();
             }
         }, function(error){
@@ -290,8 +284,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Note Added:");
-                console.log(response);
                 callback();
             }
         }, function(error){
@@ -307,7 +299,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Vote Added");
                 callback();
             }
         }, function(error){
@@ -323,7 +314,6 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Vote Removed");
                 callback();
             }
         }, function(error){
@@ -518,6 +508,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
                 }
             }
         }
+        if(questionCount == 0){ return [0,0,1]; }
 
         var percentages = [
             correct / questionCount,
@@ -539,7 +530,11 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     $scope.formatRoundPercentages = function(percentages, index){
         var formattedPercentages = [];
         for(var i = 0; i < percentages.length; i++){
-            formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
+            if(percentages[i] < 0.05){
+                formattedPercentages.push(".");
+            }else{
+                formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
+            }
         }
         return formattedPercentages;
     };
@@ -625,7 +620,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
 
     $scope.noQuestions = questionsData.length === 0;
 
-    $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '500', text: 'No Questions in Course', created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
+    $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '-1', concepts: ['No Questions in Course'], created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
     $scope.getOptionsSelected = function(){
         if(authService.isTeacher()){ 
@@ -733,6 +728,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.multipleAnswers = $scope.question.multiOption;
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
                     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
+                    console.log($scope.explanations);
                 });
                 $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
                     $scope.notes = notes;
@@ -953,9 +949,8 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
             return false;
         }
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
-        //dbService.postQuestion($scope.model);
-        //$route.reload();
-        console.log($scope.model);
+        dbService.postQuestion($scope.model);
+        $route.reload();
     };
 
 }]);
@@ -1014,7 +1009,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
                 }
             }
         }
-        if(questionCount === 0){ return [0, 0, 1]; }
+        if(questionCount == 0){ return [0, 0, 1]; }
 
         var percentages = [
             correct / questionCount,
@@ -1074,7 +1069,11 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.formatRoundPercentages = function(percentages, index){
         var formattedPercentages = [];
         for(var i = 0; i < percentages.length; i++){
-            formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
+            if(percentages[i] < 0.05){
+                formattedPercentages.push(".");
+            }else{
+                formattedPercentages.push(Math.round(percentages[i] * 100) + "%");
+            }
         }
         return formattedPercentages;
     };
@@ -1098,8 +1097,12 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
         console.log("New Concept: ");
         console.dir($scope.newConcept);
         var storeConcept = $scope.newConcept;
-        dbService.postConcept(storeConcept);
-        $route.reload();
+        dbService.postConcept(storeConcept, function(){
+            $scope.concepts = dbService.getCourseConcepts(courseService.currentCourse)
+                .then(function(response){
+                    return response;});
+            console.log($scope.concepts);
+        });
         $scope.conceptReady = false;
         $scope.open = false;
         return 1;
