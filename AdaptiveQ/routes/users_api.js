@@ -146,7 +146,7 @@ router.post('/recover', function(req, res){
                 user.resetPasswordToken = randomstring.generate();
                 user.save().then(function (savedUser){
                     console.log(savedUser.resetPasswordToken);
-                    var url = localhost + "resetPaswword?token=" + savedUser.resetPasswordToken;
+                    var url = localhost + "resetPassword?token=" + savedUser.resetPasswordToken;
                     emailer.sendResetPasswordLink(sysAccount,user.email,url,function(error, message){
                         if(error){
                             res.send(new respError('Error sending email'));
