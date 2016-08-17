@@ -648,6 +648,14 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         return statusService.checkStatus(question);
     };
 
+    $scope.getConceptsString = function(question){
+        var conceptsString = question.concepts[0];
+        for(var i = 1; i < question.concepts.length; i++){
+            conceptsString = conceptsString + ", " + question.concepts[i];
+        }
+        return conceptsString;
+    };
+
     $scope.logSidebarClick = function(){
         if(!authService.isTeacher){
             dbService.postLog("click", "questionSidebar", $scope.model.questionId);
@@ -669,7 +677,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
 
     // Question List Ordering
     $scope.order = 'Date';
-    $scope.orderVal = 'date';
+    $scope.orderVal = 'created_at';
     $scope.reverse = true;
     $scope.reverseIcon = 'fa fa-chevron-down';
 
@@ -896,6 +904,25 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
         }
     };
 
+    $scope.disabled = true;
+
+    $scope.optionsCount = 4;
+    $scope.getOptionsCount = function(count) {
+        return new Array(count);   
+    };
+
+    $scope.addOption = function(){
+        console.log("added option");
+        $scope.optionsCount++;
+    };
+
+    $scope.deleteOption = function(index){
+        console.log("deleted option");
+        $scope.optionsCount--;
+        $scope.model.options.splice(index, 1);
+        $scope.model.answers = [];
+    };
+
     $scope.loadConcepts = function(query){
         var matches = [];
         for(var i = 0; i < $scope.concepts.length; i++){
@@ -926,10 +953,9 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
             return false;
         }
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
-        console.log($scope.model.concepts);
-        console.dir($scope.model);
-        dbService.postQuestion($scope.model);
-        $route.reload();
+        //dbService.postQuestion($scope.model);
+        //$route.reload();
+        console.log($scope.model);
     };
 
 }]);
@@ -1184,46 +1210,3 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
     };
 }]);
 
-records = [
-{
-    questionId: 0,
-    optionsSelected: [0],
-},
-{
-    questionId: 1,
-    optionsSelected: [1],
-},
-];
-
-explanations = [
-{
-    user: 'Fred',
-    dateCreated: new Date(2016, 06, 09, 06, 31),
-    text: 'Hello. I am a Fred and this is my explanation.',
-    votes: 2,
-},
-{
-    user: 'Jeff',
-    dateCreated: new Date(2016, 06, 10, 10, 29),
-    text: 'Hello. I am a Jeff and this is my high-rated explanation.',
-    votes: 9,
-},
-{
-    user: 'Alice',
-    dateCreated: new Date(2016, 06, 11, 15, 03),
-    text: 'Hello. I am a Alice and this is my long explanation. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris quam ante, pharetra imperdiet tempus at, feugiat non lorem. Mauris neque mauris, sollicitudin a sodales ut, mattis in erat. Sed fringilla, lorem at eleifend luctus, enim diam varius leo, quis auctor purus lectus accumsan nulla.',
-    votes: 0,
-},
-{
-    user: 'Sally',
-    dateCreated: new Date(),
-    text: 'Hello. I am a Sally and this is my most recent explanation.',
-    votes: 0,
-},
-{
-    user: 'Alexander',
-    dateCreated: new Date(2016, 06, 11, 12, 0),
-    text: 'Hello. I am a Alexander and this is my explanation.',
-    votes: 0,
-},
-    ];

@@ -17,26 +17,14 @@ link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
           textarea(rows="6", placeholder="Enter Code", form="newQuestion", ng-model="model.code", ng-show="addCode")
       .options
         label Options
-        .option
-          input(type="checkbox", id="option0", name="option", ng-click="toggleSelection(0)")
-          label.checkbox(for="option0")
+        .option(ng-repeat="i in getOptionsCount(optionsCount) track by $index")
+          input(type="checkbox", id="option{{$index}}", name="option", ng-click="toggleSelection($index)")
+          label.checkbox(for="option{{$index}}")
             span.fa.fa-check
-          input(type="text", ng-model="model.options[0]", placeholder="Option 1", required)
-        .option
-          input(type="checkbox", id="option1", name="option", ng-click="toggleSelection(1)")
-          label.checkbox(for="option1")
-            span.fa.fa-check
-          input(type="text", ng-model="model.options[1]", placeholder="Option 2", required)
-        .option
-          input(type="checkbox", id="option2", name="option", ng-click="toggleSelection(2)")
-          label.checkbox(for="option2")
-            span.fa.fa-check
-          input(type="text", ng-model="model.options[2]", placeholder="Option 3", required)
-        .option
-          input(type="checkbox", id="option3", name="option", ng-click="toggleSelection(3)")
-          label.checkbox(for="option3")
-            span.fa.fa-check
-          input(type="text", ng-model="model.options[3]", placeholder="Option 4", required)
+          input(type="text", ng-model="model.options[$index]", placeholder="Option", required)
+          button(type="button", class="btn btn-danger", ng-click="deleteOption($index)", ng-disabled="disabled")
+            span.glyphicon.glyphicon-remove-circle
+        button(type="button", class="btn btn-success", ng-click="addOption()", ng-disabled="disabled") Add Option
         .hint
           button(type="button", class="btn btn-link btn-sm", ng-click="addHint=true", ng-hide="addHint")
             span.fa.fa-plus-circle
