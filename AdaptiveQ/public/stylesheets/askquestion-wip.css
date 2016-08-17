@@ -104,7 +104,7 @@ input[type="checkbox"] {
 
 .option input[type="text"]{
   height: 30px;
-  width: 837px;
+  width: 807px;
   margin-left: 3px;
 }
 
@@ -112,6 +112,18 @@ input[type="checkbox"] {
   display: inline-block;
   vertical-align: top;
   border-style: none;
+}
+
+.option button {
+  display:inline-block;
+  height: 30px;
+  width: 30px;
+  padding: 3px;
+  border-radius: 0px;
+}
+
+.option button span {
+  font-size: 20px;
 }
 
 .hint input[type="text"] {
