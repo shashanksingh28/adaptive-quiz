@@ -126,7 +126,7 @@ router.get('/getCourseConcepts', requireLogin, function(req, res){
     }
 });
 
-router.post('/addConcept', requireLogin, function(req, res){
+router.post('/postConcept', requireLogin, function(req, res){
     var concept = req.body;
     if(isEmpty(concept.name)){
         res.send(new respError('Cannot be empty'));
@@ -149,7 +149,7 @@ router.post('/addConcept', requireLogin, function(req, res){
                         else{
                             Concepts.addConcept(course._id,concept.name)
                                 .then(function (savedConcept){
-                                    sendOK(savedConcept);
+                                    res.send(new respOK(savedConcept));
                                  },function (error){ res.send(new respError(error)); });
                         }
                     }, function (error){ res.send(new respError(error)); });

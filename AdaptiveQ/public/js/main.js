@@ -246,7 +246,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
     };
 
     this.postConcept = function(model, callback){
-        $http.post('/api/addConcept', model).then(function(httpResponse){
+        $http.post('/api/postConcept', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
             if(response.status != "OK"){
@@ -1094,14 +1094,12 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
 
     $scope.createConcept = function(){
         $scope.newConcept.courseId = courseService.currentCourse._id;
-        console.log("New Concept: ");
-        console.dir($scope.newConcept);
         var storeConcept = $scope.newConcept;
         dbService.postConcept(storeConcept, function(){
-            $scope.concepts = dbService.getCourseConcepts(courseService.currentCourse)
+            dbService.getCourseConcepts(courseService.currentCourse)
                 .then(function(response){
-                    return response;});
-            console.log($scope.concepts);
+                    $scope.concepts = response;
+                });
         });
         $scope.conceptReady = false;
         $scope.open = false;
