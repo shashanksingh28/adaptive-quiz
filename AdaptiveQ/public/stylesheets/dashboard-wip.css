@@ -75,6 +75,14 @@ ul {
   background-color: #bcb000;
 }
 
+#legend {
+  border-bottom: 3px solid #428bca;
+}
+
+.legend {
+  width: 33%;
+}
+
 
 /* Question Panel */
 #questionInfo {

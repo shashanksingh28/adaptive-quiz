@@ -90,6 +90,15 @@ input[type="radio"] {
   display: none;
 }
 
+#legend {
+  border-bottom: 5px solid #428bca;
+  padding: 10px 0;
+}
+
+.legend {
+  width: 33%;
+}
+
 /* Students List */
 .students .item {
   padding: 0;  

@@ -6,6 +6,18 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
         .panel-heading
           h2 Concepts
         .panel-body(ng-show="courseExists")
+          #legend
+            h5 Key
+            .data-bar
+              .legend.attemptedCorrect
+                .bar
+                p Answered Correctly
+              .legend.attemptedIncorrect
+                .bar
+                p Answered Incorrectly
+              .legend.unattempted
+                .bar
+                p Not Yet Answered
           ul
             li(ng-repeat="concept in concepts")
               .item

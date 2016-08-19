@@ -620,7 +620,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
 
     $scope.noQuestions = questionsData.length === 0;
 
-    $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '-1', concepts: ['No Questions in Course'], created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
+    $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '-1', text: "No Questions in Course", concepts: ['No Questions in Course'], created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
     $scope.getOptionsSelected = function(){
         if(authService.isTeacher()){ 

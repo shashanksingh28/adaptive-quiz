@@ -214,7 +214,6 @@ input[type="radio"], input[type="checkbox"] {
 }
 
 .option label {
-  height: 35px;
   padding: 7px;
 }
 

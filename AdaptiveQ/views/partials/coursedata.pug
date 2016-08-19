@@ -8,6 +8,18 @@ link(rel="stylesheet", href="/stylesheets/coursedata-wip.css")
             b {{ course.name }}
           button(type="button", class="btn btn-default", ng-click="open=true") Add Concept
         .concepts
+          #legend
+            h5 Key
+            .data-bar
+              .legend.attemptedCorrect
+                .bar
+                p Answered Correctly
+              .legend.attemptedIncorrect
+                .bar
+                p Answered Incorrectly
+              .legend.unattempted
+                .bar
+                p Not Yet Answered
           ul
             li(ng-repeat="concept in concepts")
               .item
