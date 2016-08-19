@@ -44,6 +44,7 @@ input, textarea{
   width: 100%;
   font-size: 20px;
   resize: none;
+  padding: 5px;
 }
 
 .code {
@@ -60,6 +61,7 @@ button span {
   width: 96%;
   resize: vertical;
   vertical-align: top;
+  padding: 5px;
 }
 
 .option {
@@ -84,19 +86,19 @@ input[type="checkbox"] {
   color: #fff;
 }
 
-.option label {
+.option input[type="checkbox"] + label {
   height: 30px;
   width: 30px;
   background-color: grey;
-  padding: 2px;
   color: grey;
+  padding: 2px;
 }
 
 .option label span {
   font-size: 24px;
 }
 
-.option label:hover {
+.option input[type="checkbox"] + label:hover {
   cursor: pointer;
   background-color: green;
   color: #fff;
@@ -106,12 +108,14 @@ input[type="checkbox"] {
   height: 30px;
   width: 807px;
   margin-left: 3px;
+  padding: 5px;
 }
 
 .option label, input[type="text"] {
   display: inline-block;
   vertical-align: top;
   border-style: none;
+  padding: 5px;
 }
 
 .option button {
@@ -129,6 +133,7 @@ input[type="checkbox"] {
 .hint input[type="text"] {
   vertical-align: middle;
   width: 800px;
+  padding: 3px;
 }
 
 .concepts {
@@ -173,3 +178,24 @@ form button[type="button"]:hover {
 .success h4 {
   margin-bottom: 20px;
 }
+
+.dialog-box {
+  width: 300px;
+  margin: -100px 0 0 -150px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  border: 3px solid #fff;
+  background-color: #428bca;
+  padding: 10px;
+  text-align: center;
+}
+
+.dialog-box h5, h6 {
+  padding: 10px;
+}
+
+.dialog-box li button {
+  margin-top: 5px;
+}
+

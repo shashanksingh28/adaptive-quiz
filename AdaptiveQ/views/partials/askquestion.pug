@@ -18,13 +18,13 @@ link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
       .options
         label Options
         .option(ng-repeat="i in getOptionsCount(optionsCount) track by $index")
-          input(type="checkbox", id="option{{$index}}", name="option", ng-click="toggleSelection($index)")
+          input(type="checkbox", id="option{{$index}}", name="option", ng-checked="model.answers.indexOf($index) > -1", ng-click="toggleSelection($index)")
           label.checkbox(for="option{{$index}}")
             span.fa.fa-check
           input(type="text", ng-model="model.options[$index]", placeholder="Option", required)
-          button(type="button", class="btn btn-danger", ng-click="deleteOption($index)", ng-disabled="disabled")
+          button(type="button", class="btn btn-danger", ng-click="deleteOption($index)", ng-disabled="optionsCount <= 2")
             span.glyphicon.glyphicon-remove-circle
-        button(type="button", class="btn btn-success", ng-click="addOption()", ng-disabled="disabled") Add Option
+        button(type="button", class="btn btn-success", ng-click="addOption()") Add Option
         .hint
           button(type="button", class="btn btn-link btn-sm", ng-click="addHint=true", ng-hide="addHint")
             span.fa.fa-plus-circle
@@ -44,3 +44,8 @@ link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
         .success(ng-show="success")
           h4 Question Created
           button(type="reset", class="btn btn-success", ng-click="success=false") OK
+    
+    .dialog-box.postedQuestions(ng-show="openPostedQuestion")
+      h3 Question Submitted
+      h6 Question has been posted and email notifications have been sent.
+      button(type="button", class="btn btn-success", ng-click="confirmPostedQuestion()") Close

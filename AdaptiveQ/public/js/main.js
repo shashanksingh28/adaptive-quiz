@@ -228,7 +228,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
         });
     };
 
-    this.postQuestion = function(model){
+    this.postQuestion = function(model, callback){
         $http.post('/api/postQuestion', model).then(function(httpResponse){
             var response = httpResponse.data;
             console.log(response);
@@ -236,8 +236,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                //console.log("Question Created");
-                $window.location.reload();
+                callback();
             }
         }, function(error){
             console.log("Problem in Connecting to Server:");
@@ -452,6 +451,7 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
     $scope.changeCourse = function(courseName){
         courseService.changeCourse(courseName);
+        $scope.course = (courseService.enrolled) ? courseService.currentCourse : {name: "None"};
     };
 
 }]);
@@ -663,7 +663,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         $scope.model.questionId = questionService.savedQuestionId;
         questionService.savedQuestionId = null;
     }
-    
+
     // Retreive Question from Cookies
     if($cookies.get("savedQuestionId") != null){
         $scope.model.questionId = $cookies.get("savedQuestionId");
@@ -824,7 +824,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
             $scope.explanations[indexExp].votes.splice(indexUID, 1);
         });
     };
-    
+
     //Notes
     $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
         $scope.notes = notes;
@@ -900,8 +900,6 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
         }
     };
 
-    $scope.disabled = true;
-
     $scope.optionsCount = 4;
     $scope.getOptionsCount = function(count) {
         return new Array(count);   
@@ -913,10 +911,16 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
     };
 
     $scope.deleteOption = function(index){
-        console.log("deleted option");
         $scope.optionsCount--;
+        for(var i = $scope.model.answers.length + 1; i > -1; i--){
+            if($scope.model.answers[i] == index){
+                $scope.model.answers.splice(i, 1);
+                continue;
+            }else if($scope.model.answers[i] > index){
+                $scope.model.answers[i]--;
+            }
+        }
         $scope.model.options.splice(index, 1);
-        $scope.model.answers = [];
     };
 
     $scope.loadConcepts = function(query){
@@ -949,7 +953,13 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
             return false;
         }
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
-        dbService.postQuestion($scope.model);
+        dbService.postQuestion($scope.model, function(){
+            $scope.showPostedQuestion = true;
+        });
+    };
+
+    $scope.confirmPostedQuestion = function(){
+        $scope.openPostedQuestion = false;
         $route.reload();
     };
 
@@ -963,8 +973,10 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
     $scope.student = ($scope.students[0]) ? $scope.students[0] : { name: 'No Student Chosen' };
 
     $scope.$watch('student', function(){
-        console.log($scope.student.name);
-        dbService.postLog('click', 'studentReport', $scope.student._id);
+        if($scope.student._id != null){
+            console.log($scope.student.name);
+            dbService.postLog('click', 'studentReport', $scope.student._id);
+        }
     });
 
     $scope.getQuestionCount = function(concept){
