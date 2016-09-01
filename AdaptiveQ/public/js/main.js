@@ -81,6 +81,12 @@ mainApp.config(['$routeProvider', function($routeProvider){
             },
         },
     })
+    .when('/instmanual', {
+        templateUrl: 'partials/instmanual',
+    })
+    .when('/studmanual', {
+        templateUrl: 'partials/studmanual',
+    })
     .otherwise({
         redirectTo: '/redirect'
     });

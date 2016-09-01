@@ -63,6 +63,10 @@ html(ng-app=ngapp)
                     a(ng-href="/", ng-click="changeCourse(course)") {{ course.name }}
               li: a(href="/#/myaccount") My Account
               li: button(type="button", class="btn btn-default navbar-btn", ng-click="logout();") Logout
+              li(ng-show="isTeacher"): a(href="/#/instmanual")
+                span(class="fa fa-question-circle")
+              li(ng-hide="isTeacher"): a(href="/#/studmanual")
+                span(class="fa fa-question-circle")
 
     block content
       main(ng-view)

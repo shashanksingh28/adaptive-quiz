@@ -17,7 +17,7 @@
 }
 
 /* Forms */
-.login-form, .register-form, .recovery-form {
+.login-form, .register-form, .recovery-form, .login-help{
   position: relative;
   background-color: rgba(250, 250, 250, 0.9);
   width: 320px;
@@ -49,13 +49,6 @@ h2 {
   margin-bottom: 10px;
 }
 
-#accountTypes {
-  display: inline-block;
-  width: 90px;
-  vertical-align: top;
-  margin-left: 10px;
-}
-
 .errormsg {
   color: red;
   text-align: center;
@@ -73,7 +66,7 @@ p:not(.errormsg) {
   position: fixed;
   right: 0;
   left: 0;
-  margin: 120px auto;
+  margin: 20px auto;
 
 }
 
@@ -88,11 +81,43 @@ p:not(.errormsg) {
   position: fixed;
   right: 0;
   left: 0;
-  margin: 140px auto;
+  margin: 40px auto;
+}
+
+.login-help {
+  position: fixed;
+  top: 220px;
+  right: 0;
+  left: 0;
+  bottom: 60px;
+  width: 90%;
 }
 
 span {
   padding: 8px;
+}
+
+h2 {
+  clear: both;
+}
+
+.right {
+  float: right;
+}
+
+.help-button {
+  font-size: 16px;
+  padding: 2px;
+}
+
+.help-content {
+  height: 90%;
+  overflow-y: auto;
+}
+
+.help-content p {
+  font-size: 16px;
+  text-align: start;
 }
 
 /* Animations */
@@ -118,20 +143,9 @@ span {
   transform: translate(1000px, 0px);
 }
 
-.slidedown {
-  margin: 0;
-  max-height: 100px;
-  overflow-y: hidden;
-}
-
-.slidedown.ng-hide-add {
-  transition: all ease 1s;
-}
-
-.slidedown.ng-hide-remove {
-  transition: all ease 1s;
-}
-
-.slidedown.ng-hide {
-  max-height: 0;
+.login-help.ng-hide {
+  opacity: 0;
+  -ms-transform: translate(0px, 1000px); /* IE 9 */
+  -webkit-transform: translate(0px, 1000px); /* Safari */
+  transform: translate(0px, 1000px);
 }
