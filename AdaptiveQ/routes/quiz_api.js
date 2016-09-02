@@ -126,6 +126,45 @@ router.get('/getCourseConcepts', requireLogin, function(req, res){
     }
 });
 
+router.get('/getQuestionsHavingConcept', requireLogin, function(req, res){
+    var courseId = req.query.courseId;
+    var concept = req.query.concept;
+    if(!courseId || isEmpty(concept)){
+        res.send(new respError("Provide courseId and concept string"));
+        return;
+    }
+    
+    Users.getUserById(req.session.user._id)
+    .then(function (user){
+        Courses.getCourseById(courseId)
+        .then(function (course){
+            Questions.getQuestionsHavingConcept(courseId, concept)
+            .then(function (questions){
+                // If not an instructor and not attempted question, do not give answers
+                for(var i = 0; i < questions.length; ++i){
+                    var attempted = false;
+                    for(var j = 0; j < user.attempts.length; ++j){
+                        if(user.attempts[j].questionId == questions[i]._id){
+                            attempted = true;
+                            break;
+                        }
+                    }
+                    if (!attempted && !checkIfInstructor(course, req.session.user._id)){
+                        questions[i].answers = [];
+                    }
+                }
+                res.send(new respOK(questions));
+            }, function(error){
+                res.send(new respError(error));
+            });
+        }, function(error){
+            res.send(new respError(error));
+        });    
+    }, function(error){
+        res.send(new respError(error));
+    });
+});
+
 router.post('/postConcept', requireLogin, function(req, res){
     var concept = req.body;
     if(isEmpty(concept.name)){
