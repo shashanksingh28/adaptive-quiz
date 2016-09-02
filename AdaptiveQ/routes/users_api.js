@@ -58,7 +58,7 @@ var respError = function(error){
 
 //------- API functions --------//
 router.post('/login', function(req, res, next){
-    var email = req.body.email;
+    var email = req.body.email.toLowerCase();
     var pass = req.body.password;
     Users.getUserByEmail(email)
         .then(function (user){
@@ -90,13 +90,14 @@ router.post('/login', function(req, res, next){
 });
 
 router.post('/register', function(req, res){
-    Users.getUserByEmail(req.body.email)
+    var email = req.body.email.toLowerCase();
+    Users.getUserByEmail(email)
         .then(function (user){
             if(user && user.email){
                 res.send(new respError("Found an existing user with same email. Please use reset password link"));
             }
             else{
-                Users.createUser(req.body.email, req.body.password, req.body.name)
+                Users.createUser(email, req.body.password, req.body.name)
                     .then(function(savedUser){
                         delete savedUser.password;
                         req.session.user = savedUser;
@@ -112,7 +113,7 @@ router.post('/register', function(req, res){
 });
 
 router.post('/resetPassword', function(req, res){
-    var userEmail = req.body.email;
+    var userEmail = req.body.email.toLowerCase();
     var password = req.body.password;
     var token = req.body.token;
     if(!token || !userEmail || !password){

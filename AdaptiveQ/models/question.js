@@ -36,19 +36,15 @@ Questions.addQuestion = function(question){
 }
 
 Questions.getQuestionById = function(qId){
-  return Questions.findById(qId).exec();
+    return Questions.findById(qId).exec();
 };
 
-Questions.addExplanation = function(qId, explanation){
-  return Questions.update({'_id': qid},{$push:{'explainations':explanation}}).exec();
-};
-
-Questions.getQuestionIdsOfConcept = function(courseId, conceptName){
-  return Questions.find({courseId: courseId, concept:conceptName},{ _id : 1 , concept : 1}).exec();
+Questions.getQuestionsHavingConcept = function(courseId, concept){
+    return Questions.find({courseId: courseId, concepts : { "$in" : [concept] }}).exec();
 }
 
 Questions.getAllCourseQuestions = function(courseId){
-  return Questions.find({courseId: courseId}).exec();
+    return Questions.find({courseId: courseId}).exec();
 }
 
 module.exports = Questions;
