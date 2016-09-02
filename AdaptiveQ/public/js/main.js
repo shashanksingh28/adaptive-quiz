@@ -1039,7 +1039,7 @@ mainApp.controller('courseDataController', ['$scope', '$route', 'dbService', 'co
             var conceptPercentages = $scope.getStudentConceptBar(student, currentConcept);
             allPercentages.push(conceptPercentages);
         }
-        if(allPercentages == []){ return [0, 0, 1]; }
+        if(allPercentages.length == 0){ return [0, 0, 1]; }
 
         var percentages = [0, 0, 0];
         for(var j = 0; j < allPercentages[0].length; j++){
