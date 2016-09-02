@@ -48,12 +48,17 @@ loginApp.controller('loginController',['$http','$window','$scope','$rootScope', 
         $scope.model.password = '';
         $rootScope.form = 3;
     };
+    $scope.toLoginHelp = function(){
+        $scope.model.email = '';
+        $scope.model.password = '';
+        $rootScope.form = 4;
+    };
 }]);
 
 loginApp.controller('registerController', ['$http', '$window', '$scope', '$rootScope', function($http, $window, $scope, $rootScope){
     $scope.error_msg = '';
     $scope.model = 
-        {accountType: '',
+    {accountType: '',
         name: '',
         email: '',
         password: '',
@@ -81,7 +86,7 @@ loginApp.controller('registerController', ['$http', '$window', '$scope', '$rootS
                 // login new account and go to dashboard
                 $window.location.href = '/';
             }
-         
+
         }, function(error){
             $scope.error_msg = "Problem in connecting to server";
         });
@@ -121,6 +126,12 @@ loginApp.controller('recoveryController', ['$http','$scope','$rootScope',functio
         $scope.model.recoveryEmail = '';
         $scope.recovery_msg = '';
         $scope.error_msg = '';
+        $rootScope.form = 1;
+    };
+}]);
+
+loginApp.controller('helpController', ['$scope', '$rootScope', function($scope, $rootScope){
+    $scope.toLogin = function(){
         $rootScope.form = 1;
     };
 }]);
