@@ -462,7 +462,7 @@ mainApp.controller('navController', ['$scope', '$http', '$window', 'dbService', 
 
 }]);
 
-mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'questionService', 'courseService', 'conceptsData', 'questionsData', function($scope, dbService, statusService, questionService, courseService, conceptsData, questionsData){
+mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService', 'questionService', 'courseService', 'conceptsData', 'questionsData', 'orderByFilter', function($scope, dbService, statusService, questionService, courseService, conceptsData, questionsData, orderBy){
 
     $scope.courseExists = questionsData.length > 0;
     $scope.concepts = conceptsData;
@@ -470,6 +470,10 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     $scope.student = dbService.getUser();
     $scope.attempts = $scope.student.attempts;
     $scope.course = courseService.currentCourse;
+
+    $scope.checkStatus = function(question){
+        return statusService.checkStatus(question);
+    };
 
     $scope.getQuestionCount = function(concept){
         concept = concept.replace(/\s+/g, '-');
@@ -545,7 +549,30 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
         return formattedPercentages;
     };
 
-    // -------- Question Panel --------
+    $scope.selectedConcept = {
+        name: 'noconcept',
+    };
+
+    $scope.conceptQuestions = [];
+
+    $scope.$watch('selectedConcept.name', function(){
+        $scope.conceptQuestions = [];
+        var concept = $scope.selectedConcept.name.replace(/\s+/g, '-');
+        for(var i = 0; i < $scope.questions.length; i++){
+          if($scope.questions[i].concepts.indexOf(concept) > -1){
+              $scope.conceptQuestions.push($scope.questions[i]);
+          }
+        }
+
+        if($scope.conceptQuestions.length === 0){
+          $scope.conceptQuestions.push({
+              text: "No Questions with this Concept",
+              _id: -1
+          });
+        }
+    });
+
+    // -------- Calendar Panel --------
     $scope.noquestion = {
         concepts: ["No Question"],
     };
@@ -587,6 +614,52 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
         }
     };
 
+    // ----- Concept Questions Panel -----
+    $scope.order = 'Date';
+        $scope.orderVal = 'created_at';
+        $scope.reverse = true;
+        $scope.reverseIcon = 'fa fa-chevron-down';
+
+        $scope.switchReverse = function() {
+            $scope.reverse = !$scope.reverse;
+            $scope.reverseIcon = ($scope.reverse) ? 'fa fa-chevron-down':'fa fa-chevron-up';
+        };
+
+        $scope.sortByDate = function() {
+            $scope.order = 'Date';
+            $scope.orderVal = 'created_at';
+        };
+
+        $scope.sortByStatus = function() {
+            $scope.order = 'Status';
+            $scope.orderVal = function(question){
+                switch ($scope.checkStatus(question)){
+                    case 'attemptedCorrect':
+                        return 0;
+                    case 'attemptedIncorrect':
+                        return 1;
+                    case 'unattempted':
+                        return 2;
+                }
+            };
+        };
+
+    $scope.$watchGroup(['orderVal', 'reverse'], function(){
+        $scope.questions = orderBy($scope.questions, $scope.orderVal, $scope.reverse);
+        console.log("order values changed");
+    });
+
+    $scope.goToConceptQuestion = function(question){
+      if(question._id == -1){
+          console.log("No Question for this concept");
+          return;
+      }
+      console.log(question._id);
+      dbService.postLog("click", "ConceptQuestionsToQuestion", question._id);
+      questionService.save(question._id);
+    };
+    
+
     // Go to Question if Loaded from Email Link
     if(dbService.initQuestion() !== ""){
         dbService.postLog("click", "emailToQuestion", dbService.initQuestion());
@@ -613,7 +686,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
             for (var i = 0; i < $scope.questions.length; i++) {
                 var currentDay = new Date($scope.questions[i].created_at).setHours(0,0,0,0);
                 if (dayToCheck === currentDay) {
-                    return statusService.checkStatus($scope.questions[i]);
+                    return $scope.checkStatus($scope.questions[i]);
                 }
             }
         }

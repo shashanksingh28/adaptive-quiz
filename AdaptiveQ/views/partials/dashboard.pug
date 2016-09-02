@@ -20,19 +20,21 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
                 p Not Yet Answered
           ul
             li(ng-repeat="concept in concepts")
-              .item
-                h5 {{ concept.name }}
-                h6 {{ getQuestionCount(concept.name) }} Questions
-                .data-bar
-                  .attemptedCorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[0]}")
-                    .bar
-                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[0] }}
-                  .attemptedIncorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[1]}")
-                    .bar
-                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[1] }}
-                  .unattempted(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[2]}")
-                    .bar
-                    p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[2] }}
+              .concept-item
+                input(type="radio", id="concept{{ concept._id }}", name="selectedConcept", value="{{ concept.name }}", ng-model="selectedConcept.name", ng-click="logConceptQuestionClick()")
+                label.radio(for="concept{{ concept._id }}")
+                  h5 {{ concept.name }}
+                  h6 {{ getQuestionCount(concept.name) }} Questions
+                  .data-bar
+                    .attemptedCorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[0]}")
+                      .bar
+                      p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[0] }}
+                    .attemptedIncorrect(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[1]}")
+                      .bar
+                      p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[1] }}
+                    .unattempted(ng-style="{'width': formatPercentages(getStudentConceptBar($parent.student, concept.name))[2]}")
+                      .bar
+                      p {{ formatRoundPercentages(getStudentConceptBar($parent.student, concept.name))[2] }}
         .panel-body(ng-hide="courseExists")
           h4 Course currently has no concepts.
           h4 To enroll, go to My Account
@@ -61,6 +63,29 @@ link(rel="stylesheet", href="/stylesheets/dashboard-wip.css")
                 label Concept(s):
                 p {{ formatConcepts() }}
               button.centered(type="submit", class="btn btn-info btn-lg", ng-disabled="question == noquestion") Go to Question
+
+      #concept-questions.panel.panel-primary(ng-show="selectedConcept.name !== 'noconcept'")
+        .panel-heading
+          h2 {{ selectedConcept.name }}
+        .panel-body
+          h6 Sort By:&nbsp
+          .btn-group.sortButtons
+            button(data-toggle="dropdown", class="btn btn-default btn-xs dropdown-toggle") {{ order }}
+            ul.dropdown-menu
+              li: a(ng-click="sortByDate()") Date
+              li: a(ng-click="sortByStatus()") Status
+            button(type="button", class="btn btn-default btn-xs", ng-click="switchReverse();")
+              span(ng-class="reverseIcon")
+          #question-list
+          ul
+            li(ng-repeat="question in conceptQuestions")
+              .question-item(ng-click="goToConceptQuestion(question)")
+                h4 {{ question.text }}
+                .attemptindicator(ng-switch="checkStatus(question)")
+                  .attemptedCorrect(ng-switch-when="attemptedCorrect", title="Attempted Correct")
+                  .attemptedIncorrect(ng-switch-when="attemptedIncorrect", title="Attempted Incorrect")
+                  .unattempted(ng-switch-when="unattempted", title="Unattempted")
+                h6 {{ question.created_at | date}}
 
       #recommendations.panel.panel-primary(ng-show="false")
         .panel-heading
