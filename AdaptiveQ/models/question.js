@@ -44,7 +44,7 @@ Questions.getQuestionsHavingConcept = function(courseId, concept){
 }
 
 Questions.getAllCourseQuestions = function(courseId){
-    return Questions.find({courseId: courseId}).exec();
+    return Questions.find({courseId: courseId}).lean().exec();
 }
 
 module.exports = Questions;

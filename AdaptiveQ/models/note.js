@@ -5,7 +5,7 @@ var autoIncrement = require('mongoose-auto-increment');
 autoIncrement.initialize(mongo.connection);
 
 var notesSchema = new Schema({
-	questionId : Number, // list of instructor's  user Id's
+	questionId : Number,
     userId : Number,
     text : String,
     created_at : Date
