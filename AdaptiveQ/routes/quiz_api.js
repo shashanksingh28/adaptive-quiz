@@ -295,20 +295,31 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
             .then(function (user){
                 Courses.getCourseById(courseId)
                 .then(function(course){
-                    // If not an instructor and not attempted question, do not give answers
-                    for(var i = 0; i < questions.length; ++i){
-                        var attempted = false;
-                        for(var j = 0; j < user.attempts.length; ++j){
-                            if(user.attempts[j].questionId == questions[i]._id){
-                                attempted = true;
-                                break;
+                    Notes.getAllUserNotes(user._id)
+                    .then(function (notes){
+                        // This is needed because we modifying things not present in schema
+                        for(var i = 0; i < questions.length; ++i){
+                            // If a note exists for the current user, append it to question
+                            for (var j = 0; j < notes.length; ++j){
+                                if(notes[j].questionId == questions[i]._id){
+                                    questions[i]['userNote'] = notes[j];
+                                }
+                            }
+                            
+                            // If not an instructor and not attempted question, do not give answers
+                            var attempted = false;
+                            for(var j = 0; j < user.attempts.length; ++j){
+                                if(user.attempts[j].questionId == questions[i]._id){
+                                    attempted = true;
+                                    break;
+                                }
+                            }
+                            if (!attempted && !checkIfInstructor(course, req.session.user._id)){
+                                questions[i].answers = [];
                             }
                         }
-                        if (!attempted && !checkIfInstructor(course, req.session.user._id)){
-                            questions[i].answers = [];
-                        }
-                    }
-                    res.send(new respOK(questions));
+                        res.send(new respOK(questions));
+                    });
                 });
             }, function (error) {
                 res.send(new respError(error));
