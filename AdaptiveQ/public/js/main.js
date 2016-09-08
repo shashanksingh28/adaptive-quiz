@@ -658,7 +658,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
       dbService.postLog("click", "ConceptQuestionsToQuestion", question._id);
       questionService.save(question._id);
     };
-    
+
 
     // Go to Question if Loaded from Email Link
     if(dbService.initQuestion() !== ""){
@@ -702,7 +702,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
     $scope.questions = (!$scope.noQuestions) ? questionsData : [{_id: '-1', text: "No Questions in Course", concepts: ['No Questions in Course'], created_at: 'Instructor has not posted yet.', answers: [], noData: true}];
 
     $scope.getOptionsSelected = function(){
-        if(authService.isTeacher()){ 
+        if(authService.isTeacher()){
             return []; }
         var allAttempts = dbService.getUser().attempts;
         for(var i = 0; i < allAttempts.length; i++){
@@ -806,7 +806,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.noHint = $scope.question.hint === "";
                 $scope.multipleAnswers = $scope.question.multiOption;
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                    $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
+                    $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
                     console.log($scope.explanations);
                 });
                 $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
@@ -867,7 +867,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         dbService.postExplanation($scope.expModel, function(){
             $scope.expModel.text = "";
             $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
-                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);      
+                $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
             });
         });
     };
@@ -876,7 +876,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
     $scope.expOrderVal = 'votes.length';
 
     $scope.$watch('expOrderVal', function(){
-        $scope.explanations = orderBy($scope.explanations, $scope.expOrderVal, true);      
+        $scope.explanations = orderBy($scope.explanations, $scope.expOrderVal, true);
     });
 
     $scope.expSortDate = function() {
@@ -955,7 +955,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
 
 }]);
 
-mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'courseService', 'conceptsData', function($scope, $route, dbService, courseService, conceptsData){
+mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbService', 'courseService', 'conceptsData', function($scope, $route, $window, dbService, courseService, conceptsData){
     $scope.concepts = conceptsData;
 
     $scope.model = {
@@ -981,7 +981,7 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
 
     $scope.optionsCount = 4;
     $scope.getOptionsCount = function(count) {
-        return new Array(count);   
+        return new Array(count);
     };
 
     $scope.addOption = function(){
@@ -1034,6 +1034,8 @@ mainApp.controller('askQuestionController', ['$scope', '$route', 'dbService', 'c
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
         dbService.postQuestion($scope.model, function(){
             $scope.showPostedQuestion = true;
+            alert("Question posted!");
+            $window.location.reload();
         });
     };
 
@@ -1301,4 +1303,3 @@ mainApp.controller('accountController', ['$scope', 'dbService', 'courseService',
         $scope.resetDialogs();
     };
 }]);
-
