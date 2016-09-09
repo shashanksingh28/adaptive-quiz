@@ -94,7 +94,7 @@ mainApp.config(['$routeProvider', function($routeProvider){
 }]);
 
 mainApp.run(['$rootScope', '$location', 'authService', function($rootScope, $location, authService){
-    $rootScope.$on('$routeChangeStart', function(events, next, previous){
+    $rootScope.$on('$routeChangeStart', function(event, next, previous){
         if($location.$$path == "/redirect" || $location.$$path == "/dashboard" || $location.$$path == "/coursedata"){
             event.preventDefault();
             if(authService.isTeacher()){
