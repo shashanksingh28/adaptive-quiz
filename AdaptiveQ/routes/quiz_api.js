@@ -8,7 +8,6 @@ var linkifyHtml = require('linkifyjs/html');
 var router = express.Router();
 
 var emailer = require('../helpers/emailer');
-//var localhost = "http://52.40.100.41";
 var localhost = "http://localhost:3000";
 var sysAccount = 'adaptq@gmail.com';
 
