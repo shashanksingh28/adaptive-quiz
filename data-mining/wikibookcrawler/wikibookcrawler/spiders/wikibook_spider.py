@@ -6,6 +6,7 @@ from bs4 import BeautifulSoup
 import urlparse
 from wikibookcrawler.items import WikiBookPageItem
 import codecs
+from xml.sax.saxutils import escape, unescape
 
 class WikiBookSpider(scrapy.Spider):
     name = "WikiBookSpider"
@@ -81,8 +82,8 @@ def savePageItem(item, out_dir):
         f.write("<add><doc>\n")
 	f.write("<field name='url'>\n" + item['url'] + "\n</field>\n")
 	f.write("<field name='heading'>\n"+item['heading']+"\n</field>\n")
-	f.write("<field name='text'>\n"+item['text'] + "\n</field>\n")
-	f.write("<field name='code'>\n"+item['code'] + "\n</field>\n")
+	f.write("<field name='text'>\n"+escape(unescape(item['text'])) + "\n</field>\n")
+	f.write("<field name='code'>\n"+escape(unescape(item['code'])) + "\n</field>\n")
 	f.write("</doc></add>")
 
     print filename
