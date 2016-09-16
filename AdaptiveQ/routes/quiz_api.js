@@ -7,10 +7,6 @@ var linkifyHtml = require('linkifyjs/html');
 
 var router = express.Router();
 
-var emailer = require('../helpers/emailer');
-var localhost = "http://localhost:3000";
-var sysAccount = 'adaptq@gmail.com';
-
 var Users = require('../models/user');
 var Courses = require('../models/course');
 var Concepts = require('../models/concept');
@@ -205,6 +201,10 @@ router.post('/postQuestion', requireLogin, function(req, res){
     else if(q.courseId === null || q.concepts.length == 0){
         res.send(new respError('Question must belong to a course and have at least one concept'));
     }
+    else if(!q.publishTime){
+        res.send(new respError('Question must have a time to publish'));
+    }
+
     var course = Courses.getCourseById(q.courseId)
         .then(function (course){
             if(!checkIfInstructor(course, req.session.user._id)){
@@ -213,21 +213,8 @@ router.post('/postQuestion', requireLogin, function(req, res){
             else{
                 Questions.addQuestion(q)
                 .then(function (savedQuestion){
-                    Users.getCourseUsers(course._id)
-                    .then(function(users){
-                        userEmails = [];
-                        for(var i = 0; i < users.length; ++i){
-                            userEmails.push(users[i].email);
-                        }
-                        emailer.sendQuestion(localhost,sysAccount,null,userEmails,savedQuestion._id, savedQuestion.concepts,function(error, response){
-                            if(error)
-                            {
-                    		    res.send(new respError("Error sending emails : " + error));
-                    		}
-            				res.send(new respOK(savedQuestion));
-                    	});
-                    });
-                }, function (error){ res.send(new respError(error)); });
+                    res.send(new respOK(savedQuestion));
+                }, function (error) { res.send(new respError(error)); });
             }
         }, function (error){ res.send(new respError(error)); });
 });
@@ -288,15 +275,20 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
     if (!courseId) { res.send(new respError('No CourseId given.')); }
     else
     {
-        Questions.getAllCourseQuestions(courseId)
-        .then(function (questions){
+        Courses.getCourseById(courseId)
+        .then(function (course){
             Users.getUserById(req.session.user._id)
             .then(function (user){
-                Courses.getCourseById(courseId)
-                .then(function(course){
+                
+                // Check if user is instuctor, as this will decide
+                // whether to show answers and un-published questions
+                var isInstructor = checkIfInstructor(course, user._id);
+
+                Questions.getAllCourseQuestions(courseId, isInstructor)
+                .then(function(questions){
                     Notes.getAllUserNotes(user._id)
                     .then(function (notes){
-                        // This is needed because we modifying things not present in schema
+                        // This is needed to fetch user notes
                         for(var i = 0; i < questions.length; ++i){
                             // If a note exists for the current user, append it to question
                             for (var j = 0; j < notes.length; ++j){
@@ -313,7 +305,7 @@ router.get('/getCourseQuestions', requireLogin, function(req, res){
                                     break;
                                 }
                             }
-                            if (!attempted && !checkIfInstructor(course, req.session.user._id)){
+                            if (!attempted && !isInstructor){
                                 questions[i].answers = [];
                             }
                         }

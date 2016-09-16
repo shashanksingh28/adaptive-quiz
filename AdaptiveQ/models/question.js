@@ -5,14 +5,16 @@ autoIncrement.initialize(mongo.connection);
 
 var questionSchema = new Schema({
 	courseId: {type: Number, required: true},
-	text: { type : String, required: true}, // question text
+	text: {type : String, required: true}, // question text
 	code: String,
 	options: Array, // list of options, array of strings
 	answers: Array, // Array of Number
 	concepts: Array, // Array of strings
 	created_at: Date,
 	hint: String,
-	multiOption : Boolean
+	multiOption : Boolean,
+	published : {type : Boolean, required: true},
+	publishTime: {type : Date, required: true}
 });
 
 questionSchema.plugin(autoIncrement.plugin, 'Questions');
@@ -29,7 +31,9 @@ Questions.addQuestion = function(question){
         concepts : question.concepts,
         hint : question.hint,
         created_at : Date.now(),
-		multiOption : question.answers.length > 1
+		multiOption : question.answers.length > 1,
+		published : false,
+		publishTime : question.publishTime
     });
 
     return newQuestion.save();
@@ -43,8 +47,18 @@ Questions.getQuestionsHavingConcept = function(courseId, concept){
     return Questions.find({courseId: courseId, concepts : { "$in" : [concept] }}).exec();
 }
 
-Questions.getAllCourseQuestions = function(courseId){
-    return Questions.find({courseId: courseId}).lean().exec();
+Questions.getAllCourseQuestions = function(courseId, isInstructor){
+    // If not instructor, do not show un-published questions
+    if(isInstructor){
+        return Questions.find({courseId: courseId}).lean().exec();
+    }
+    else{
+        return Questions.find({courseId : courseId, published : true}).lean().exec();
+    }
+}
+
+Questions.getCourseUnpublished = function(courseId){
+    return Questions.find({publishTime : {$lt : new Date()}, published : false, courseId : courseId});
 }
 
 module.exports = Questions;
