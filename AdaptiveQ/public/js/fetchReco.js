@@ -30,7 +30,7 @@ function fetchRecos(concept, text, code, count, callback) {
       'url': url,
       'dataType': 'jsonp',
       'jsonp': 'json.wrf',
-      'success': callback(url)
+      'success': callback
     });
 }
 

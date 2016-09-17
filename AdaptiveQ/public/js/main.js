@@ -963,9 +963,9 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 conceptChain = conceptChain + " " + $scope.question.concepts[i];
             }
         }
-        fetchRecos(conceptChain, $scope.question.text, $scope.question.code, 3, function(url){
-            console.log(url);
-            // How do I access the Data in the XML?
+        fetchRecos(conceptChain, $scope.question.text, $scope.question.code, 3, function(body){
+            // Access the data by body.response.docs[] as json
+            console.log(body.response.docs);
         });
     };
 
