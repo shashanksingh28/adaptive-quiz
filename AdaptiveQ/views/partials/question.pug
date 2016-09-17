@@ -91,29 +91,37 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 p(ng-bind-html="explanation.text").
                    {{ explanation.text }}
   
-  #notes-sidebar
+  #tools-sidebar
     #sidebar-content
-      #sidebar-header
-        h3 Notes 
-      #notes-list
-        #add-note(ng-hide="hasOwnNote")
-          form#newNote(ng-submit="postNote()")
-            label Create Note
-            textarea(rows="4", placeholder="New Note", form="newNote", ng-model="noteModel.text", required)
-            button(type="submit", class="btn btn-info btn-sm", ng-disabled='noteModel.text == ""') Post
-            p Notes are anonymous and can be viewed by your peers. You must post your own note to see notes from others.
-        ul(ng-show="hasOwnNote")
-          li.note-item.own-note(ng-hide="editingNote")
-            p {{ ownNote.text }}
-            button(type="button", class="btn btn-default btn-sm", ng-click="startEdit()") Edit
-          li.note-item.editing(ng-show="editingNote")
-            form#editNotes(ng-submit="postNote()")
-              label Edit Note
-              textarea(rows="4", form="newNote", ng-model="noteModel.text", required)
+      #recommendations-content
+        #tools-header
+          h3 Recommended Study
+        #recommendations-list
+          .recommendation-item
+            h4 A Recommendation
+          .recommendation-item
+            h4 Another Recommendation
+        #tools-footer
+      #notes-content
+        #tools-header
+          h3 Notes 
+        #notes-list
+          #add-note(ng-hide="hasOwnNote")
+            form#newNote(ng-submit="postNote()")
+              label Create Note
+              textarea(rows="4", placeholder="New Note", form="newNote", ng-model="noteModel.text", required)
               button(type="submit", class="btn btn-info btn-sm", ng-disabled='noteModel.text == ""') Post
-              button(type="button", class="btn btn-default btn-sm", ng-click="editingNote = false") Cancel
-          li.note-item(ng-repeat="note in filteredNotes")
-            p {{ note.text }}
-            
-      #sidebar-footer
-
+              p Notes are anonymous and can be viewed by your peers. You must post your own note to see notes from others.
+          ul(ng-show="hasOwnNote")
+            li.note-item.own-note(ng-hide="editingNote")
+              p {{ ownNote.text }}
+              button(type="button", class="btn btn-default btn-sm", ng-click="startEdit()") Edit
+            li.note-item.editing(ng-show="editingNote")
+              form#editNotes(ng-submit="postNote()")
+                label Edit Note
+                textarea(rows="4", form="newNote", ng-model="noteModel.text", required)
+                button(type="submit", class="btn btn-info btn-sm", ng-disabled='noteModel.text == ""') Post
+                button(type="button", class="btn btn-default btn-sm", ng-click="editingNote = false") Cancel
+            li.note-item(ng-repeat="note in filteredNotes")
+              p {{ note.text }}
+        #tools-footer

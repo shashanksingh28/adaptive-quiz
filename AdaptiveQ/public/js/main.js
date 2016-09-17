@@ -808,7 +808,6 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.multipleAnswers = $scope.question.multiOption;
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
                     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
-                    console.log($scope.explanations);
                 });
                 $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
                     $scope.notes = notes;
@@ -821,6 +820,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                         dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
                     }
                 }
+                $scope.getRecommendations();
                 break;
             }
         }
@@ -952,6 +952,21 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         $scope.editingNote = true;
         $scope.noteModel.text = $scope.ownNote.text;
         $scope.noteModel._id = $scope.ownNote._id;
+    };
+
+    $scope.getRecommendations = function(){
+        var conceptChain = "";
+        for(var i = 0; i < $scope.question.concepts.length; i++){
+            if(i == 0){
+                conceptChain = $scope.question.concepts[i];
+            }else{
+                conceptChain = conceptChain + " " + $scope.question.concepts[i];
+            }
+        }
+        fetchRecos(conceptChain, $scope.question.text, $scope.question.code, 3, function(url){
+            console.log(url);
+            // How do I access the Data in the XML?
+        });
     };
 
 }]);

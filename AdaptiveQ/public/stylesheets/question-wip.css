@@ -222,8 +222,8 @@ form button[type="submit"] {
   border: 3px solid #fff;
 }
 
-/* Notes Sidebar */
-#notes-sidebar {
+/* Tools Sidebar */
+#tools-sidebar {
   position: absolute;
   top: 50px;
   bottom: 25px;
@@ -231,20 +231,31 @@ form button[type="submit"] {
   width: 320px;
 }
 
-#notes-sidebar #sidebar-header {
-  height: 40px;
+#tools-sidebar #sidebar-content {
+  box-shadow: none;
 }
 
-#notes-sidebar #sidebar-header h3 {
+#tools-header {
+  height: 40px;
+  background-color: #428bca;
+}
+
+#tools-footer {
+  height: 15px;
+  background-color: #428bca;
+}
+
+#tools-header h3 {
   float: left;
 }
 
-#notes-list {
-  position: absolute;
-  top: 40px;
-  right: 0;
-  left: 0;
-  bottom: 15px;
+#notes-content, #recommendations-content {
+  margin-bottom: 30px;
+  box-shadow: 0px 10px 30px rgba(0,0,0,1);
+}
+  
+#notes-list, #recommendations-list {
+  width: 100%;
   background-color: #ccc;
   overflow-y: auto;
 }
@@ -260,7 +271,7 @@ form button[type="submit"] {
   margin-top: 30px;
 }
 
-.note-item {
+.recommendation-item, .note-item {
   background-color: #eee;
   padding: 5px;
   border-bottom-style: solid;
