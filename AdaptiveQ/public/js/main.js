@@ -963,9 +963,13 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 conceptChain = conceptChain + " " + $scope.question.concepts[i];
             }
         }
-        fetchRecos(conceptChain, $scope.question.text, $scope.question.code, 3, function(body){
-            // Access the data by body.response.docs[] as json
-            console.log(body.response.docs);
+        fetchRecos(conceptChain, $scope.question.text, $scope.question.code, 5, function(body){
+            for(var i = 0; i < body.response.docs.length; i++){
+                console.log(body.response.docs[i].heading);
+                body.response.docs[i].heading = body.response.docs[i].heading.replace(/_/g, ' ');
+                body.response.docs[i].text = body.response.docs[i].text.substring(0, 100) + "...";
+            }
+            $scope.recommendations = body.response.docs;
         });
     };
 

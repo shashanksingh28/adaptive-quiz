@@ -247,6 +247,7 @@ form button[type="submit"] {
 
 #tools-header h3 {
   float: left;
+  margin: 4px;
 }
 
 #notes-content, #recommendations-content {
@@ -268,7 +269,7 @@ form button[type="submit"] {
 
 #newNote p {
   font-size: 12px;
-  margin-top: 30px;
+  margin-top: 3px;
 }
 
 .recommendation-item, .note-item {
@@ -277,6 +278,25 @@ form button[type="submit"] {
   border-bottom-style: solid;
   border-color: #ccc;
   color: #1E6498;
+}
+
+.recommendation-item a {
+  display: block;
+  color: #1E6498;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.recommendation-item p {
+  font-size: 10px;
+  color: #000;
+}
+
+.recommendation-item pre {
+  font-size: 10px;
+  padding: 5px;
+  max-height: 80px;
+  overflow: auto;
 }
 
 .note-item p {

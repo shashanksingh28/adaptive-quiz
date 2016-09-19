@@ -97,10 +97,10 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
         #tools-header
           h3 Recommended Study
         #recommendations-list
-          .recommendation-item
-            h4 A Recommendation
-          .recommendation-item
-            h4 Another Recommendation
+          .recommendation-item(ng-repeat="recommendation in recommendations")
+              a(href="{{ recommendation.url }}") {{ recommendation.heading }}
+              p {{ recommendation.text }}
+              pre(ng-hide="1") {{ recommendation.code }}
         #tools-footer
       #notes-content
         #tools-header
