@@ -980,6 +980,7 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
 
     $scope.model = {
         courseId: courseService.currentCourse._id,
+        publishTime: new Date(),
         text: "",
         code: "",
         options: [],
@@ -989,6 +990,23 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         hint: "",
         explanations: [],
     };
+
+    $scope.options = {
+        minDate: new Date(),
+        showWeeks: false
+    };
+
+    $scope.openDatepicker = true;
+
+    $scope.toggleDatepicker = function(){
+        $scope.openDatepicker = !$scope.openDatepicker;
+    };
+
+    $scope.$watch('dt', function(){
+        console.log("date changed");
+        $scope.toggleDatepicker();
+        $scope.model.publishTime = new Date($scope.dt).setHours(0,0,0,0);
+    });
 
     $scope.toggleSelection = function(answer){
         var index = $scope.model.answers.indexOf(answer);
@@ -1026,7 +1044,7 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         var matches = [];
         for(var i = 0; i < $scope.concepts.length; i++){
             var concept = $scope.concepts[i];
-            var match = concept.name.indexOf(query);
+            var match = concept.name.toLowerCase().indexOf(query.toLowerCase());
             if(match != -1){
                 matches.push(concept.name);
             }

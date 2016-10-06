@@ -30,9 +30,44 @@ input, textarea{
   box-shadow: 0px 10px 30px rgba(0,0,0,1);
 }
 
-.question, .options {
+.publishtime, .question, .options {
   width: 100%;
   padding: 15px;
+}
+
+.publishtime label {
+  width: 100%;
+}
+
+.publishtime input[type="text"] {
+  margin-right: 5px;
+  height: 34px;
+  width: 30%;
+}
+
+.publishtime button span {
+  color: #000;
+}
+
+.datepicker {
+  position: absolute;
+  left: 40%;
+  display: table;
+  margin: 10px auto;
+  color: #000;
+}
+
+.datepicker .well { 
+  border-radius: 20px;
+}
+
+.datepicker .uib-title, .datepicker i, .datepicker span {
+  color: #000;
+}
+
+.datepicker .btn-info.active{
+  color: #000;
+  background-color: #ebebeb;
 }
 
 .question {

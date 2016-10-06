@@ -5,6 +5,13 @@ link(rel="stylesheet", href="/stylesheets/ng-tags-input.bootstrap.min.css")
   .question-box
     h1 Create New Question
     form#newQuestion(ng-submit="submitQuestion()")
+      .publishtime
+        label Publish Date
+        input(type="text", ng-model="model.publishTime", readonly)
+        button(type="button", class="btn btn-default", ng-click="toggleDatepicker()")
+          span.glyphicon.glyphicon-calendar
+        .datepicker(ng-show="openDatepicker")
+          uib-datepicker.well(ng-model="dt", datepicker-options="options")
       .question
         label Question Text
         textarea(rows="3", placeholder="Enter Question", form="newQuestion", ng-model="model.text", required) 
