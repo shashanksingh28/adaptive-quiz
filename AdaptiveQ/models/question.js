@@ -22,6 +22,7 @@ questionSchema.plugin(autoIncrement.plugin, 'Questions');
 var Questions = mongo.model('Questions', questionSchema);
 
 Questions.addQuestion = function(question){
+    
     var newQuestion = Questions({
         courseId : question.courseId,
         text : question.text,
@@ -33,7 +34,7 @@ Questions.addQuestion = function(question){
         created_at : Date.now(),
 		multiOption : question.answers.length > 1,
 		published : false,
-		publishTime : question.publishTime
+		publishTime : new Date(question.publishTime)
     });
 
     return newQuestion.save();
