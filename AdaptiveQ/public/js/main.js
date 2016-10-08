@@ -1002,10 +1002,9 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         $scope.openDatepicker = !$scope.openDatepicker;
     };
 
-    $scope.$watch('dt', function(){
-        console.log("date changed");
+    $scope.$watch('pubDate', function(){
         $scope.toggleDatepicker();
-        $scope.model.publishTime = new Date($scope.dt).setHours(0,0,0,0);
+        $scope.pubDateFormatted = $scope.pubDate.getFullYear() + "-" + ($scope.pubDate.getMonth() + 1) + "-" + $scope.pubDate.getDate();
     });
 
     $scope.toggleSelection = function(answer){
@@ -1061,6 +1060,10 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
     };
 
     $scope.submitQuestion = function(){
+        if($scope.pubDate == null){
+            $scope.errorMsg = "Please choose publishing date";
+            return false;
+        }
         if($scope.model.answers.length === 0){
             $scope.errorMsg = "Please choose correct answers";
             return false;
@@ -1069,7 +1072,9 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
             $scope.errorMsg = "Please choose concepts related to question";
             return false;
         }
+        $scope.model.publishTime = new Date($scope.pubDate.getFullYear(), $scope.pubDate.getMonth(), $scope.pubDate.getDate(), $scope.pubTime.getHours(), $scope.pubTime.getMinutes(), $scope.pubTime.getSeconds());
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
+        console.log($scope.model.publishTime);
         dbService.postQuestion($scope.model, function(){
             $scope.showPostedQuestion = true;
             alert("Question posted!");

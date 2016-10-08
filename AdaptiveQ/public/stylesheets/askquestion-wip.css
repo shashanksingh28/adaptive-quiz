@@ -70,6 +70,12 @@ input, textarea{
   background-color: #ebebeb;
 }
 
+.timepicker {
+  display: inline-block;
+  margin-left: 10px;
+  font-size: 16px;
+}
+
 .question {
   border-bottom-style: solid;
   border-bottom-color: #428bca;
