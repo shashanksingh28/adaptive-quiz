@@ -40,6 +40,23 @@ Questions.addQuestion = function(question){
     return newQuestion.save();
 }
 
+Questions.updateQuestion = function(q, updatedQ){
+    q.text = updatedQ.text;
+    q.code = updatedQ.code;
+    q.options = updatedQ.options;
+    q.answers = updatedQ.answers;
+    q.concepts = updatedQ.concepts;
+    q.multiOption = updatedQ.answers.length > 1;
+    q.published = updatedQ.published;
+    q.publishTime = new Date(updatedQ.publishTime);
+
+    q.markModified('options');
+    q.markModified('answers');
+    q.markModified('concepts');
+    
+    return q.save();
+}
+
 Questions.getQuestionById = function(qId){
     return Questions.findById(qId).exec();
 };
