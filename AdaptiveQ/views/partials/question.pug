@@ -56,6 +56,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
 
   .question-area(ng-show="recordExists")
       .question-box
+        button#editbutton(type="button", class="btn btn-warning", ng-click="editQuestion(question)", ng-hide="isPublished(question)") Edit
         .question
           h1 {{ question.text }}
           pre {{ question.code }}
@@ -98,7 +99,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
           h3 Recommended Study
         #recommendations-list
           .recommendation-item(ng-repeat="recommendation in recommendations")
-              a(href="{{ recommendation.url }}") {{ recommendation.heading }}
+              a(href="{{ recommendation.url }}", ng-click="logRecoClick(recommendation)") {{ recommendation.heading }}
               p {{ recommendation.text }}
               pre(ng-hide="1") {{ recommendation.code }}
         #tools-footer

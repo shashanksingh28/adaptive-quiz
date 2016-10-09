@@ -400,10 +400,16 @@ mainApp.service('courseService', ['$window', 'dbService', function($window, dbSe
 mainApp.service('questionService', ['$window', function($window){
 
     this.savedQuestionId = null;
+    this.questionToEdit = null;
 
     this.save = function(questionId){
         this.savedQuestionId = questionId;
         $window.location.href = '/#/question';
+    };
+
+    this.edit = function(question){
+        this.questionToEdit = question;
+        $window.location.href = '/#/askquestion';
     };
 
 }]);
@@ -851,7 +857,16 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
     $scope.enableHint = function(){
         $scope.showHint = true;
         dbService.postLog("click", "enableHint", $scope.model.questionId);
-        // TODO: Record that user used a hint
+    };
+
+    $scope.editQuestion = function(question){
+        questionService.edit(question);
+    };
+
+    $scope.isPublished = function(question){
+        var rightNow = new Date();
+        var publishDate = new Date(question.publishTime);
+        return rightNow > publishDate;
     };
 
     // Explanations
@@ -965,7 +980,6 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         }
         fetchRecos(conceptChain, $scope.question.text, $scope.question.code, 5, function(body){
             for(var i = 0; i < body.response.docs.length; i++){
-                console.log(body.response.docs[i].heading);
                 body.response.docs[i].heading = body.response.docs[i].heading.replace(/_/g, ' ');
                 body.response.docs[i].text = body.response.docs[i].text.substring(0, 100) + "...";
             }
@@ -973,9 +987,22 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
         });
     };
 
+
+    $scope.logRecoClick = function(recommendation){
+        var url = recommendation.url;
+        var rank = -1;
+        for(var i = 0; i < $scope.recommendations.length; i++){
+            if(url == $scope.recommendations[i].url){
+                rank = i;
+                break;
+            }
+        }
+        dbService.postLog("click", "recommendation", rank + " " + url);
+    };
+
 }]);
 
-mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbService', 'courseService', 'conceptsData', function($scope, $route, $window, dbService, courseService, conceptsData){
+mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbService', 'courseService', 'questionService', 'conceptsData', function($scope, $route, $window, dbService, courseService, questionService, conceptsData){
     $scope.concepts = conceptsData;
 
     $scope.model = {
@@ -991,6 +1018,7 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         explanations: [],
     };
 
+    //Datepicker Config
     $scope.options = {
         minDate: new Date(),
         showWeeks: false
@@ -1007,6 +1035,10 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         $scope.pubDateFormatted = $scope.pubDate.getFullYear() + "-" + ($scope.pubDate.getMonth() + 1) + "-" + $scope.pubDate.getDate();
     });
 
+    $scope.pubDate = new Date();
+    $scope.pubDate.setDate($scope.pubDate.getDate() + 1);
+    $scope.pubTime = new Date(0, 0, 0, 10, 0, 0);
+
     $scope.toggleSelection = function(answer){
         var index = $scope.model.answers.indexOf(answer);
         if(index > -1){
@@ -1016,6 +1048,7 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         }
     };
 
+    //Question Options
     $scope.optionsCount = 4;
     $scope.getOptionsCount = function(count) {
         return new Array(count);
@@ -1039,6 +1072,7 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         $scope.model.options.splice(index, 1);
     };
 
+    //Question Concepts
     $scope.loadConcepts = function(query){
         var matches = [];
         for(var i = 0; i < $scope.concepts.length; i++){
@@ -1059,6 +1093,20 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
         return concepts;
     };
 
+    // Retreive Question to be Edited from Questions View
+    if(questionService.questionToEdit){
+        console.log('existing question needs editing');
+        $scope.model = questionService.questionToEdit;
+        console.log($scope.model);
+        $scope.optionsCount = $scope.model.options.length;
+        $scope.addCode = $scope.model.code;
+        $scope.addHint = $scope.model.hint;
+        var publishTime = new Date($scope.model.publishTime);
+        $scope.pubDate = new Date(publishTime.getFullYear(), publishTime.getMonth(), publishTime.getDate(), 0, 0, 0);
+        $scope.pubTime = new Date(0, 0, 0, publishTime.getHours(), publishTime.getMinutes(), 0);
+        questionService.questionToEdit = null;
+    }
+
     $scope.submitQuestion = function(){
         if($scope.pubDate == null){
             $scope.errorMsg = "Please choose publishing date";
@@ -1072,9 +1120,8 @@ mainApp.controller('askQuestionController', ['$scope', '$route', '$window', 'dbS
             $scope.errorMsg = "Please choose concepts related to question";
             return false;
         }
-        $scope.model.publishTime = new Date($scope.pubDate.getFullYear(), $scope.pubDate.getMonth(), $scope.pubDate.getDate(), $scope.pubTime.getHours(), $scope.pubTime.getMinutes(), $scope.pubTime.getSeconds());
+        $scope.model.publishTime = new Date($scope.pubDate.getFullYear(), $scope.pubDate.getMonth(), $scope.pubDate.getDate(), $scope.pubTime.getHours(), $scope.pubTime.getMinutes(), 0);
         $scope.model.concepts = unwrapConcepts($scope.model.concepts);
-        console.log($scope.model.publishTime);
         dbService.postQuestion($scope.model, function(){
             $scope.showPostedQuestion = true;
             alert("Question posted!");
