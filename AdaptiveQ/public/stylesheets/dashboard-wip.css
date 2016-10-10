@@ -52,6 +52,7 @@ input[type="radio"] {
 .concept-item label:hover {
   background-color: #65a5da;
   color: #fff;
+  cursor: pointer;
 }
 
 .concept-item input[type="radio"]:checked + label {
@@ -181,6 +182,7 @@ input[type="radio"] {
 .question-item:hover {
   background-color: #65a5da;
   color: #fff;
+  cursor: pointer;
 }
 
 .question-item h4 {

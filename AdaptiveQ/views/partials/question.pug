@@ -99,7 +99,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
           h3 Recommended Study
         #recommendations-list
           .recommendation-item(ng-repeat="recommendation in recommendations")
-              a(href="{{ recommendation.url }}", ng-click="logRecoClick(recommendation)") {{ recommendation.heading }}
+              a(href="{{ recommendation.url }}", target="_blank", ng-click="logRecoClick(recommendation)") {{ recommendation.heading }}
               p {{ recommendation.text }}
               pre(ng-hide="1") {{ recommendation.code }}
         #tools-footer

@@ -166,7 +166,8 @@ ul {
 }
 
 #editbutton {
-  margin: 5px;
+  display: block;
+  margin: auto;
   margin-bottom: -10px;
 }
 
