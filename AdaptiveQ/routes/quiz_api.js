@@ -205,18 +205,41 @@ router.post('/postQuestion', requireLogin, function(req, res){
         res.send(new respError('Question must have a time to publish'));
     }
 
-    var course = Courses.getCourseById(q.courseId)
-        .then(function (course){
-            if(!checkIfInstructor(course, req.session.user._id)){
-                res.send(new respError('User not instructor for course.'));
+    if(q._id){
+        // Already existing question
+        Questions.getQuestionById(q._id)
+        .then(function(question){
+            if (question){
+                Questions.updateQuestion(question, q)
+                .then(function (updatedQ){
+                    res.send(new respOK(updatedQ));
+               }, function(error){
+                    res.send(new respError(error));
+               });                
             }
             else{
-                Questions.addQuestion(q)
-                .then(function (savedQuestion){
-                    res.send(new respOK(savedQuestion));
-                }, function (error) { res.send(new respError(error)); });
+                res.send(new respError("Question with id:"+q._id+" not found"));
             }
-        }, function (error){ res.send(new respError(error)); });
+        }, function(error){
+            res.send(new respError(error));
+        });
+    }
+    else{
+        var course = Courses.getCourseById(q.courseId)
+            .then(function (course){
+                if(!checkIfInstructor(course, req.session.user._id)){
+                    res.send(new respError('User not instructor for course.'));
+                }
+                else{
+                    Questions.addQuestion(q)
+                    .then(function (savedQuestion){
+                        res.send(new respOK(savedQuestion));
+                    }, function (error) { res.send(new respError(error)); });
+                }
+            }, function (error){
+                res.send(new respError(error)); 
+            });
+    }
 });
 
 router.post('/postAttempt', requireLogin, function(req, res){
