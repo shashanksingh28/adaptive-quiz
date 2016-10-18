@@ -281,8 +281,6 @@ form button[type="submit"] {
 .recommendation-item, .note-item {
   background-color: #eee;
   padding: 5px;
-  border-bottom-style: solid;
-  border-color: #ccc;
   color: #1E6498;
 }
 

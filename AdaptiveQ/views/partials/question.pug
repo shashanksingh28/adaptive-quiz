@@ -115,7 +115,7 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
               p Notes are anonymous and can be viewed by your peers. You must post your own note to see notes from others.
           ul(ng-show="hasOwnNote")
             li.note-item.own-note(ng-hide="editingNote")
-              p {{ ownNote.text }}
+              p {{ note.text }}
               button(type="button", class="btn btn-default btn-sm", ng-click="startEdit()") Edit
             li.note-item.editing(ng-show="editingNote")
               form#editNotes(ng-submit="postNote()")
@@ -123,6 +123,4 @@ link(rel="stylesheet", href="/stylesheets/question-wip.css")
                 textarea(rows="4", form="newNote", ng-model="noteModel.text", required)
                 button(type="submit", class="btn btn-info btn-sm", ng-disabled='noteModel.text == ""') Post
                 button(type="button", class="btn btn-default btn-sm", ng-click="editingNote = false") Cancel
-            li.note-item(ng-repeat="note in filteredNotes")
-              p {{ note.text }}
         #tools-footer

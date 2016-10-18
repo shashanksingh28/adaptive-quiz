@@ -356,7 +356,7 @@ mainApp.service('dbService', ['$http', '$window', function($http, $window){
                 console.log(response.eMessage);
             }
             else{
-                console.log("Action Logged");
+//                console.log("Action Logged");
             }
         }, function(error){
             console.log("Problem in connecting to server");
@@ -701,7 +701,7 @@ mainApp.controller('dashboardController', ['$scope', 'dbService', 'statusService
     }
 }]);
 
-mainApp.controller('questionController', ['$scope', '$route', '$window', 'statusService', 'dbService', 'questionService', 'authService', 'questionsData', 'orderByFilter', '$cookies', function($scope, $route, $window, statusService, dbService, questionService, authService, questionsData, orderBy, $cookies){
+mainApp.controller('questionController', ['$scope', '$route', '$window', 'statusService', 'dbService', 'questionService', 'courseService', 'authService', 'questionsData', 'orderByFilter', '$cookies', function($scope, $route, $window, statusService, dbService, questionService, courseService, authService, questionsData, orderBy, $cookies){
     $scope.user = dbService.getUser();
 
     $scope.noQuestions = questionsData.length === 0;
@@ -815,10 +815,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 $scope.explanations = dbService.getExplanations($scope.model, function(explanations){
                     $scope.explanations = orderBy(explanations, $scope.expOrderVal, true);
                 });
-                $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
-                    $scope.notes = notes;
-                    $scope.loadNotes();
-                });
+                $scope.loadNote();
                 if(!authService.isTeacher()){
                     if($scope.recordExist){
                         dbService.postLog("view", "attemptedQuestion", $scope.question._id);
@@ -826,6 +823,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                         dbService.postLog("view", "unattemptedQuestion", $scope.question._id);
                     }
                 }
+                $scope.getRecommendations();
                 $scope.getRecommendations();
                 break;
             }
@@ -921,25 +919,10 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
     };
 
     //Notes
-    $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
-        $scope.notes = notes;
-        $scope.loadNotes();
-    });
-
-    $scope.loadNotes = function(){
-        $scope.hasOwnNote = false;
-        $scope.ownNote = {};
-        $scope.filteredNotes = [];
-        if($scope.notes != null){
-            for(var i = 0; i < $scope.notes.length; i++){
-                if($scope.notes[i].userId == $scope.user._id){
-                    $scope.hasOwnNote = true;
-                    $scope.ownNote = $scope.notes[i];
-                    $scope.filteredNotes = $scope.notes;
-                    $scope.filteredNotes.splice(i,1);
-                    break;
-                }
-            }
+    $scope.loadNote = function(){
+        $scope.hasOwnNote = 'userNote' in $scope.question;
+        if($scope.hasOwnNote){
+            $scope.note = $scope.question.userNote;
         }
     };
 
@@ -954,19 +937,18 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
             $scope.editingNote = false;
         }
         $scope.noteModel.questionId = $scope.model.questionId;
+        console.log('posting note');
+        console.log($scope.noteModel);
         dbService.postNote($scope.noteModel, function(){
-            $scope.noteModel.text = "";
-            $scope.notes = dbService.getQuestionNotes($scope.model, function(notes){
-                $scope.notes = notes;
-                $scope.loadNotes();
-            });
+            questionService.save($scope.question._id);
+            $route.reload();
         });
     };
 
     $scope.startEdit = function(){
         $scope.editingNote = true;
-        $scope.noteModel.text = $scope.ownNote.text;
-        $scope.noteModel._id = $scope.ownNote._id;
+        $scope.noteModel.text = $scope.note.text;
+        $scope.noteModel._id = $scope.note._id;
     };
 
     $scope.getRecommendations = function(){
@@ -984,6 +966,7 @@ mainApp.controller('questionController', ['$scope', '$route', '$window', 'status
                 body.response.docs[i].text = body.response.docs[i].text.substring(0, 100) + "...";
             }
             $scope.recommendations = body.response.docs;
+            console.log($scope.recommendations);
         });
     };
 
