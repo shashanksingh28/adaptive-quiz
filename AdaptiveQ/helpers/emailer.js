@@ -32,7 +32,7 @@ var sendQuestion = function (hostname,fromEmail,toList,bccList,questionId,questi
 	smtpTransport.sendMail(mailOptions, function(error, response){
 		console.log(response);
 		if(error){
-			callback(error, message);
+			callback(error);
 		}
 		else{
 			callback(error, response.message);
@@ -53,7 +53,7 @@ var sendResetPasswordLink = function(fromEmail, toEmail, uri, callback){
 	smtpTransport.sendMail(mailOptions, function(error, response){
 		console.log(response);
 		if(error){
-			callback(error, message);
+			callback(error);
 		}
 		else{
 			callback(error, response.message);
